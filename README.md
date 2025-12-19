@@ -4,7 +4,7 @@ Compiler project for the Formal Languages and Translation Techniques course in t
 
 # Project structure
 `src/` - compiler source code  
-`mw2025` - virutal machine by [prof Maciej Gębala](https://cs.pwr.edu.pl/gebala/)  
+`mw2025/` - virutal machine by [prof Maciej Gębala](https://cs.pwr.edu.pl/gebala/)  
 
 
 # Language Structure
@@ -89,8 +89,8 @@ WRITE <val>
 
 # Rules
 ## 1. All arithmetic operations are done on natural numbers:
-   - $x, y \in [0..\infin)$
-   - $x<0 \rarr x=0$ 
+   - $x, y \in [0..inf)$
+   - $x<0 → x=0$ 
    - $\frac{x}{0}=0,\ rem=0$  
 ```
 example:
@@ -115,7 +115,7 @@ All variables must be declared inside a procedure, or be passed as `IN/OUT` ref 
  - **`T`** marks an argument as an array
 
 ## 5. for loops
-FOR loop has a non-modifiable local iterator which can only be incremented by $\plusmn1$
+FOR loop has a non-modifiable local iterator which can only be incremented by ±1
 
 ## 6. Identifier syntax
 Identifier is described with regular expression `[_a-z]+`
