@@ -66,11 +66,12 @@
 
 
 
-%left ASSIGN 
+/* gramar does not need precedence */
+/* %left ASSIGN 
 %left EQ NEQ
 %left GT LT GEQ LEQ
 %left ADD SUB
-%left MULT DIV MOD
+%left MULT DIV MOD */
 
 
 /* %type program_all

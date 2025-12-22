@@ -28,7 +28,7 @@ $(LEXER_PATH)/lexer.cpp: $(LEXER_PATH)/lexer.lex $(PARSER_PATH)/parser.hpp
 	flex -o $@ $<
 
 $(PARSER_PATH)/parser.cpp $(PARSER_PATH)/parser.hpp: $(PARSER_PATH)/parser.y
-	bison -Wall -d -o $@ $^
+	bison -Wall -d -o $(PARSER_PATH)/parser.cpp $^
 
 clean:
 	rm -f $(EXE_NAME)
