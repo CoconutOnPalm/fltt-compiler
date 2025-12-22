@@ -44,5 +44,11 @@
 examples/
 description-pl.pdf
 
+kompilator
+
+src/lexer/lexer.cpp
+src/parser/parser.cpp
+src/parser/parser.hpp
+
 mw2025/maszyna-wirtualna
 mw2025/maszyna-wirtualna-cln
