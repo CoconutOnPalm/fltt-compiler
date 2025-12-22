@@ -17,17 +17,18 @@ EXE_NAME = kompilator
 
 all: $(EXE_NAME)
 
-$(EXE_NAME): $(CXX_OBJ)
-	$(CXX) $(FLAGS) -I $(INCLUDE) -o $(CXX_OBJ) $(LINKED_LIBS)
+$(EXE_NAME): $(CXX_SRC)
+	$(CXX) $(FLAGS) -I $(INCLUDE) $(CXX_SRC) -o $@ $(LINKED_LIBS)
 
-$(CXX_OBJ): $(CXX_SRC)
-	$(CXX) $(FLAGS) -c $^
+# $(CXX_OBJ): $(CXX_SRC)
+# 	$(CXX) $(FLAGS) -c $^
+# 	mv *.o $(BUILD_DIR)
 
 $(LEXER_PATH)/lexer.cpp: $(LEXER_PATH)/lexer.lex $(PARSER_PATH)/parser.hpp
 	flex -o $@ $<
 
 $(PARSER_PATH)/parser.cpp $(PARSER_PATH)/parser.hpp: $(PARSER_PATH)/parser.y
-	bison -Wall -o $@ $^
+	bison -Wall -d -o $@ $^
 
 clean:
 	rm -f $(EXE_NAME)

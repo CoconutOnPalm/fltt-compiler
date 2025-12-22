@@ -28,8 +28,6 @@ keywords:
     WRITE
     T I O 
 */
-keyword     [A-Z]+
-
 
 comment     \#.*\n
 
@@ -40,11 +38,59 @@ comment     \#.*\n
 
 {comment}       { /* skip comments */ }
 
-{keyword}       { return yytext; }
-{identifier}    { yylval.identifier = yytext; return ID; }
+ENDIF           { return ENDIF; }
+IF              { return IF; }
+THEN            { return THEN; }
+ELSE            { return ELSE; }
 
-{number}        { yylval.val = std::stoull(yytext); return VAL; }
+ENDWHILE        { return ENDWHILE; }
+DO              { return DO; }
+WHILE           { return WHILE; }
 
-[\+\-\*\/\%]    { return yytext; }
+ENDFOR          { return ENDFOR; }
+FOR             { return FOR; }
+FROM            { return FROM; }
+DOWNTO          { return DOWNTO; }
+TO              { return TO; }
+
+REPEAT          { return REPEAT; }
+UNTIL           { return UNTIL; }
+
+READ            { return READ; }
+WRITE           { return WRITE; }
+
+PROGRAM         { return PROGRAM; }
+PROCEDURE       { return PROCEDURE; }
+IS              { return IS; }
+IN              { return IN; }
+END             { return END; }
+
+T               { return T; }
+I               { return I; }
+O               { return O; }
+
+{identifier}    { yylval.identifier = yytext; return pidentifier; }
+
+{number}        { yylval.val = std::stoull(yytext); return num; }
+
+"+"              { return ADD;  }
+"-"              { return SUB;  }
+"*"              { return MULT; }
+"/"              { return DIV;  }
+"%"              { return MOD;  }
+
+":="             { return ASSIGN; }
+"!="             { return NEQ; }
+">"              { return GT;  }
+"<"              { return LT;  }
+">="             { return GEQ; }
+"<="             { return LEQ; }
+"="              { return EQ;  }
+
+
+","              { return ','; }
+";"              { return ';'; }
+
+.                { std::println("ERROR: unknown character: {}", yytext); }
 
 %%
