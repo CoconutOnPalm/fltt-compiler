@@ -15,12 +15,14 @@
 
 %union {
     int val;
-    const char* token;
+    const char* word;
 }
 
 
-%token <val>        VAL
-%token <token> ID
+%token <val>    VAL
+%token <word>   ID
+
+%token <word>   
 
 %left '='
 %left '+' '-'
