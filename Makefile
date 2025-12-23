@@ -3,15 +3,16 @@ LINKED_LIBS := -lstdc++exp
 FLAGS := $(CXX_VERSION) -ggdb3
 INCLUDE := include/
 
-LEXER_PATH := src/lexer
-PARSER_PATH := src/parser
+SRC_PATH = src
 
-CXX_SRC = $(LEXER_PATH)/lexer.cpp $(PARSER_PATH)/parser.cpp
-CXX_OBJ = build/parser.o build/lexer.o
+LEXER_PATH := $(SRC_PATH)/lexer
+PARSER_PATH := $(SRC_PATH)/parser
 
-DEPENDENCIES = $(LEXER_PATH)/* $(PARSER_PATH)/* 
-
-BUILD_DIR = build
+CXX_SRC = \
+	$(SRC_PATH)/*.cpp \
+	$(SRC_PATH)/input/*.cpp \
+	$(LEXER_PATH)/*.cpp \
+	$(PARSER_PATH)/*.cpp \
 
 EXE_NAME = kompilator
 

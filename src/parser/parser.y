@@ -10,6 +10,7 @@
 
     int yylex();
     int yyerror(const char* s);
+    void yyset_in(FILE* in_str);
 %}
 
 
@@ -193,7 +194,8 @@ int yyerror(const char* s)
 }
 
 
-int main()
+void run_parser(FILE* in_str)
 {
+    yyset_in(in_str);
     yyparse();
 }
