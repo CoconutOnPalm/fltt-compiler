@@ -9,7 +9,7 @@ Compiler project for the Formal Languages and Translation Techniques course in t
 
 # Language Structure
 
-The structure is described by the fltt-compiler's language, some parameters are encapsulated in `< >` brackets
+The structure is described by the fltt-compiler's language, some parameters are encapsulated in the `< >` brackets
 
 ## main()
 ```c++
@@ -36,7 +36,7 @@ Where **`F`** is an argument type:
  - **`T`** - array
  - $\epsilon$ - no arg type 
 
-technically this should be called a procedure, but following the standard c-like naming convention, I'll using `function` instead of `procedure` do describe procedures in the documentation
+technically this should be called a procedure, but following the standard c-like naming convention, I'll using `function` instead of `procedure` do describe procedures in this documentation
 
 ### calls
 ```
@@ -109,7 +109,7 @@ arr[3, 7] = array of size 5, ind: [3, 4, 5, 6, 7]
 ## 3. No recursion
 
 ## 4. Declarations
-All variables must be declared inside a procedure, or be passed as `IN/OUT` ref arguments
+All variables must be declared inside a function, or be passed as `IN/OUT` ref arguments
  - **`I`** (IN) param marks an argument as `readonly const`
  - **`O`** (OUT) param marks an argumenta as an 'OUT' argument - cannot be read before assignment, cannot be passed as `I`
  - **`T`** marks an argument as an array
@@ -138,8 +138,8 @@ There are 8 registers available, each named
 > **[RG]**, 
 > **[RH]**, 
 
-let **`PC`** be our program counter
-let `MEM[i]` be the memory at address *`i`*
+let **`PC`** be our program counter  
+let `MEM[i]` be the memory cell at address *`i`*  
 
 |instruction|arg|action|PC|cost|description|
 |:---|:---:|---|---|---:|---|
@@ -150,11 +150,11 @@ let `MEM[i]` be the memory at address *`i`*
 | RLOAD  | x | `[RA] = MEM[RX]`        | PC++          |  50 ![ORANGE](https://placehold.co/15x15/orange/orange.png) |  |
 | RSTORE | x | `MEM[RX] = [RA]`        | PC++          |  50 ![ORANGE](https://placehold.co/15x15/orange/orange.png) |  |
 | ADD    | x | `[RA] = [RA] + [RX]`    | PC++          |   5 ![YELLOW](https://placehold.co/15x15/yellow/yellow.png) |  |
-| SUB    | x | `[RA] = [RA] - [RX]`    | PC++          |   5 ![YELLOW](https://placehold.co/15x15/yellow/yellow.png) |  |
+| SUB    | x | \*`[RA] = [RA] - [RX]`  | PC++          |   5 ![YELLOW](https://placehold.co/15x15/yellow/yellow.png) |  |
 | SWP    | x | `swap([RA], [RX])`      | PC++          |   5 ![YELLOW](https://placehold.co/15x15/yellow/yellow.png) |  |
 | RST    | x | `[RX] = 0`              | PC++          |   1 ![GREEN](https://placehold.co/15x15/green/green.png) |  |
 | INC    | x | `[RX]++`                | PC++          |   1 ![GREEN](https://placehold.co/15x15/green/green.png) |  |
-| DEC    | x | `[RA]--`                | PC++          |   1 ![GREEN](https://placehold.co/15x15/green/green.png) |  |
+| DEC    | x | \*`[RX]--`              | PC++          |   1 ![GREEN](https://placehold.co/15x15/green/green.png) |  |
 | SHL    | x | `[RX] = [RX] << 1`      | PC++          |   1 ![GREEN](https://placehold.co/15x15/green/green.png) |  |
 | SHR    | x | `[RX] = [RX] >> 1`      | PC++          |   1 ![GREEN](https://placehold.co/15x15/green/green.png) |  |
 | JUMP   | i | `JUMP i`                | PC = i        |   1 ![GREEN](https://placehold.co/15x15/green/green.png) |  |
@@ -163,3 +163,5 @@ let `MEM[i]` be the memory at address *`i`*
 | CALL   | i | `[RA] = PC+1`, `JUMP i` | **PC = i**    |   1 ![GREEN](https://placehold.co/15x15/green/green.png) |  |
 | RTRN   |   | `PC = [RA]`             | **PC = [RA]** |   1 ![GREEN](https://placehold.co/15x15/green/green.png) |  |
 | HALT   |   | `exit`                  | *stop*        |   0 ![CYAN](https://placehold.co/15x15/cyan/cyan.png) | stops the program |
+
+\* *where* `[RA]`, `[RB]`, `...`, `[RH]` $\in \N$
