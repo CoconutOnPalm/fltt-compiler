@@ -52,3 +52,7 @@ src/parser/parser.hpp
 
 mw2025/maszyna-wirtualna
 mw2025/maszyna-wirtualna-cln
+
+mw2025/lexer.cc
+mw2025/parser.cc
+mw2025/parser.hh
