@@ -1,5 +1,13 @@
 %code requires {
-    #include <string>
+    #include "../symbol/symbol_table.hpp"
+}
+
+%code provides {
+    extern fl::SymbolTable symbol_table_buffer;
+}
+
+%code {
+    fl::SymbolTable symbol_table_buffer;
 }
 
 %{
@@ -16,7 +24,7 @@
 
 %union {
     int val;
-    const char* identifier;
+    char* identifier;
 }
 
 
@@ -101,6 +109,9 @@ procedures
 
 main 
     : PROGRAM IS declarations IN statements END
+    {
+        symbol_table_buffer._debug_print();
+    }
     | PROGRAM IS IN statements END
 ;
 
@@ -132,9 +143,29 @@ procedure_call
 
 declarations 
     : declarations ',' pidentifier
+    {
+        symbol_table_buffer.add<fl::Variable>($<identifier>3);
+        free($<identifier>3);
+    }
     | declarations ',' pidentifier '[' num ':' num ']'
+    {
+        symbol_table_buffer.add<fl::Array>($<identifier>3, $<val>5, $<val>7);
+        free($<identifier>3);
+        free($<identifier>5);
+        free($<identifier>7);
+    }
     | pidentifier
+    {
+        symbol_table_buffer.add<fl::Variable>($<identifier>1);
+        free($<identifier>1);
+    }
     | pidentifier '[' num ':' num ']'
+    {
+        symbol_table_buffer.add<fl::Array>($<identifier>1, $<val>3, $<val>5);
+        free($<identifier>1);
+        free($<identifier>3);
+        free($<identifier>5);
+    }
 ;
 
 args_decl 

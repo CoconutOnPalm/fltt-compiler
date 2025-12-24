@@ -6,6 +6,7 @@
 %{
 #include <string>
 #include <print>
+#include <cstring>
 
 #include "../parser/parser.hpp"
 
@@ -69,7 +70,7 @@ T               { return T; }
 I               { return I; }
 O               { return O; }
 
-{identifier}    { yylval.identifier = yytext; return pidentifier; }
+{identifier}    { yylval.identifier = strdup(yytext); return pidentifier; }
 
 {number}        { yylval.val = std::stoull(yytext); return num; }
 
@@ -91,6 +92,6 @@ O               { return O; }
 ","              { return ','; }
 ";"              { return ';'; }
 
-.                { std::println("ERROR: unknown character: {}", yytext); }
+.                { return static_cast<int>(yytext[0]); }
 
 %%

@@ -11,6 +11,7 @@ PARSER_PATH := $(SRC_PATH)/parser
 CXX_SRC = \
 	$(SRC_PATH)/*.cpp \
 	$(SRC_PATH)/input/*.cpp \
+	$(SRC_PATH)/symbol/*.cpp \
 	$(LEXER_PATH)/*.cpp \
 	$(PARSER_PATH)/*.cpp \
 
