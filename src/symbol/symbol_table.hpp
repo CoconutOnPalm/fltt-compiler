@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <map>
+#include <vector>
 
 #include "symbol.hpp"
 #include "array.hpp"
@@ -23,13 +24,41 @@ namespace fl
 		SymbolTable() = default;
 		~SymbolTable() = default;
 
-		template <class SymT, typename... Args>
-		void add(const std::string& name, Args&&... args)
-		{
-			if (symbol_table.contains(name))
-				panic("redeclaration of the variable '{}'", name);
+		SymbolTable(const SymbolTable& other) = delete;
+		SymbolTable(SymbolTable&& other) : symbol_table(std::move(other.symbol_table)) {}
 
-			symbol_table[name] = std::make_unique<SymT>(name, std::forward<Args>(args)...);
+		template <class SymT, typename... Args>
+		inline void add(const std::string& name, Args&&... args)
+		{
+			symbol_table.emplace(name, std::make_unique<SymT>(name, args...));
+		}
+
+		const Symbol& get(const std::string& name) const
+		{
+			if (!symbol_table.contains(name))
+			{
+				panic("undefined variable '{}'", name);
+			}
+
+			return *(symbol_table.at(name).get());
+		}
+
+		const Symbol& operator[](const std::string& name) const
+		{
+			return get(name);
+		}
+
+		std::vector<std::string> getDeclaredVariables() const 
+		{
+			std::vector<std::string> names; names.reserve(symbol_table.size());
+			for (const auto& [name, _] : symbol_table)
+				names.push_back(name);
+			return names;
+		}
+
+		inline void clear()
+		{
+			symbol_table.clear();
 		}
 		
 		void _debug_print() const

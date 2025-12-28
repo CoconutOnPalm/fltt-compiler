@@ -1,6 +1,6 @@
 CXX_VERSION := -std=c++23
 LINKED_LIBS := -lstdc++exp
-FLAGS := $(CXX_VERSION) -ggdb3
+FLAGS := $(CXX_VERSION) -ggdb3 -fconcepts-diagnostics-depth=2
 INCLUDE := include/
 
 SRC_PATH = src
@@ -11,15 +11,25 @@ PARSER_PATH := $(SRC_PATH)/parser
 CXX_SRC = \
 	$(SRC_PATH)/*.cpp \
 	$(SRC_PATH)/input/*.cpp \
+	$(SRC_PATH)/procedure/*.cpp \
 	$(SRC_PATH)/symbol/*.cpp \
 	$(LEXER_PATH)/*.cpp \
 	$(PARSER_PATH)/*.cpp \
+
+CXX_HEAD = \
+	$(SRC_PATH)/*.hpp \
+	$(SRC_PATH)/utils/*.hpp \
+	$(SRC_PATH)/input/*.hpp \
+	$(SRC_PATH)/procedure/*.hpp \
+ 	$(SRC_PATH)/symbol/*.hpp \
+ 	$(PARSER_PATH)/*.hpp \
+
 
 EXE_NAME = kompilator
 
 all: $(EXE_NAME) vm
 
-$(EXE_NAME): $(CXX_SRC)
+$(EXE_NAME): $(CXX_SRC) $(CXX_HEAD)
 	$(CXX) $(FLAGS) -I $(INCLUDE) $(CXX_SRC) -o $@ $(LINKED_LIBS)
 
 # $(CXX_OBJ): $(CXX_SRC)

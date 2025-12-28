@@ -11,11 +11,12 @@ namespace fl
 	private:
 
 		const uint64_t begin, end;
+		const uint64_t size;
 
 	public:
 
 		Array(const std::string_view name, const uint64_t begin, const uint64_t end);
-		virtual ~Array() = default;
+		~Array() = default;
 
 		std::string _debug_string() const;
 	};

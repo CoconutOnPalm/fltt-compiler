@@ -8,6 +8,8 @@ namespace fl
 	
 	class Variable : public Symbol
 	{
+	private:
+
 	public:
 
 		Variable(const std::string_view name);

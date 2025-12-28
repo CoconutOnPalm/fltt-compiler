@@ -1,13 +1,13 @@
 %code requires {
-    #include "../symbol/symbol_table.hpp"
+    #include "../compiler.hpp"
 }
 
 %code provides {
-    extern fl::SymbolTable symbol_table_buffer;
+    extern fl::Compiler compiler;
 }
 
 %code {
-    fl::SymbolTable symbol_table_buffer;
+    fl::Compiler compiler;
 }
 
 %{
@@ -99,20 +99,32 @@
 
 program_all 
     : procedures main
+    {
+        compiler.__debug_print();
+    }
 ;
 
 procedures 
     : procedures PROCEDURE procedure_head IS declarations IN statements END
+    {
+        compiler.pushProcedure($<identifier>3);
+    }
     | procedures PROCEDURE procedure_head IS IN statements END
+    {
+        compiler.pushProcedure($<identifier>3);
+    }
     | %empty
 ;
 
 main 
     : PROGRAM IS declarations IN statements END
     {
-        symbol_table_buffer._debug_print();
+        compiler.pushProcedure("__prog_start");
     }
     | PROGRAM IS IN statements END
+    {
+        compiler.pushProcedure("__prog_start");
+    }
 ;
 
 statements 
@@ -135,6 +147,9 @@ statement
 
 procedure_head 
     : pidentifier '(' args_decl ')'
+    {
+        $<identifier>$ = $<identifier>1;
+    }
 ;
 
 procedure_call 
@@ -144,27 +159,23 @@ procedure_call
 declarations 
     : declarations ',' pidentifier
     {
-        symbol_table_buffer.add<fl::Variable>($<identifier>3);
+        compiler.addSymbol<fl::Variable>($<identifier>3);
         free($<identifier>3);
     }
     | declarations ',' pidentifier '[' num ':' num ']'
     {
-        symbol_table_buffer.add<fl::Array>($<identifier>3, $<val>5, $<val>7);
+        compiler.addSymbol<fl::Array>($<identifier>3, $<val>5, $<val>7);
         free($<identifier>3);
-        free($<identifier>5);
-        free($<identifier>7);
     }
     | pidentifier
     {
-        symbol_table_buffer.add<fl::Variable>($<identifier>1);
+        compiler.addSymbol<fl::Variable>($<identifier>1);
         free($<identifier>1);
     }
     | pidentifier '[' num ':' num ']'
     {
-        symbol_table_buffer.add<fl::Array>($<identifier>1, $<val>3, $<val>5);
+        compiler.addSymbol<fl::Array>($<identifier>1, $<val>3, $<val>5);
         free($<identifier>1);
-        free($<identifier>3);
-        free($<identifier>5);
     }
 ;
 
@@ -220,7 +231,7 @@ identifier
 int yyerror(const char* s) 
 {
     std::string_view msg { s };
-    std::println("\033[31m[ERROR]\033[0m: {} in line {}", msg, yylineno);
+    std::println("\033[31m[ERROR]\033[0m: {} at line {}", msg, yylineno);
     return 0;
 }
 

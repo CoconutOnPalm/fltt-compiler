@@ -7,9 +7,9 @@ namespace fl
 {
 	
 	Array::Array(const std::string_view name, const uint64_t begin, const uint64_t end)
-		: Symbol(name, (begin <= end) ? end - begin + 1 : 0)
-		, begin(begin)
-		, end(end)
+		: Symbol(name, SymbolType::ARRAY)
+		, begin(begin), end(end)
+		, size(end - begin + 1)
 	{
 		if (begin > end)
 		{
@@ -19,7 +19,7 @@ namespace fl
 
     std::string Array::_debug_string() const
     {
-        return std::format("{}[{}:{}] | size={}, assignments={}", name, begin, end, length, assignment_counter);
+        return std::format("{:20} | size={}, assignments={}", std::format("{}[{}:{}]", name, begin, end), size, assignment_counter);
     }
 
 } // namespace fl

@@ -7,19 +7,26 @@
 
 namespace fl
 {
+	enum class SymbolType
+	{
+		VARIABLE,
+		ARRAY
+	};
 	
 	class Symbol
 	{
-	protected:
+	public:
 
-		std::string name;
+		const std::string name;
+		const SymbolType type;
+		
+	protected:
 		
 		uint64_t assignment_counter {0};
-		uint64_t length {1};
 	
 	public:
 	
-		Symbol(const std::string_view name, const uint64_t length);
+		Symbol(const std::string_view name, const SymbolType type);
 		virtual ~Symbol() = default;
 		
 		virtual std::string _debug_string() const = 0;
