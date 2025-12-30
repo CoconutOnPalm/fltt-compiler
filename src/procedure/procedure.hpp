@@ -6,7 +6,6 @@
 
 
 #include "../symbol/symbol_table.hpp"
-#include "../tac/tac_table.hpp"
 
 
 namespace fl
@@ -18,7 +17,6 @@ namespace fl
 
 		const std::string name;
 		const SymbolTable symbol_table;
-		TACTable tac_table;
 
 	private:
 
@@ -26,7 +24,7 @@ namespace fl
 
 	public:
 
-		Procedure(const std::string_view name, SymbolTable&& symb_table, TACTable&& _tac_table);
+		Procedure(const std::string_view name, SymbolTable&& symb_table);
 		Procedure(Procedure&& procedure) = default;
 		~Procedure() = default;
 

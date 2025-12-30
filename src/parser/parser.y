@@ -5,17 +5,18 @@
 
 %code provides {
     extern fl::Compiler compiler;
+    extern std::unique_ptr<fl::Block> block_buffer;
 }
 
 %code {
     fl::Compiler compiler;
+    std::unique_ptr<fl::Block> block_buffer;
 }
 
 %{
     #include <print>
     #include <string_view>
     #include <variant>
-    #include "../tac/triple.hpp"
     
     extern int yylineno;
 
@@ -28,20 +29,25 @@
 %union {
     uint64_t num;
     char* id;
-    struct {
-        size_t tac_index;
-        uint64_t num;
-        char* id;
-        int type;
-    } val_t;
+    // struct {
+    //     size_t tac_index;
+    //     uint64_t num;
+    //     char* id;
+    //     int type;
+    // } val_t;
+    fl::ASTNode* ast;
+    fl::Block* block;
 }
 
 
 
 %token <num>        num
 %token <id>         pidentifier
-%type  <val_t>      identifier
-%type  <val_t>      expression
+
+%type  <block>      block
+%type  <ast>        identifier
+%type  <ast>        expression
+%type  <ast>        condition
 
 
 /* KEYWORDS */
@@ -102,7 +108,7 @@
 %type procedure_head
 %type procedure_call
 %type declarations
-%type statements
+%type block
 %type statement
 %type args_decl
 %type args */
@@ -118,51 +124,76 @@ program_all
 ;
 
 procedures 
-    : procedures PROCEDURE procedure_head IS declarations IN statements END
+    : procedures PROCEDURE procedure_head IS declarations IN block END
     {
         compiler.pushProcedure($<id>3);
+        block_buffer->generateTAC();
     }
-    | procedures PROCEDURE procedure_head IS IN statements END
+    | procedures PROCEDURE procedure_head IS IN block END
     {
         compiler.pushProcedure($<id>3);
+        block_buffer->generateTAC();
     }
     | %empty
 ;
 
 main 
-    : PROGRAM IS declarations IN statements END
+    : PROGRAM IS declarations IN block END
     {
         compiler.pushProcedure("__PROG_START");
+        block_buffer->generateTAC();
     }
-    | PROGRAM IS IN statements END
+    | PROGRAM IS IN block END
     {
         compiler.pushProcedure("__PROG_START");
+        block_buffer->generateTAC();
     }
 ;
 
-statements 
-    : statements statement
+block 
+    : block statement
+    {
+        fl::ASTNode* statement = $<ast>2;
+        block_buffer->addStatement(statement);
+    }
     | statement
+    {
+        block_buffer = std::make_unique<fl::Block>();
+
+        fl::ASTNode* statement = $<ast>1;
+        block_buffer->addStatement(statement);
+    }
 ;
 
 statement 
     : identifier ASSIGN expression ';'
     {
-        auto lvalue = $<val_t>1;
-        auto rvalue = $<val_t>3;
+        fl::ASTNode* lvalue = $<ast>1;
+        fl::ASTNode* rvalue = $<ast>3;
+        $<ast>$ = new fl::Expression(fl::Operator::ASSIGN, lvalue, rvalue);
 
-        fl::tacval_t left, right;
-        fl::parser::assignValueVariant(left, lvalue);
-        fl::parser::assignValueVariant(right, rvalue);
+        // auto lvalue = $<val_t>1;
+        // auto rvalue = $<val_t>3;
 
-        size_t tac_index = compiler.pushExpression(fl::Operator::ASSIGN, left, right).index;
+        // fl::tacval_t left, right;
+        // fl::parser::assignValueVariant(left, lvalue);
+        // fl::parser::assignValueVariant(right, rvalue);
+
+        // // size_t tac_index = compiler.pushExpression(fl::Operator::ASSIGN, left, right);
+        // size_t tac_index = compiler.pushStatement<fl::Expression>(fl::Operator::ASSIGN, left, right);
     }
-    | IF condition THEN statements ELSE statements ENDIF
-    | IF condition THEN statements ENDIF
-    | WHILE condition DO statements ENDWHILE
-    | REPEAT statements UNTIL condition ';'
-    | FOR pidentifier FROM value TO value DO statements ENDFOR
-    | FOR pidentifier FROM value DOWNTO value DO statements ENDFOR
+    | IF condition THEN block ELSE block ENDIF
+    {
+
+    }
+    | IF condition THEN block ENDIF
+    {
+
+    }
+    | WHILE condition DO block ENDWHILE
+    | REPEAT block UNTIL condition ';'
+    | FOR pidentifier FROM value TO value DO block ENDFOR
+    | FOR pidentifier FROM value DOWNTO value DO block ENDFOR
     | procedure_call ';'
     | READ identifier ';'
     | WRITE value ';'
@@ -222,37 +253,41 @@ args
 expression 
     : value
     {
-        $<val_t>$ = $<val_t>1;
+        $<ast>$ = $<ast>1;
     }
     | value[L] ADD value[R]
     {
-        auto left_val = $<val_t>L;
-        auto right_val = $<val_t>R;
+        fl::ASTNode* left = $<ast>L;
+        fl::ASTNode* right = $<ast>R;
+        $<ast>$ = new fl::Expression(fl::Operator::ADD, left, right);
+        // auto left_val = $<val_t>L;
+        // auto right_val = $<val_t>R;
 
-        fl::tacval_t left, right;
-        fl::parser::assignValueVariant(left, left_val);
-        fl::parser::assignValueVariant(right, right_val);
+        // fl::tacval_t left, right;
+        // fl::parser::assignValueVariant(left, left_val);
+        // fl::parser::assignValueVariant(right, right_val);
 
-        size_t tac_index = compiler.pushExpression(fl::Operator::ADD, left, right).index;
+        // // size_t tac_index = compiler.pushExpression(fl::Operator::ADD, left, right);
+        // size_t tac_index = compiler.pushStatement<fl::Expression>(fl::Operator::ADD, left, right);
 
-        $<val_t>$.type = fl::parser::TACNodeType::TAC_INDEX;
-        $<val_t>$.tac_index = tac_index;
+        // $<val_t>$.type = fl::parser::TACNodeType::TAC_INDEX;
+        // $<val_t>$.tac_index = tac_index;
     }
     | value[L] SUB value[R]
     {
-
+        $<ast>$ = new fl::Expression(fl::Operator::SUB, $<ast>L, $<ast>R);
     }
     | value[L] MULT value[R]
     {
-        
+        $<ast>$ = new fl::Expression(fl::Operator::MULT, $<ast>L, $<ast>R);
     }
     | value[L] DIV value[R]
     {
-        
+        $<ast>$ = new fl::Expression(fl::Operator::DIV, $<ast>L, $<ast>R);
     }
     | value[L] MOD value[R]
     {
-        
+        $<ast>$ = new fl::Expression(fl::Operator::MOD, $<ast>L, $<ast>R);
     }
 ;
 
@@ -260,6 +295,19 @@ condition
     : value[L] EQ  value[R]
     | value[L] NEQ value[R]
     | value[L] GT  value[R]
+    {
+        // auto left_val = $<val_t>L;
+        // auto right_val = $<val_t>R;
+
+        // fl::tacval_t left, right;
+        // fl::parser::assignValueVariant(left, left_val);
+        // fl::parser::assignValueVariant(right, right_val);
+
+        // size_t tac_index = compiler.pushStatement<fl::Condition>(fl::CondOp::GT, left, right);
+
+        // $<val_t>$.type = fl::parser::TACNodeType::TAC_INDEX;
+        // $<val_t>$.tac_index = tac_index;
+    }
     | value[L] LT  value[R]
     | value[L] GEQ value[R]
     | value[L] LEQ value[R]
@@ -268,39 +316,62 @@ condition
 value 
     : num
     {
-        $<val_t>$.type = fl::parser::TACNodeType::NUM;
-        $<val_t>$.num = $<num>1;
+        $<ast>$ = new fl::Number($<num>1);
+        // $<val_t>$.type = fl::parser::TACNodeType::NUM;
+        // $<val_t>$.num = $<num>1;
     }
     | identifier
     {
-        $<val_t>$ = $<val_t>1;
+        $<ast>$ = $<ast>1;
+        // $<val_t>$ = $<val_t>1;
     }
 ;
 
 identifier 
     : pidentifier
     {
-        $<val_t>$.type = fl::parser::TACNodeType::IDENTIFIER;
-        $<val_t>$.id = $<id>1;
+        $<ast>$ = new fl::Identifier($<id>1);
+        free($<id>1);
+        // $<val_t>$.type = fl::parser::TACNodeType::IDENTIFIER;
+        // $<val_t>$.id = $<id>1;
     }
     | pidentifier '[' pidentifier ']'
     {
-        fl::tacval_t arr; arr.emplace<0>(std::string_view{$<id>1});
-        fl::tacval_t ind; ind.emplace<0>(std::string_view{$<id>3});
-        size_t tac_index = compiler.pushExpression(fl::Operator::INDEX, arr, ind).index;
-        $<val_t>$.type = fl::parser::TACNodeType::TAC_INDEX;
-        $<val_t>$.tac_index = tac_index;
+        fl::ASTNode* arr = new fl::Identifier($<id>1);
+        fl::ASTNode* ind = new fl::Identifier($<id>3);
+        fl::ASTNode* node = new fl::Expression(fl::Operator::INDEX, arr, ind);
+
+        $<ast>$ = node;
+
         free($<id>1);
         free($<id>3);
+        
+        // fl::tacval_t arr; arr.emplace<0>(std::string_view{$<id>1});
+        // fl::tacval_t ind; ind.emplace<0>(std::string_view{$<id>3});
+        // // size_t tac_index = compiler.pushExpression(fl::Operator::INDEX, arr, ind);
+        // size_t tac_index = compiler.pushStatement<fl::Expression>(fl::Operator::INDEX, arr, ind);
+        // $<val_t>$.type = fl::parser::TACNodeType::TAC_INDEX;
+        // $<val_t>$.tac_index = tac_index;
+        // free($<id>1);
+        // free($<id>3);
     }
     | pidentifier '[' num ']'
     {
-        fl::tacval_t arr; arr.emplace<0>(std::string_view{$<id>1});
-        fl::tacval_t ind; ind.emplace<1>($<num>3);
-        size_t tac_index = compiler.pushExpression(fl::Operator::INDEX, arr, ind).index;
-        $<val_t>$.type = fl::parser::TACNodeType::TAC_INDEX;
-        $<val_t>$.tac_index = tac_index;
+        fl::ASTNode* arr = new fl::Identifier($<id>1);
+        fl::ASTNode* ind = new fl::Number($<num>3);
+        fl::ASTNode* node = new fl::Expression(fl::Operator::INDEX, arr, ind);
+
+        $<ast>$ = node;
+
         free($<id>1);
+        
+        // fl::tacval_t arr; arr.emplace<0>(std::string_view{$<id>1});
+        // fl::tacval_t ind; ind.emplace<1>($<num>3);
+        // // size_t tac_index = compiler.pushExpression(fl::Operator::INDEX, arr, ind);
+        // size_t tac_index = compiler.pushStatement<fl::Expression>(fl::Operator::INDEX, arr, ind);
+        // $<val_t>$.type = fl::parser::TACNodeType::TAC_INDEX;
+        // $<val_t>$.tac_index = tac_index;
+        // free($<id>1);
     }
 ;
 

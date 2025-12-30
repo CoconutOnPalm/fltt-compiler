@@ -5,7 +5,6 @@
 
 #include "symbol/symbol_table.hpp"
 #include "procedure/procedure.hpp"
-#include "tac/tac_table.hpp"
 
 
 namespace fl
@@ -15,7 +14,6 @@ namespace fl
 	{
 	private:
 
-		TACTable m_tac_table_buffer;
 		SymbolTable m_symbol_table_buffer;
 		std::map<std::string, Procedure> m_procedure_map;
 
@@ -29,7 +27,12 @@ namespace fl
 		
 
 		void pushProcedure(const std::string_view procedure_name);
-		TACTableRef pushExpression(const Operator op, const tacval_t left, const tacval_t right);
+
+		template <typename Stmt_T, typename... Args>
+		inline size_t pushStatement(Args&&... args)
+		{
+			return 0;
+		}
 
 		template <class SymT, typename... Args>
 		inline void addSymbol(const std::string& name, Args&&... args)
