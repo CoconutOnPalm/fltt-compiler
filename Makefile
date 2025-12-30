@@ -13,6 +13,7 @@ CXX_SRC = \
 	$(SRC_PATH)/input/*.cpp \
 	$(SRC_PATH)/procedure/*.cpp \
 	$(SRC_PATH)/symbol/*.cpp \
+	$(SRC_PATH)/tac/*.cpp \
 	$(LEXER_PATH)/*.cpp \
 	$(PARSER_PATH)/*.cpp \
 
@@ -22,6 +23,7 @@ CXX_HEAD = \
 	$(SRC_PATH)/input/*.hpp \
 	$(SRC_PATH)/procedure/*.hpp \
  	$(SRC_PATH)/symbol/*.hpp \
+ 	$(SRC_PATH)/tac/*.hpp \
  	$(PARSER_PATH)/*.hpp \
 
 
@@ -29,7 +31,7 @@ EXE_NAME = kompilator
 
 all: $(EXE_NAME) vm
 
-$(EXE_NAME): $(CXX_SRC) $(CXX_HEAD)
+$(EXE_NAME): $(CXX_SRC) $(CXX_HEAD) $(LEXER_PATH)/lexer.lex $(PARSER_PATH)/parser.y
 	$(CXX) $(FLAGS) -I $(INCLUDE) $(CXX_SRC) -o $@ $(LINKED_LIBS)
 
 # $(CXX_OBJ): $(CXX_SRC)

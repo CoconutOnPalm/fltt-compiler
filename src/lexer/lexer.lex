@@ -70,9 +70,9 @@ T               { return T; }
 I               { return I; }
 O               { return O; }
 
-{identifier}    { yylval.identifier = strdup(yytext); return pidentifier; }
+{identifier}    { yylval.id = strdup(yytext); return pidentifier; }
 
-{number}        { yylval.val = std::stoull(yytext); return num; }
+{number}        { yylval.num = std::stoull(yytext); return num; }
 
 "+"              { return ADD;  }
 "-"              { return SUB;  }

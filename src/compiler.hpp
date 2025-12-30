@@ -1,8 +1,11 @@
 #pragma once
 
+#include <map>
+#include <variant>
+
 #include "symbol/symbol_table.hpp"
 #include "procedure/procedure.hpp"
-#include <map>
+#include "tac/tac_table.hpp"
 
 
 namespace fl
@@ -12,6 +15,7 @@ namespace fl
 	{
 	private:
 
+		TACTable m_tac_table_buffer;
 		SymbolTable m_symbol_table_buffer;
 		std::map<std::string, Procedure> m_procedure_map;
 
@@ -25,6 +29,7 @@ namespace fl
 		
 
 		void pushProcedure(const std::string_view procedure_name);
+		TACTableRef pushExpression(const Operator op, const tacval_t left, const tacval_t right);
 
 		template <class SymT, typename... Args>
 		inline void addSymbol(const std::string& name, Args&&... args)
@@ -38,7 +43,7 @@ namespace fl
 
 	private:
 
-		void flushSymbolTable();
+		void flushBuffers();
 
 	};
 

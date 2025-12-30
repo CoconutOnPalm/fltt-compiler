@@ -1,5 +1,6 @@
 %code requires {
     #include "../compiler.hpp"
+    #include "parser_utils.hpp"
 }
 
 %code provides {
@@ -13,6 +14,8 @@
 %{
     #include <print>
     #include <string_view>
+    #include <variant>
+    #include "../tac/triple.hpp"
     
     extern int yylineno;
 
@@ -23,13 +26,23 @@
 
 
 %union {
-    int val;
-    char* identifier;
+    uint64_t num;
+    char* id;
+    struct {
+        size_t tac_index;
+        uint64_t num;
+        char* id;
+        int type;
+    } val_t;
 }
 
 
-%token <val>            num
-%token <identifier>     pidentifier
+
+%token <num>        num
+%token <id>         pidentifier
+%type  <val_t>      identifier
+%type  <val_t>      expression
+
 
 /* KEYWORDS */
 %token ENDIF
@@ -107,11 +120,11 @@ program_all
 procedures 
     : procedures PROCEDURE procedure_head IS declarations IN statements END
     {
-        compiler.pushProcedure($<identifier>3);
+        compiler.pushProcedure($<id>3);
     }
     | procedures PROCEDURE procedure_head IS IN statements END
     {
-        compiler.pushProcedure($<identifier>3);
+        compiler.pushProcedure($<id>3);
     }
     | %empty
 ;
@@ -119,11 +132,11 @@ procedures
 main 
     : PROGRAM IS declarations IN statements END
     {
-        compiler.pushProcedure("__prog_start");
+        compiler.pushProcedure("__PROG_START");
     }
     | PROGRAM IS IN statements END
     {
-        compiler.pushProcedure("__prog_start");
+        compiler.pushProcedure("__PROG_START");
     }
 ;
 
@@ -134,6 +147,16 @@ statements
 
 statement 
     : identifier ASSIGN expression ';'
+    {
+        auto lvalue = $<val_t>1;
+        auto rvalue = $<val_t>3;
+
+        fl::tacval_t left, right;
+        fl::parser::assignValueVariant(left, lvalue);
+        fl::parser::assignValueVariant(right, rvalue);
+
+        size_t tac_index = compiler.pushExpression(fl::Operator::ASSIGN, left, right).index;
+    }
     | IF condition THEN statements ELSE statements ENDIF
     | IF condition THEN statements ENDIF
     | WHILE condition DO statements ENDWHILE
@@ -148,7 +171,7 @@ statement
 procedure_head 
     : pidentifier '(' args_decl ')'
     {
-        $<identifier>$ = $<identifier>1;
+        $<id>$ = $<id>1;
     }
 ;
 
@@ -159,23 +182,23 @@ procedure_call
 declarations 
     : declarations ',' pidentifier
     {
-        compiler.addSymbol<fl::Variable>($<identifier>3);
-        free($<identifier>3);
+        compiler.addSymbol<fl::Variable>($<id>3);
+        free($<id>3);
     }
     | declarations ',' pidentifier '[' num ':' num ']'
     {
-        compiler.addSymbol<fl::Array>($<identifier>3, $<val>5, $<val>7);
-        free($<identifier>3);
+        compiler.addSymbol<fl::Array>($<id>3, $<num>5, $<num>7);
+        free($<id>3);
     }
     | pidentifier
     {
-        compiler.addSymbol<fl::Variable>($<identifier>1);
-        free($<identifier>1);
+        compiler.addSymbol<fl::Variable>($<id>1);
+        free($<id>1);
     }
     | pidentifier '[' num ':' num ']'
     {
-        compiler.addSymbol<fl::Array>($<identifier>1, $<val>3, $<val>5);
-        free($<identifier>1);
+        compiler.addSymbol<fl::Array>($<id>1, $<num>3, $<num>5);
+        free($<id>1);
     }
 ;
 
@@ -198,11 +221,39 @@ args
 
 expression 
     : value
-    | value[L] ADD  value[R]
-    | value[L] SUB  value[R]
+    {
+        $<val_t>$ = $<val_t>1;
+    }
+    | value[L] ADD value[R]
+    {
+        auto left_val = $<val_t>L;
+        auto right_val = $<val_t>R;
+
+        fl::tacval_t left, right;
+        fl::parser::assignValueVariant(left, left_val);
+        fl::parser::assignValueVariant(right, right_val);
+
+        size_t tac_index = compiler.pushExpression(fl::Operator::ADD, left, right).index;
+
+        $<val_t>$.type = fl::parser::TACNodeType::TAC_INDEX;
+        $<val_t>$.tac_index = tac_index;
+    }
+    | value[L] SUB value[R]
+    {
+
+    }
     | value[L] MULT value[R]
-    | value[L] DIV  value[R]
-    | value[L] MOD  value[R]
+    {
+        
+    }
+    | value[L] DIV value[R]
+    {
+        
+    }
+    | value[L] MOD value[R]
+    {
+        
+    }
 ;
 
 condition 
@@ -216,13 +267,41 @@ condition
 
 value 
     : num
+    {
+        $<val_t>$.type = fl::parser::TACNodeType::NUM;
+        $<val_t>$.num = $<num>1;
+    }
     | identifier
+    {
+        $<val_t>$ = $<val_t>1;
+    }
 ;
 
 identifier 
     : pidentifier
+    {
+        $<val_t>$.type = fl::parser::TACNodeType::IDENTIFIER;
+        $<val_t>$.id = $<id>1;
+    }
     | pidentifier '[' pidentifier ']'
+    {
+        fl::tacval_t arr; arr.emplace<0>(std::string_view{$<id>1});
+        fl::tacval_t ind; ind.emplace<0>(std::string_view{$<id>3});
+        size_t tac_index = compiler.pushExpression(fl::Operator::INDEX, arr, ind).index;
+        $<val_t>$.type = fl::parser::TACNodeType::TAC_INDEX;
+        $<val_t>$.tac_index = tac_index;
+        free($<id>1);
+        free($<id>3);
+    }
     | pidentifier '[' num ']'
+    {
+        fl::tacval_t arr; arr.emplace<0>(std::string_view{$<id>1});
+        fl::tacval_t ind; ind.emplace<1>($<num>3);
+        size_t tac_index = compiler.pushExpression(fl::Operator::INDEX, arr, ind).index;
+        $<val_t>$.type = fl::parser::TACNodeType::TAC_INDEX;
+        $<val_t>$.tac_index = tac_index;
+        free($<id>1);
+    }
 ;
 
 %%
