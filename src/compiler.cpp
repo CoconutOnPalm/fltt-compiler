@@ -37,7 +37,7 @@ namespace fl
 			std::println("  declared:");
 			for (const std::string& symbol : declared_variables)
 			{
-				std::println("    {}", procedure.symbol_table[symbol]._debug_string());
+				std::println("    {}", procedure.symbol_table[symbol].__debug_string());
 				
 			}
 		}

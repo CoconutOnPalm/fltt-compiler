@@ -15,7 +15,7 @@ namespace fl
 		Variable(const std::string_view name);
 		~Variable() = default;
 
-		std::string _debug_string() const;
+		std::string __debug_string() const;
 	};
 
 } // namespace fl
@@ -26,6 +26,6 @@ struct std::formatter<fl::Variable, char_T> : std::formatter<std::string>
 {
 	auto format(const fl::Variable& symbol, std::format_context& ctx) const
 	{
-		return std::formatter<std::string>::format(std::format("{}", symbol._debug_string()), ctx);
+		return std::formatter<std::string>::format(std::format("{}", symbol.__debug_string()), ctx);
 	}
 };

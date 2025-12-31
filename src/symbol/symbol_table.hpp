@@ -61,11 +61,11 @@ namespace fl
 			symbol_table.clear();
 		}
 		
-		void _debug_print() const
+		void __debug_print() const
 		{
 			for (const auto& [name, symbol] : symbol_table)
 			{
-				std::println("[{:20}]: {}", name, symbol->_debug_string());
+				std::println("[{:20}]: {}", name, symbol->__debug_string());
 			}
 		}
 	};

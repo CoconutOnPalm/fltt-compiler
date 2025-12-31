@@ -3,14 +3,19 @@
 #include <string>
 #include <cstdint>
 #include <format>
+#include <bitset>
 
 
 namespace fl
 {
-	enum class SymbolType
+	enum class SymbolType : uint8_t
 	{
-		VARIABLE,
-		ARRAY
+		NONE		= (0),
+		VARIABLE 	= (1u << 0),
+		ARGUMENT	= (1u << 1),
+		ARRAY		= (1u << 2),
+		IN			= (1u << 3),
+		OUT			= (1u << 4),
 	};
 	
 	class Symbol
@@ -18,18 +23,23 @@ namespace fl
 	public:
 
 		const std::string name;
-		const SymbolType type;
+		const std::bitset<5> type_flags;
 		
 	protected:
 		
 		uint64_t assignment_counter {0};
+		size_t memsize {0};
 	
 	public:
 	
-		Symbol(const std::string_view name, const SymbolType type);
+		Symbol(const std::string_view name, const size_t size, const uint8_t type);
 		virtual ~Symbol() = default;
 		
-		virtual std::string _debug_string() const = 0;
+		virtual std::string __debug_string() const = 0;
+
+	protected:
+
+		std::string __flags_to_string() const;
 	};
 
 } // namespace fl

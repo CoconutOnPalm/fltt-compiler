@@ -37,6 +37,8 @@
     // } val_t;
     fl::ASTNode* ast;
     fl::Block* block;
+    fl::Condition* cond;
+    fl::SymbolTable* st;
 }
 
 
@@ -44,10 +46,11 @@
 %token <num>        num
 %token <id>         pidentifier
 
-%type  <block>      block
-%type  <ast>        identifier
-%type  <ast>        expression
-%type  <ast>        condition
+%type <block> block
+%type <ast>   identifier
+%type <ast>   expression
+%type <cond>  condition
+%type <st>    declarations
 
 
 /* KEYWORDS */
@@ -126,13 +129,18 @@ program_all
 procedures 
     : procedures PROCEDURE procedure_head IS declarations IN block END
     {
+        fl::SymbolTable* symbol_table = $<st>5;
+        symbol_table->__debug_print();
+
+        fl::Block* block = $<block>7;
+        block->generateTAC();
         compiler.pushProcedure($<id>3);
-        block_buffer->generateTAC();
     }
     | procedures PROCEDURE procedure_head IS IN block END
     {
         compiler.pushProcedure($<id>3);
-        block_buffer->generateTAC();
+        fl::Block* block = $<block>6;
+        block->generateTAC();
     }
     | %empty
 ;
@@ -140,28 +148,41 @@ procedures
 main 
     : PROGRAM IS declarations IN block END
     {
-        compiler.pushProcedure("__PROG_START");
-        block_buffer->generateTAC();
+        // compiler.pushProcedure("__PROG_START");
+
+        fl::SymbolTable* symbol_table = $<st>3;
+        symbol_table->__debug_print();
+        
+        fl::Block* block = $<block>5;
+        block->generateTAC();
     }
     | PROGRAM IS IN block END
     {
-        compiler.pushProcedure("__PROG_START");
-        block_buffer->generateTAC();
+        // compiler.pushProcedure("__PROG_START");
+        fl::Block* block = $<block>4;
+        block->generateTAC();
     }
 ;
 
 block 
     : block statement
     {
+        fl::Block* this_block = $<block>1;
         fl::ASTNode* statement = $<ast>2;
-        block_buffer->addStatement(statement);
+        this_block->addStatement(statement);
+        $$ = this_block;
+        // block_buffer->addStatement(statement);
+
     }
     | statement
     {
-        block_buffer = std::make_unique<fl::Block>();
-
+        // block_buffer = std::make_unique<fl::Block>();
+        fl::Block* new_block = new fl::Block;
         fl::ASTNode* statement = $<ast>1;
-        block_buffer->addStatement(statement);
+        new_block->addStatement(statement);
+        $$ = new_block;
+        // block_buffer->addStatement(statement);
+        
     }
 ;
 
@@ -182,16 +203,22 @@ statement
         // // size_t tac_index = compiler.pushExpression(fl::Operator::ASSIGN, left, right);
         // size_t tac_index = compiler.pushStatement<fl::Expression>(fl::Operator::ASSIGN, left, right);
     }
-    | IF condition THEN block ELSE block ENDIF
+    | IF condition THEN block[I] ELSE block[E] ENDIF
     {
-
+        $<ast>$ = new fl::IfElse($<cond>2, $<block>I, $<block>E);
     }
     | IF condition THEN block ENDIF
     {
-
+        $<ast>$ = new fl::If($<cond>2, $<block>4);
     }
     | WHILE condition DO block ENDWHILE
+    {
+        $<ast>$ = new fl::While($<cond>2, $<block>4);
+    }
     | REPEAT block UNTIL condition ';'
+    {
+        $<ast>$ = new fl::DoWhile($<cond>2, $<block>4);
+    }
     | FOR pidentifier FROM value TO value DO block ENDFOR
     | FOR pidentifier FROM value DOWNTO value DO block ENDFOR
     | procedure_call ';'
@@ -213,22 +240,33 @@ procedure_call
 declarations 
     : declarations ',' pidentifier
     {
-        compiler.addSymbol<fl::Variable>($<id>3);
+        fl::SymbolTable* symbol_table = $<st>1;
+        symbol_table->add<fl::Variable>($<id>3);
+        $<st>$ = symbol_table;
         free($<id>3);
     }
     | declarations ',' pidentifier '[' num ':' num ']'
     {
-        compiler.addSymbol<fl::Array>($<id>3, $<num>5, $<num>7);
+        fl::SymbolTable* symbol_table = $<st>1;
+        symbol_table->add<fl::Array>($<id>3, $<num>5, $<num>7);
+        $<st>$ = symbol_table;
+        // compiler.addSymbol<fl::Array>($<id>3, $<num>5, $<num>7);
         free($<id>3);
     }
     | pidentifier
     {
-        compiler.addSymbol<fl::Variable>($<id>1);
+        fl::SymbolTable* symbol_table = new fl::SymbolTable;
+        symbol_table->add<fl::Variable>($<id>1);
+        $<st>$ = symbol_table;
+        // compiler.addSymbol<fl::Variable>($<id>1);
         free($<id>1);
     }
     | pidentifier '[' num ':' num ']'
     {
-        compiler.addSymbol<fl::Array>($<id>1, $<num>3, $<num>5);
+        fl::SymbolTable* symbol_table = new fl::SymbolTable;
+        symbol_table->add<fl::Array>($<id>1, $<num>3, $<num>5);
+        $<st>$ = symbol_table;
+        // compiler.addSymbol<fl::Array>($<id>1, $<num>3, $<num>5);
         free($<id>1);
     }
 ;
@@ -293,9 +331,17 @@ expression
 
 condition 
     : value[L] EQ  value[R]
+    {
+        $<cond>$ = new fl::Condition(fl::CondOp::EQ, $<ast>L, $<ast>R);
+    }
     | value[L] NEQ value[R]
+    {
+        $<cond>$ = new fl::Condition(fl::CondOp::NEQ, $<ast>L, $<ast>R);
+    }
     | value[L] GT  value[R]
     {
+        $<cond>$ = new fl::Condition(fl::CondOp::GT, $<ast>L, $<ast>R);
+
         // auto left_val = $<val_t>L;
         // auto right_val = $<val_t>R;
 
@@ -309,8 +355,17 @@ condition
         // $<val_t>$.tac_index = tac_index;
     }
     | value[L] LT  value[R]
+    {
+        $<cond>$ = new fl::Condition(fl::CondOp::LT, $<ast>L, $<ast>R);
+    }
     | value[L] GEQ value[R]
+    {
+        $<cond>$ = new fl::Condition(fl::CondOp::GEQ, $<ast>L, $<ast>R);
+    }
     | value[L] LEQ value[R]
+    {
+        $<cond>$ = new fl::Condition(fl::CondOp::LEQ, $<ast>L, $<ast>R);
+    }
 ;
 
 value 
