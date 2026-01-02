@@ -2,6 +2,10 @@
 
 #include <variant>
 
+#include "../utils/const.hpp"
+
+#include "../procedure/procedure_tree.hpp"
+
 #include "../AST/syntax_tree.hpp"
 #include "../AST/blocks/block.hpp"
 #include "../AST/blocks/expression.hpp"
@@ -9,6 +13,8 @@
 #include "../AST/blocks/ifelse.hpp"
 #include "../AST/blocks/while.hpp"
 #include "../AST/blocks/dowhile.hpp"
+#include "../AST/blocks/for.hpp"
+#include "../AST/blocks/proc_decl.hpp"
 
 
 namespace fl::parser

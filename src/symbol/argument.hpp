@@ -5,7 +5,7 @@
 
 namespace fl
 {
-	enum class ArgType
+	enum ArgType : int
 	{
 		IN,
 		OUT,
@@ -28,3 +28,5 @@ namespace fl
 	};
 	
 } // namespace fl
+
+

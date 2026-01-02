@@ -4,7 +4,7 @@
 #include <string>
 #include <cstdint>
 
-
+#include "../AST/blocks/block.hpp"
 #include "../symbol/symbol_table.hpp"
 
 
@@ -16,19 +16,22 @@ namespace fl
 	public:
 
 		const std::string name;
-		const SymbolTable symbol_table;
-
+		
 	private:
-
+		
+		const std::shared_ptr<SymbolTable> m_symbol_table;
+		const std::shared_ptr<Block> m_body;
 		uint64_t m_call_count {0};
 
 	public:
 
-		Procedure(const std::string_view name, SymbolTable&& symb_table);
+		Procedure(const std::string_view name, SymbolTable* symbol_table_ptr, Block* body_ptr);
 		Procedure(Procedure&& procedure) = default;
 		~Procedure() = default;
 
 		uint64_t callCount() const;
+
+		void __debug_print() const;
 
 	private:
 	};

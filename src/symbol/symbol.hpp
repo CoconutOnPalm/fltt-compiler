@@ -24,16 +24,21 @@ namespace fl
 
 		const std::string name;
 		const std::bitset<5> type_flags;
+		const size_t memsize;
 		
 	protected:
 		
 		uint64_t assignment_counter {0};
-		size_t memsize {0};
+		uint64_t usage_counter {0};
+
+		size_t mempos {0};
 	
 	public:
 	
 		Symbol(const std::string_view name, const size_t size, const uint8_t type);
 		virtual ~Symbol() = default;
+
+		virtual void setRelativeMemoryPosition(const size_t position);
 		
 		virtual std::string __debug_string() const = 0;
 

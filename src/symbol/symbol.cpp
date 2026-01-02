@@ -7,8 +7,13 @@ namespace fl
 {
 	
 	Symbol::Symbol(const std::string_view name, const size_t size, const uint8_t type)
-		: name(name), type_flags(type), memsize(size)
+		: name(name), memsize(size), type_flags(type)
 	{}
+
+    void Symbol::setRelativeMemoryPosition(const size_t position)
+    {
+		mempos = position;
+    }
 
     std::string Symbol::__flags_to_string() const
     {

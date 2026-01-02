@@ -14,7 +14,6 @@ namespace fl
 	{
 	private:
 
-		SymbolTable m_symbol_table_buffer;
 		std::map<std::string, Procedure> m_procedure_map;
 
 	public:
@@ -25,21 +24,8 @@ namespace fl
 		Compiler(const Compiler& other) = delete;
 		Compiler& operator=(const Compiler& other) = delete;
 		
-
-		void pushProcedure(const std::string_view procedure_name);
-
-		template <typename Stmt_T, typename... Args>
-		inline size_t pushStatement(Args&&... args)
-		{
-			return 0;
-		}
-
-		template <class SymT, typename... Args>
-		inline void addSymbol(const std::string& name, Args&&... args)
-		{
-			m_symbol_table_buffer.add<SymT>(name, std::forward<Args>(args)...);
-		}
-
+		void defineProcedure(const std::string_view procedure_name, SymbolTable* symbol_table, Block* body);
+		void defineMain(SymbolTable* symbol_table, Block* body);
 
 		void __debug_print() const;
 

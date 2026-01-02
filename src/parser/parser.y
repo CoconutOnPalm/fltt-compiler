@@ -5,12 +5,10 @@
 
 %code provides {
     extern fl::Compiler compiler;
-    extern std::unique_ptr<fl::Block> block_buffer;
 }
 
 %code {
     fl::Compiler compiler;
-    std::unique_ptr<fl::Block> block_buffer;
 }
 
 %{
@@ -39,6 +37,9 @@
     fl::Block* block;
     fl::Condition* cond;
     fl::SymbolTable* st;
+    fl::PTNode* pt;
+    fl::ArgsDecl* argdecl;
+    fl::ProcDecl* procdecl;
 }
 
 
@@ -46,11 +47,14 @@
 %token <num>        num
 %token <id>         pidentifier
 
-%type <block> block
-%type <ast>   identifier
-%type <ast>   expression
-%type <cond>  condition
-%type <st>    declarations
+%type <block>       block
+%type <ast>         identifier
+%type <ast>         expression
+%type <cond>        condition
+%type <st>          declarations
+%type <pt>          procedure_call
+%type <argdecl>     args_decl
+%type <procdecl>    procedure_head
 
 
 /* KEYWORDS */
@@ -129,16 +133,17 @@ program_all
 procedures 
     : procedures PROCEDURE procedure_head IS declarations IN block END
     {
+        fl::ProcDecl* head = $<procdecl>3;
+        head->generateTAC();
         fl::SymbolTable* symbol_table = $<st>5;
         symbol_table->__debug_print();
-
         fl::Block* block = $<block>7;
         block->generateTAC();
-        compiler.pushProcedure($<id>3);
     }
     | procedures PROCEDURE procedure_head IS IN block END
     {
-        compiler.pushProcedure($<id>3);
+        fl::ProcDecl* head = $<procdecl>3;
+        head->generateTAC();
         fl::Block* block = $<block>6;
         block->generateTAC();
     }
@@ -148,17 +153,11 @@ procedures
 main 
     : PROGRAM IS declarations IN block END
     {
-        // compiler.pushProcedure("__PROG_START");
-
-        fl::SymbolTable* symbol_table = $<st>3;
-        symbol_table->__debug_print();
-        
+        fl::SymbolTable* symbol_table = $<st>3;   
         fl::Block* block = $<block>5;
-        block->generateTAC();
     }
     | PROGRAM IS IN block END
     {
-        // compiler.pushProcedure("__PROG_START");
         fl::Block* block = $<block>4;
         block->generateTAC();
     }
@@ -220,8 +219,17 @@ statement
         $<ast>$ = new fl::DoWhile($<cond>2, $<block>4);
     }
     | FOR pidentifier FROM value TO value DO block ENDFOR
+    {
+        $<ast>$ = new fl::For(new fl::Identifier($<id>2), $<ast>4, $<ast>6, $<block>8, 1);
+    }
     | FOR pidentifier FROM value DOWNTO value DO block ENDFOR
+    {
+        $<ast>$ = new fl::For(new fl::Identifier($<id>2), $<ast>4, $<ast>6, $<block>8, -1);
+    }
     | procedure_call ';'
+    {
+
+    }
     | READ identifier ';'
     | WRITE value ';'
 ;
@@ -229,12 +237,23 @@ statement
 procedure_head 
     : pidentifier '(' args_decl ')'
     {
-        $<id>$ = $<id>1;
+        fl::ArgsDecl* args = $<argdecl>3;
+        fl::ProcDecl* procedure = new fl::ProcDecl($<id>1, std::move(*args));
+
+        $<procdecl>$ = procedure;
+
+        delete args;
+        free($<id>1);
     }
 ;
 
 procedure_call 
     : pidentifier '(' args ')'
+    {
+        fl::PTNode* proc = new fl::PTNode($<id>1);
+        $<pt>$ = proc;
+        free($<id>1);
+    }
 ;
 
 declarations 
@@ -273,19 +292,35 @@ declarations
 
 args_decl 
     : args_decl ',' type pidentifier
+    {
+        fl::ArgsDecl* args = $<argdecl>1;
+        args->add(fl::Argument($<id>4, static_cast<fl::ArgType>($<num>3)));
+        $<argdecl>$ = args;
+    }
     | type pidentifier
+    {
+        fl::ArgsDecl* args = new fl::ArgsDecl;
+        args->add(fl::Argument($<id>2, static_cast<fl::ArgType>($<num>1)));
+        $<argdecl>$ = args;
+    }
 ;
 
 type 
-    : T 
-    | I 
-    | O 
-    | %empty
+    : T         { $<num>$ = static_cast<int>(fl::ArgType::ARRAY); }
+    | I         { $<num>$ = static_cast<int>(fl::ArgType::IN);    }
+    | O         { $<num>$ = static_cast<int>(fl::ArgType::OUT);   }
+    | %empty    { $<num>$ = static_cast<int>(fl::ArgType::NONE);  }
 ;
 
 args 
     : args ',' pidentifier
+    {
+
+    }
     | pidentifier
+    {
+
+    }
 ;
 
 expression 
