@@ -16,9 +16,14 @@ namespace fl
 		}
 	}
 
-    std::string Array::__debug_string() const
+    std::unique_ptr<Symbol> Array::clone() const
     {
-        return std::format("{:10} | size={}, assignments={} | {}", std::format("{}[{}:{}]", name, begin, end), memsize, assignment_counter, __flags_to_string());
+        return std::make_unique<Array>(*this);
+    }
+
+std::string Array::__debug_string() const
+    {
+        return std::format("{} | memsize={}, mempos={} | {}", std::format("{}[{}:{}]", name, begin, end), memsize, m_mempos, __flags_to_string());
     }
 
 } // namespace fl

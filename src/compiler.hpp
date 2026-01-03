@@ -5,6 +5,7 @@
 
 #include "symbol/symbol_table.hpp"
 #include "procedure/procedure.hpp"
+#include "AST/blocks/proc_decl.hpp"
 
 
 namespace fl
@@ -23,8 +24,10 @@ namespace fl
 
 		Compiler(const Compiler& other) = delete;
 		Compiler& operator=(const Compiler& other) = delete;
+
+		void compile();
 		
-		void defineProcedure(const std::string_view procedure_name, SymbolTable* symbol_table, Block* body);
+		void defineProcedure(const std::string_view procedure_name, ProcDecl* head, SymbolTable* symbol_table, Block* body);
 		void defineMain(SymbolTable* symbol_table, Block* body);
 
 		void __debug_print() const;
@@ -32,7 +35,7 @@ namespace fl
 
 	private:
 
-		void flushBuffers();
+		void assignMemory();
 
 	};
 

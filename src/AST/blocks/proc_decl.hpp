@@ -20,7 +20,15 @@ namespace fl
 		~ArgsDecl() = default;
 
 		void add(const Argument& arg) { args.push_back(arg); }
+		const std::vector<Argument>& get() const { return args; }
 
+		std::string __debug_string() const 
+		{
+			std::string out;
+			for (const Argument& arg : args)
+				out += std::format("{}, ", arg.__debug_string());
+			return out;
+		}
 	};
 	
 	class ProcDecl : ASTNode
@@ -37,14 +45,17 @@ namespace fl
 		{}
 		~ProcDecl() = default;
 
+		inline std::string name() const { return procedure_id; }
+		inline const std::vector<Argument>& getArgs() const { return args.get(); }
+
 		void generateTAC() const 
 		{
-			std::println("func {}", procedure_id);
+			std::println("func {}({})", procedure_id, args.__debug_string());
 		}
 
 		std::string __debug_string() const
 		{
-			return std::format("func {}", procedure_id);
+			return std::format("func {}({})", procedure_id, args.__debug_string());
 		}
 
 	};

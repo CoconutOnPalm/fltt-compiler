@@ -17,6 +17,8 @@ namespace fl
 		Array(const std::string_view name, const uint64_t begin, const uint64_t end);
 		~Array() = default;
 
+		std::unique_ptr<Symbol> clone() const override;
+
 		std::string __debug_string() const;
 	};
 

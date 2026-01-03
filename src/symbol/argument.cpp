@@ -11,9 +11,14 @@ namespace fl
 		: Symbol(name, 0, mapArgTypes(arg_type))
 	{}
 
-    std::string Argument::__debug_string() const
+    std::unique_ptr<Symbol> Argument::clone() const
     {
-        return std::format("{:10} \t| size={}, assignments={} | ", name, 1, assignment_counter, __flags_to_string());
+        return std::make_unique<Argument>(*this);
+    }
+
+	std::string Argument::__debug_string() const
+    {
+        return std::format("{} \t| memsize={}, mempos={} | {}", name, memsize, m_mempos, __flags_to_string());
     }
 
     

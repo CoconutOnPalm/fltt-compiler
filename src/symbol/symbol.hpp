@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <format>
 #include <bitset>
+#include <memory>
 
 
 namespace fl
@@ -28,20 +29,23 @@ namespace fl
 		
 	protected:
 		
-		uint64_t assignment_counter {0};
-		uint64_t usage_counter {0};
+		uint64_t m_assignment_counter {0};
+		uint64_t m_usage_counter {0};
 
-		size_t mempos {0};
+		size_t m_mempos {0};
 	
 	public:
 	
 		Symbol(const std::string_view name, const size_t size, const uint8_t type);
 		virtual ~Symbol() = default;
 
-		virtual void setRelativeMemoryPosition(const size_t position);
-		
-		virtual std::string __debug_string() const = 0;
+		virtual std::unique_ptr<Symbol> clone() const = 0;
 
+		virtual void setMemoryPosition(const size_t position);
+		
+		bool testFlag(const SymbolType type) const;
+		virtual std::string __debug_string() const = 0;
+		
 	protected:
 
 		std::string __flags_to_string() const;

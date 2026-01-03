@@ -23,11 +23,16 @@ namespace fl
 		const std::shared_ptr<Block> m_body;
 		uint64_t m_call_count {0};
 
+		size_t m_alloc_size {0};
+
 	public:
 
 		Procedure(const std::string_view name, SymbolTable* symbol_table_ptr, Block* body_ptr);
 		Procedure(Procedure&& procedure) = default;
 		~Procedure() = default;
+
+		size_t assignMemoryBlock(const size_t memshift);
+		inline size_t allocSize() const { return m_alloc_size; }
 
 		uint64_t callCount() const;
 

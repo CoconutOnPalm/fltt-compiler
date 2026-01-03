@@ -4,24 +4,28 @@
 }
 
 %code provides {
-    extern fl::Compiler compiler;
+    // extern fl::Compiler compiler;
 }
 
 %code {
-    fl::Compiler compiler;
+    // fl::Compiler compiler;
 }
 
 %{
     #include <print>
     #include <string_view>
     #include <variant>
+    #include "../compiler.hpp"
     
     extern int yylineno;
 
     int yylex();
-    int yyerror(const char* s);
+    int yyerror(fl::Compiler& compiler, const char* s);
     void yyset_in(FILE* in_str);
 %}
+
+
+%parse-param { fl::Compiler& compiler }
 
 
 %union {
@@ -37,9 +41,10 @@
     fl::Block* block;
     fl::Condition* cond;
     fl::SymbolTable* st;
-    fl::PTNode* pt;
     fl::ArgsDecl* argdecl;
     fl::ProcDecl* procdecl;
+    fl::Params* param;
+    fl::ProcCall* proccall;
 }
 
 
@@ -52,7 +57,8 @@
 %type <ast>         expression
 %type <cond>        condition
 %type <st>          declarations
-%type <pt>          procedure_call
+%type <param>       args
+%type <ast>         procedure_call
 %type <argdecl>     args_decl
 %type <procdecl>    procedure_head
 
@@ -126,7 +132,7 @@
 program_all 
     : procedures main
     {
-        compiler.__debug_print();
+        std::println("parsing complete");
     }
 ;
 
@@ -134,18 +140,26 @@ procedures
     : procedures PROCEDURE procedure_head IS declarations IN block END
     {
         fl::ProcDecl* head = $<procdecl>3;
-        head->generateTAC();
         fl::SymbolTable* symbol_table = $<st>5;
-        symbol_table->__debug_print();
         fl::Block* block = $<block>7;
-        block->generateTAC();
+        
+        compiler.defineProcedure(head->name(), head, symbol_table, block);
+
+        // delete head;
+        // delete symbol_table;
+        // delete block;
     }
     | procedures PROCEDURE procedure_head IS IN block END
     {
         fl::ProcDecl* head = $<procdecl>3;
-        head->generateTAC();
+        fl::SymbolTable* symbol_table = nullptr;
         fl::Block* block = $<block>6;
-        block->generateTAC();
+
+        compiler.defineProcedure(head->name(), head, symbol_table, block);
+
+        // delete head;
+        // // delete symbol_table; <-- nullptr
+        // delete block;
     }
     | %empty
 ;
@@ -155,11 +169,21 @@ main
     {
         fl::SymbolTable* symbol_table = $<st>3;   
         fl::Block* block = $<block>5;
+        
+        compiler.defineMain(symbol_table, block);
+
+        // delete symbol_table;
+        // delete block;
     }
     | PROGRAM IS IN block END
     {
+        fl::SymbolTable* symbol_table = nullptr;   
         fl::Block* block = $<block>4;
-        block->generateTAC();
+
+        compiler.defineMain(symbol_table, block);
+
+        // // delete symbol_table; <-- nullptr
+        // delete block;
     }
 ;
 
@@ -170,18 +194,14 @@ block
         fl::ASTNode* statement = $<ast>2;
         this_block->addStatement(statement);
         $$ = this_block;
-        // block_buffer->addStatement(statement);
 
     }
     | statement
     {
-        // block_buffer = std::make_unique<fl::Block>();
         fl::Block* new_block = new fl::Block;
         fl::ASTNode* statement = $<ast>1;
         new_block->addStatement(statement);
         $$ = new_block;
-        // block_buffer->addStatement(statement);
-        
     }
 ;
 
@@ -191,16 +211,6 @@ statement
         fl::ASTNode* lvalue = $<ast>1;
         fl::ASTNode* rvalue = $<ast>3;
         $<ast>$ = new fl::Expression(fl::Operator::ASSIGN, lvalue, rvalue);
-
-        // auto lvalue = $<val_t>1;
-        // auto rvalue = $<val_t>3;
-
-        // fl::tacval_t left, right;
-        // fl::parser::assignValueVariant(left, lvalue);
-        // fl::parser::assignValueVariant(right, rvalue);
-
-        // // size_t tac_index = compiler.pushExpression(fl::Operator::ASSIGN, left, right);
-        // size_t tac_index = compiler.pushStatement<fl::Expression>(fl::Operator::ASSIGN, left, right);
     }
     | IF condition THEN block[I] ELSE block[E] ENDIF
     {
@@ -228,10 +238,16 @@ statement
     }
     | procedure_call ';'
     {
-
+        $<ast>$ = $<ast>1;
     }
     | READ identifier ';'
+    {
+        $<ast>$ = new fl::Read;
+    }
     | WRITE value ';'
+    {
+        $<ast>$ = new fl::Write;
+    }
 ;
 
 procedure_head 
@@ -250,9 +266,12 @@ procedure_head
 procedure_call 
     : pidentifier '(' args ')'
     {
-        fl::PTNode* proc = new fl::PTNode($<id>1);
-        $<pt>$ = proc;
+        fl::Params* params = $<param>3;
+        fl::ASTNode* proc_call = new fl::ProcCall($<id>1, std::move(*params));
+        free(params);
         free($<id>1);
+
+        $<ast>$ = proc_call;
     }
 ;
 
@@ -315,11 +334,17 @@ type
 args 
     : args ',' pidentifier
     {
-
+        fl::Params* params = $<param>1;
+        params->add($<id>3);
+        free($<id>3);
+        $<param>$ = params;
     }
     | pidentifier
     {
-
+        fl::Params* params = new fl::Params;
+        params->add($<id>1);
+        free($<id>1);
+        $<param>$ = params;
     }
 ;
 
@@ -468,7 +493,7 @@ identifier
 %%
 
 
-int yyerror(const char* s) 
+int yyerror(fl::Compiler& compiler, const char* s) 
 {
     std::string_view msg { s };
     std::println("\033[31m[ERROR]\033[0m: {} at line {}", msg, yylineno);
@@ -476,8 +501,8 @@ int yyerror(const char* s)
 }
 
 
-void run_parser(FILE* in_str)
+void run_parser(fl::Compiler& compiler, FILE* in_str)
 {
     yyset_in(in_str);
-    yyparse();
+    yyparse(compiler);
 }

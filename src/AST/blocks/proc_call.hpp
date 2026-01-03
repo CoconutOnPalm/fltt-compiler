@@ -1,0 +1,65 @@
+#pragma once
+
+#include <vector>
+
+#include "../ASTNode.hpp"
+#include "../../symbol/argument.hpp"
+
+
+namespace fl
+{
+	class Params : public ASTNode
+	{	
+	private:
+
+		std::vector<std::string> param_ids;
+
+	public:
+
+		Params() = default;
+		~Params() = default;
+
+		void add(const std::string& identifier) { param_ids.push_back(identifier); }
+
+		void generateTAC() const 
+		{
+			for (const auto& id : param_ids)
+			{
+				std::println("param {}", id);
+			}
+		}
+
+		std::string __debug_string() const 
+		{
+			return std::format("param count = {}", param_ids.size());
+		}
+	};
+	
+	class ProcCall : public ASTNode
+	{
+	private:
+
+		const std::string procedure_id;
+		const Params args;
+
+	public:
+
+		ProcCall(const std::string_view proc, Params&& args)
+			: procedure_id(proc), args(std::move(args))
+		{}
+		~ProcCall() = default;
+
+		void generateTAC() const 
+		{
+			args.generateTAC();
+			std::println("call {}", procedure_id);
+		}
+
+		std::string __debug_string() const
+		{
+			return std::format("call {}", procedure_id);
+		}
+
+	};
+	
+} // namespace fl

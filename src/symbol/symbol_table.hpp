@@ -17,44 +17,42 @@ namespace fl
 	{
 	private:
 
-		std::map<std::string, std::unique_ptr<Symbol>> symbol_table;
+		std::map<std::string, std::unique_ptr<Symbol>> m_symbol_table;
+		size_t m_size;
 
 	public:
 
 		SymbolTable() = default;
 		~SymbolTable() = default;
 
-		SymbolTable(const SymbolTable& other) = delete;
-		SymbolTable(SymbolTable&& other) : symbol_table(std::move(other.symbol_table)) {}
+		SymbolTable(const SymbolTable& ) = delete;
+		SymbolTable& operator=(const SymbolTable& ) = delete;
+		
+		SymbolTable(SymbolTable&& other) : m_symbol_table(std::move(other.m_symbol_table)) {}
 
 		template <class SymT, typename... Args>
 		inline void add(const std::string& name, Args&&... args)
 		{
-			symbol_table.emplace(name, std::make_unique<SymT>(name, args...));
+			m_symbol_table.emplace(name, std::make_unique<SymT>(name, args...));
+			m_size += m_symbol_table[name]->memsize;
 		}
 
-		inline const Symbol& get(const std::string& name) const
+		template <class SymT>
+		inline void add(const Symbol* symbol)
 		{
-			if (!symbol_table.contains(name))
-			{
-				panic("undefined variable '{}'", name);
-			}
-
-			return *(symbol_table.at(name).get());
+			
+			m_symbol_table.emplace(symbol->name, symbol->clone());
 		}
 
-		inline const Symbol& operator[](const std::string& name) const
-		{
-			return get(name);
-		}
+		const Symbol& get(const std::string& name) const;
+		inline const Symbol& operator[](const std::string& name) const { return get(name); }
+		
+		void assignMemory(const size_t shift);
 
-		void __debug_print() const
-		{
-			for (const auto& [name, symbol] : symbol_table)
-			{
-				std::println("[{:20}]: {}", name, symbol->__debug_string());
-			}
-		}
+		inline size_t size() const { return m_size; }
+
+		
+		void __debug_print() const;
 	};
 
 } // namespace fl

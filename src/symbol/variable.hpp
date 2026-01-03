@@ -15,6 +15,8 @@ namespace fl
 		Variable(const std::string_view name);
 		~Variable() = default;
 
+		std::unique_ptr<Symbol> clone() const override;
+
 		std::string __debug_string() const;
 	};
 

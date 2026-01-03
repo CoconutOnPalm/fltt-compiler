@@ -13,12 +13,15 @@ namespace fl
 		NONE,
 	};
 	
-	class Argument : Symbol
+	class Argument : public Symbol
 	{
 	public:
 
 		Argument(const std::string_view name, const ArgType arg_type);
+		Argument(const Argument& other) = default;
 		virtual ~Argument() = default;
+
+		std::unique_ptr<Symbol> clone() const override;
 
 		std::string __debug_string() const;
 	

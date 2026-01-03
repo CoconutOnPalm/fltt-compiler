@@ -15,6 +15,8 @@
 #include "../AST/blocks/dowhile.hpp"
 #include "../AST/blocks/for.hpp"
 #include "../AST/blocks/proc_decl.hpp"
+#include "../AST/blocks/proc_call.hpp"
+#include "../AST/blocks/io.hpp"
 
 
 namespace fl::parser
