@@ -8,7 +8,7 @@
 #include "value.hpp"
 
 
-namespace fl
+namespace fl::ast
 {
 
 	class Condition : public ASTNode
@@ -27,9 +27,10 @@ namespace fl
 
 		virtual ~Condition() = default;
 
-		void generateTAC() const
+		size_t generateTAC(TACTable& tac_table) const override
 		{
 			std::println("({:2}, {}, {})", op, left->__debug_string(), right->__debug_string());
+			return 0;
 		}
 
 		std::string __debug_string() const override

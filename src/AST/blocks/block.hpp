@@ -6,7 +6,7 @@
 #include "../ASTNode.hpp"
 
 
-namespace fl
+namespace fl::ast
 {
 
 	class Block : public ASTNode
@@ -25,14 +25,16 @@ namespace fl
 			block.emplace_back(std::shared_ptr<ASTNode>(stmt_owning_ptr));
 		}
 
-		void generateTAC() const
+		size_t generateTAC(TACTable& tac_table) const override
 		{ 
+			size_t back = 0;
 			std::println("[block]:");
 			for (const auto& statement : block)
 			{
-				std::print("  ");
-				statement->generateTAC();
+				back = statement->generateTAC(tac_table);
 			}
+
+			return back;
 		}
 	
 		std::string __debug_string() const override 

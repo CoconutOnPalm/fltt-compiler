@@ -2,6 +2,8 @@
 
 #include <print> // propagate include down
 
+#include "../TAC/tac_table.hpp"
+
 namespace fl
 {
 	
@@ -12,7 +14,7 @@ namespace fl
 		ASTNode() = default;
 		virtual ~ASTNode() = default;
 
-		virtual void generateTAC() const = 0;
+		virtual size_t generateTAC(TACTable& tac_table) const = 0;
 
 		virtual std::string __debug_string() const = 0;
 	};

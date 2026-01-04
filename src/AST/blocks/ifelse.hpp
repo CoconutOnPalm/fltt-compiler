@@ -9,7 +9,7 @@
 #include "value.hpp"
 
 
-namespace fl
+namespace fl::ast
 {
 
 	class IfElse : public ASTNode
@@ -28,14 +28,15 @@ namespace fl
 
 		virtual ~IfElse() = default;
 
-		void generateTAC() const
+		size_t generateTAC(TACTable& tac_table) const override
 		{
-			condition->generateTAC();
+			condition->generateTAC(tac_table);
 			std::println("if (not {}) JMP <else>", condition->__debug_string());
-			if_block->generateTAC();
+			if_block->generateTAC(tac_table);
 			std::println("JMP <endif>");
 			std::println("else");
-			else_block->generateTAC();
+			else_block->generateTAC(tac_table);
+			return 0;
 		}
 
 		std::string __debug_string() const override

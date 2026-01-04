@@ -14,10 +14,14 @@ namespace fl
 		}
 
 		assignMemory();
+
+		m_procedure_map.at(config::prog_entry_name).generateTAC(m_tac_table);
+
+		m_tac_table.generateASM();
     }
 
 
-	void Compiler::defineProcedure(const std::string_view procedure_name, ProcDecl* head, SymbolTable* symbol_table, Block* body)
+	void Compiler::defineProcedure(const std::string_view procedure_name, ast::ProcDecl* head, SymbolTable* symbol_table, ast::Block* body)
 	{
 		if (symbol_table == nullptr) panic("internal compiler error: defineProcedure - symbol table is null");
 		if (body == nullptr) panic("internal compiler error: defineProcedure - body is null");
@@ -33,7 +37,7 @@ namespace fl
 		m_procedure_map.emplace(procedure_name, Procedure(procedure_name, symbol_table, body));
 	}
 
-	void Compiler::defineMain(SymbolTable* symbol_table, Block* body)
+	void Compiler::defineMain(SymbolTable* symbol_table, ast::Block* body)
 	{
 		defineProcedure(config::prog_entry_name, nullptr, symbol_table, body);
 	}

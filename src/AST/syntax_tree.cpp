@@ -2,7 +2,7 @@
 
 namespace fl
 {
-    SyntaxTree::SyntaxTree(Block* root)
+    SyntaxTree::SyntaxTree(ast::Block* root)
     {
 		m_root = root;
     }

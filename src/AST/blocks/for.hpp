@@ -8,7 +8,7 @@
 #include "block.hpp"
 
 
-namespace fl
+namespace fl::ast
 {
 
 	class For : public ASTNode
@@ -30,13 +30,14 @@ namespace fl
 
 		virtual ~For() = default;
 
-		void generateTAC() const 
+		size_t generateTAC(TACTable& tac_table) const override
 		{
-			iterator->generateTAC();
+			iterator->generateTAC(tac_table);
 			std::print(" = ");
-			from->generateTAC();
+			from->generateTAC(tac_table);
 			std::println("{}", __debug_string());
-			block->generateTAC();
+			block->generateTAC(tac_table);
+			return 0;
 		}
 
 		std::string __debug_string() const override

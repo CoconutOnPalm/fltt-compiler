@@ -14,6 +14,7 @@ CXX_SRC = \
 	$(SRC_PATH)/procedure/*.cpp \
 	$(SRC_PATH)/symbol/*.cpp \
 	$(SRC_PATH)/AST/*.cpp \
+	$(SRC_PATH)/TAC/*.cpp \
 	$(LEXER_PATH)/*.cpp \
 	$(PARSER_PATH)/*.cpp \
 
@@ -25,6 +26,9 @@ CXX_HEAD = \
  	$(SRC_PATH)/symbol/*.hpp \
  	$(SRC_PATH)/AST/*.hpp \
  	$(SRC_PATH)/AST/blocks/*.hpp \
+ 	$(SRC_PATH)/TAC/*.hpp \
+ 	$(SRC_PATH)/TAC/codes/*.hpp \
+ 	$(SRC_PATH)/TAC/codes/expressions/*.hpp \
  	$(PARSER_PATH)/*.hpp \
 
 

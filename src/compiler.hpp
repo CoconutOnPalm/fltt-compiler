@@ -6,6 +6,7 @@
 #include "symbol/symbol_table.hpp"
 #include "procedure/procedure.hpp"
 #include "AST/blocks/proc_decl.hpp"
+#include "TAC/tac_table.hpp"
 
 
 namespace fl
@@ -16,6 +17,7 @@ namespace fl
 	private:
 
 		std::map<std::string, Procedure> m_procedure_map;
+		TACTable m_tac_table;
 
 	public:
 
@@ -27,8 +29,8 @@ namespace fl
 
 		void compile();
 		
-		void defineProcedure(const std::string_view procedure_name, ProcDecl* head, SymbolTable* symbol_table, Block* body);
-		void defineMain(SymbolTable* symbol_table, Block* body);
+		void defineProcedure(const std::string_view procedure_name, ast::ProcDecl* head, SymbolTable* symbol_table, ast::Block* body);
+		void defineMain(SymbolTable* symbol_table, ast::Block* body);
 
 		void __debug_print() const;
 

@@ -4,8 +4,13 @@
 #include <string>
 #include <format>
 
+#include "../ASTNode.hpp"
 
-namespace fl
+#include "../../TAC/codes/LDI.hpp"
+#include "../../TAC/codes/LD.hpp"
+
+
+namespace fl::ast
 {
 
 	class Number : public ASTNode
@@ -18,7 +23,10 @@ namespace fl
 
 		Number(const uint64_t val) : val(val) {}
 
-		void generateTAC() const { std::println("({})", val); }
+		size_t generateTAC(TACTable& tac_table) const 
+		{ 
+			return tac_table.add<tac::LDI>(val);
+		}
 
 		std::string __debug_string() const override
 		{
@@ -36,7 +44,10 @@ namespace fl
 
 		Identifier(const std::string& id) : identifier(id) {}
 
-		void generateTAC() const { std::println("{}", identifier); }
+		size_t generateTAC(TACTable& tac_table) const override
+		{ 
+			return tac_table.add<tac::LD>(identifier);
+		}
 
 		std::string __debug_string() const override
 		{

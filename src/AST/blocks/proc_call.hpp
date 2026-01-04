@@ -6,7 +6,7 @@
 #include "../../symbol/argument.hpp"
 
 
-namespace fl
+namespace fl::ast
 {
 	class Params : public ASTNode
 	{	
@@ -21,12 +21,13 @@ namespace fl
 
 		void add(const std::string& identifier) { param_ids.push_back(identifier); }
 
-		void generateTAC() const 
+		size_t generateTAC(TACTable& tac_table) const override
 		{
 			for (const auto& id : param_ids)
 			{
 				std::println("param {}", id);
 			}
+			return 0;
 		}
 
 		std::string __debug_string() const 
@@ -49,10 +50,11 @@ namespace fl
 		{}
 		~ProcCall() = default;
 
-		void generateTAC() const 
+		size_t generateTAC(TACTable& tac_table) const override
 		{
-			args.generateTAC();
+			args.generateTAC(tac_table);
 			std::println("call {}", procedure_id);
+			return 0;
 		}
 
 		std::string __debug_string() const

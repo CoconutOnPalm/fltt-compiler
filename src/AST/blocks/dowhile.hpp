@@ -9,7 +9,7 @@
 #include "value.hpp"
 
 
-namespace fl
+namespace fl::ast
 {
 
 	class DoWhile : public ASTNode
@@ -27,12 +27,13 @@ namespace fl
 
 		virtual ~DoWhile() = default;
 
-		void generateTAC() const
+		size_t generateTAC(TACTable& tac_table) const override
 		{
 			std::println("repeat");
-			block->generateTAC();
-			condition->generateTAC();
+			block->generateTAC(tac_table);
+			condition->generateTAC(tac_table);
 			std::println("until (not {}) JMP <repeat>", condition->__debug_string());
+			return 0;
 		}
 
 		std::string __debug_string() const override

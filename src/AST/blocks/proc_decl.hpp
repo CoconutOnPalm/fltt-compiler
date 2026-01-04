@@ -6,7 +6,7 @@
 #include "../../symbol/argument.hpp"
 
 
-namespace fl
+namespace fl::ast
 {
 	class ArgsDecl
 	{	
@@ -48,9 +48,10 @@ namespace fl
 		inline std::string name() const { return procedure_id; }
 		inline const std::vector<Argument>& getArgs() const { return args.get(); }
 
-		void generateTAC() const 
+		size_t generateTAC(TACTable& tac_table) const override
 		{
 			std::println("func {}({})", procedure_id, args.__debug_string());
+			return 0;
 		}
 
 		std::string __debug_string() const

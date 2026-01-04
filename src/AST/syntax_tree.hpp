@@ -9,16 +9,16 @@ namespace fl
 	{
 	private:
 
-		Block* m_root;
+		ast::Block* m_root;
 
 	public:
 
-		SyntaxTree(Block* root);
+		SyntaxTree(ast::Block* root);
 		~SyntaxTree();
 
-		inline void generateTAC() const
+		inline size_t generateTAC(TACTable& tac_table) const
 		{
-			m_root->generateTAC();
+			return m_root->generateTAC(tac_table);
 		}
 
 		std::string __debug_string() const override 

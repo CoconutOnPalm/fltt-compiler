@@ -9,7 +9,7 @@
 #include "value.hpp"
 
 
-namespace fl
+namespace fl::ast
 {
 
 	class While : public ASTNode
@@ -27,11 +27,12 @@ namespace fl
 
 		virtual ~While() = default;
 
-		void generateTAC() const
+		size_t generateTAC(TACTable& tac_table) const override
 		{
-			condition->generateTAC();
+			condition->generateTAC(tac_table);
 			std::println("while (not {}) JMP <endwhile>", condition->__debug_string());
-			block->generateTAC();
+			block->generateTAC(tac_table);
+			return 0;
 		}
 
 		std::string __debug_string() const override

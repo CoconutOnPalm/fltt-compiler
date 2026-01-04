@@ -3,7 +3,7 @@
 #include "../ASTNode.hpp"
 
 
-namespace fl
+namespace fl::ast
 {
 	
 	class Read : public ASTNode
@@ -15,12 +15,13 @@ namespace fl
 		Read() = default;
 		~Read() = default;
 
-		void generateTAC() const 
+		size_t generateTAC(TACTable& tac_table) const override
 		{
 			std::println("READ");
+			return 0;
 		}
 
-		std::string __debug_string() const 
+		std::string __debug_string() const override
 		{
 			return "READ";
 		}
@@ -35,12 +36,13 @@ namespace fl
 		Write() = default;
 		~Write() = default;
 
-		void generateTAC() const 
+		size_t generateTAC(TACTable& tac_table) const override
 		{
 			std::println("WRITE");
+			return 0;
 		}
 
-		std::string __debug_string() const 
+		std::string __debug_string() const override
 		{
 			return "WRITE";
 		}
