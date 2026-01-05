@@ -1,0 +1,38 @@
+#pragma once
+
+
+#include <memory>
+
+#include "../../tac.hpp"
+#include "../label.hpp"
+
+
+namespace fl::tac
+{
+
+	class JNZ : public TAC
+	{
+	private:
+
+		const size_t condition_index;
+		std::shared_ptr<size_t> label_id;
+		
+	public:
+
+		JNZ(const size_t cond_index, std::shared_ptr<size_t> label)
+			: condition_index(cond_index), label_id(label)
+		{}
+		virtual ~JNZ() = default;
+
+		virtual void generateASM() const override
+		{
+			std::println("{}", __debug_string());
+		}
+
+		virtual std::string __debug_string() const override
+		{
+			return std::format("JNZ ({}) --> {}", condition_index, *(label_id.get()));
+		}
+	};
+	
+} // namespace fl::tac

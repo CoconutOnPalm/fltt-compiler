@@ -28,7 +28,6 @@ namespace fl::ast
 		size_t generateTAC(TACTable& tac_table) const override
 		{ 
 			size_t back = 0;
-			std::println("[block]:");
 			for (const auto& statement : block)
 			{
 				back = statement->generateTAC(tac_table);
