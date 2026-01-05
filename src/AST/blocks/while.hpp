@@ -29,6 +29,19 @@ namespace fl::ast
 
 		size_t generateTAC(TACTable& tac_table) const override
 		{
+			std::shared_ptr<uint64_t> while_id = std::make_shared<uint64_t>(0);
+			std::shared_ptr<uint64_t> endwhile_id = std::make_shared<uint64_t>(0);
+			
+			condition->invert();
+			
+			size_t while_begin = 	tac_table.add<tac::Label>("while", while_id);
+			size_t cond = 			condition->generateTAC(tac_table);
+			size_t endwhile_jmp = 	generateJump(cond, condition->getOperator(), endwhile_id, tac_table);
+			size_t body = 			block->generateTAC(tac_table);
+			size_t while_jmp = 		tac_table.add<tac::JUMP>(while_id);
+
+			return 					tac_table.add<tac::Label>("endwhile", endwhile_id);
+			
 			condition->generateTAC(tac_table);
 			std::println("while (not {}) JMP <endwhile>", condition->__debug_string());
 			block->generateTAC(tac_table);

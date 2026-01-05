@@ -30,13 +30,23 @@ namespace fl::ast
 
 		size_t generateTAC(TACTable& tac_table) const override
 		{
-			condition->generateTAC(tac_table);
-			std::println("if (not {}) JMP <else>", condition->__debug_string());
-			if_block->generateTAC(tac_table);
-			std::println("JMP <endif>");
-			std::println("else");
-			else_block->generateTAC(tac_table);
-			return 0;
+			std::shared_ptr<uint64_t> else_label = std::make_shared<uint64_t>(0);
+			std::shared_ptr<uint64_t> endif_label = std::make_shared<uint64_t>(0);
+
+			condition->invert();
+			
+			// if
+			size_t cond = 		condition->generateTAC(tac_table);
+			size_t jmp = 		generateJump(cond, condition->getOperator(), else_label, tac_table);
+			size_t if_body = 	if_block->generateTAC(tac_table);
+			tac_table.add<tac::JUMP>(endif_label);
+
+			// else
+			tac_table.add<tac::Label>("else", else_label);
+			size_t else_body = 	else_block->generateTAC(tac_table);
+
+			// endif
+			return tac_table.add<tac::Label>("endif", endif_label);
 		}
 
 		std::string __debug_string() const override

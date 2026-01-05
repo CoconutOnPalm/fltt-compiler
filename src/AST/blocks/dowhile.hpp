@@ -29,11 +29,17 @@ namespace fl::ast
 
 		size_t generateTAC(TACTable& tac_table) const override
 		{
-			std::println("repeat");
+			std::shared_ptr<uint64_t> do_label = std::make_shared<uint64_t>(0);
+
+			condition->invert();
+
+			// do
+			tac_table.add<tac::Label>("do", do_label);
 			block->generateTAC(tac_table);
-			condition->generateTAC(tac_table);
-			std::println("until (not {}) JMP <repeat>", condition->__debug_string());
-			return 0;
+
+			// while
+			size_t cond = condition->generateTAC(tac_table);
+			return generateJump(cond, condition->getOperator(), do_label, tac_table);
 		}
 
 		std::string __debug_string() const override

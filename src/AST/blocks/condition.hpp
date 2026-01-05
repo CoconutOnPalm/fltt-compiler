@@ -16,6 +16,7 @@
 
 #include "../../TAC/codes/jump/jz.hpp"
 #include "../../TAC/codes/jump/jnz.hpp"
+#include "../../TAC/codes/jump/jump.hpp"
 
 
 namespace fl::ast
@@ -23,20 +24,18 @@ namespace fl::ast
 
 	class Condition : public ASTNode
 	{
-	public:
-
-		const CondOp op;
-		
 	private:
-
+	
+		CondOp op;
 		const std::shared_ptr<ASTNode> left;
 		const std::shared_ptr<ASTNode> right;
 
 	public:
-	
+
 		Condition(const CondOp op, ASTNode* left, ASTNode* right)
 			: op(op), left(std::shared_ptr<ASTNode>(left)), right(std::shared_ptr<ASTNode>(right))
-		{}
+		{
+		}
 
 		virtual ~Condition() = default;
 
@@ -52,29 +51,43 @@ namespace fl::ast
 		{
 			return std::format("({:2}, {}, {})", op, left->__debug_string(), right->__debug_string());
 		}
-	
-	private:
 
-		static CondOp invert(const CondOp _operator)
+
+		CondOp getOperator() const
 		{
-			switch (_operator)
+			return op;
+		}
+		
+
+		void invert()
+		{
+			switch (op)
 			{
 			case CondOp::EQ:
-				return CondOp::NEQ;
+				op = CondOp::NEQ;
+				return;
 			case CondOp::NEQ:
-				return CondOp::EQ;
+				op = CondOp::EQ;
+				return;
 			case CondOp::GT:
-				return CondOp::LEQ;
+				op = CondOp::LEQ;
+				return;
 			case CondOp::LT:
-				return CondOp::GEQ;
+				op = CondOp::GEQ;
+				return;
 			case CondOp::GEQ:
-				return CondOp::LT;
+				op = CondOp::LT;
+				return;
 			case CondOp::LEQ:
-				return CondOp::GT;
+				op = CondOp::GT;
+				return;
 			default:
-				break;
+				panic("internal compiler error: conditional operator '{}' not defined", op);
+			break;
 			}
 		}
+
+	private:
 
 		size_t mapOperatorsToTAC(const CondOp _operator, const size_t l, const size_t r, TACTable& tac_table) const
 		{
@@ -108,5 +121,27 @@ namespace fl::ast
 		}
 
 	};
+
+	inline size_t generateJump(const size_t cond, const CondOp op, std::shared_ptr<uint64_t> label_id, TACTable& tac_table)
+	{
+		switch (op)
+		{
+		case CondOp::EQ:
+			return tac_table.add<tac::JZ>(cond, label_id);
+		case CondOp::NEQ:
+			return tac_table.add<tac::JNZ>(cond, label_id);
+		case CondOp::GT:
+			return tac_table.add<tac::JNZ>(cond, label_id);
+		case CondOp::LT:
+			return tac_table.add<tac::JNZ>(cond, label_id);
+		case CondOp::GEQ:
+			return tac_table.add<tac::JZ>(cond, label_id);
+		case CondOp::LEQ:
+			return tac_table.add<tac::JZ>(cond, label_id);
+		default:
+			panic("internal compiler error: if AST - operator '{}' not handled", op);
+			return 0; // disable warning
+		}
+	}
 
 } // namespace fl

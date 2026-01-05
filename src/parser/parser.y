@@ -226,7 +226,7 @@ statement
     }
     | REPEAT block UNTIL condition ';'
     {
-        $<ast>$ = new fl::ast::DoWhile($<cond>2, $<block>4);
+        $<ast>$ = new fl::ast::DoWhile($<cond>4, $<block>2);
     }
     | FOR pidentifier FROM value TO value DO block ENDFOR
     {
@@ -375,7 +375,7 @@ expression
 ;
 
 condition 
-    : value[L] EQ  value[R]
+    : value[L] EQ value[R]
     {
         $<cond>$ = new fl::ast::Condition(fl::CondOp::EQ, $<ast>L, $<ast>R);
     }
@@ -383,11 +383,11 @@ condition
     {
         $<cond>$ = new fl::ast::Condition(fl::CondOp::NEQ, $<ast>L, $<ast>R);
     }
-    | value[L] GT  value[R]
+    | value[L] GT value[R]
     {
         $<cond>$ = new fl::ast::Condition(fl::CondOp::GT, $<ast>L, $<ast>R);
     }
-    | value[L] LT  value[R]
+    | value[L] LT value[R]
     {
         $<cond>$ = new fl::ast::Condition(fl::CondOp::LT, $<ast>L, $<ast>R);
     }
