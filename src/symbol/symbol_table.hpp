@@ -33,14 +33,17 @@ namespace fl
 		template <class SymT, typename... Args>
 		inline void add(const std::string& name, Args&&... args)
 		{
+			// commented out - allow redeclarations (for now)
+			// if (m_symbol_table.contains(name))
+			// 	panic("redeclaration of the variable '{}'", name);
+				
 			m_symbol_table.emplace(name, std::make_unique<SymT>(name, args...));
 			m_size += m_symbol_table[name]->memsize;
 		}
 
 		template <class SymT>
 		inline void add(const Symbol* symbol)
-		{
-			
+		{	
 			m_symbol_table.emplace(symbol->name, symbol->clone());
 		}
 

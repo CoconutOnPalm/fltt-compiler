@@ -15,6 +15,11 @@ namespace fl::ast
 		Read() = default;
 		~Read() = default;
 
+		std::vector<std::shared_ptr<ASTNode>> getChildren()
+		{
+			return {};
+		}
+
 		size_t generateTAC(TACTable& tac_table) const override
 		{
 			std::println("READ");
@@ -36,13 +41,18 @@ namespace fl::ast
 		Write() = default;
 		~Write() = default;
 
-		size_t generateTAC(TACTable& tac_table) const override
+		virtual std::vector<std::shared_ptr<ASTNode>> getChildren() override
+		{
+			return {};
+		}
+
+		virtual size_t generateTAC(TACTable& tac_table) const override
 		{
 			std::println("WRITE");
 			return 0;
 		}
 
-		std::string __debug_string() const override
+		virtual std::string __debug_string() const override
 		{
 			return "WRITE";
 		}

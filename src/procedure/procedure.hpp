@@ -31,6 +31,8 @@ namespace fl
 		Procedure(Procedure&& procedure) = default;
 		~Procedure() = default;
 
+		void makeInBlockDeclarations();
+
 		size_t assignMemoryBlock(const size_t memshift);
 		inline size_t allocSize() const { return m_alloc_size; }
 

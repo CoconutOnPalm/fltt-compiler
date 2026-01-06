@@ -25,7 +25,12 @@ namespace fl::ast
 			block.emplace_back(std::shared_ptr<ASTNode>(stmt_owning_ptr));
 		}
 
-		size_t generateTAC(TACTable& tac_table) const override
+		virtual std::vector<std::shared_ptr<ASTNode>> getChildren() override
+		{
+			return block;
+		}
+
+		virtual size_t generateTAC(TACTable& tac_table) const override
 		{ 
 			size_t back = 0;
 			for (const auto& statement : block)
@@ -36,7 +41,7 @@ namespace fl::ast
 			return back;
 		}
 	
-		std::string __debug_string() const override 
+		virtual std::string __debug_string() const override 
 		{
 			return std::format("[block] stmt count={}", block.size());
 		}

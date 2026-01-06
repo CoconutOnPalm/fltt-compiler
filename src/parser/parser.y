@@ -31,12 +31,7 @@
 %union {
     uint64_t num;
     char* id;
-    // struct {
-    //     size_t tac_index;
-    //     uint64_t num;
-    //     char* id;
-    //     int type;
-    // } val_t;
+    
     fl::ASTNode* ast;
     fl::ast::Block* block;
     fl::ast::Condition* cond;

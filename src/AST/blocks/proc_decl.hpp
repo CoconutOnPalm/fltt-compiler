@@ -48,13 +48,18 @@ namespace fl::ast
 		inline std::string name() const { return procedure_id; }
 		inline const std::vector<Argument>& getArgs() const { return args.get(); }
 
-		size_t generateTAC(TACTable& tac_table) const override
+		virtual std::vector<std::shared_ptr<ASTNode>> getChildren() override
+		{
+			return {};
+		}
+
+		virtual size_t generateTAC(TACTable& tac_table) const override
 		{
 			std::println("func {}({})", procedure_id, args.__debug_string());
 			return 0;
 		}
 
-		std::string __debug_string() const
+		virtual std::string __debug_string() const override
 		{
 			return std::format("func {}({})", procedure_id, args.__debug_string());
 		}

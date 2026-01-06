@@ -4,7 +4,7 @@
 #include <print>
 #include <format>
 
-#include "../tac.hpp"
+#include "../../tac.hpp"
 
 
 namespace fl::tac
@@ -13,13 +13,13 @@ namespace fl::tac
 	class Index : public TAC
 	{
 
-		std::string lvalue_id;	// id in symbol table
-		size_t rvalue_index;	// index in TAC table
+		size_t lval;
+		size_t rval;
 
 	public:
 
-		Index(const std::string_view lvalue, const size_t rvalue)
-			: lvalue_id(lvalue), rvalue_index(rvalue)
+		Index(const size_t lvalue, const size_t rvalue)
+			: lval(lvalue), rval(rvalue)
 		{}
 
 		virtual ~Index() = default;
@@ -31,7 +31,7 @@ namespace fl::tac
 
 		virtual std::string __debug_string() const override
 		{
-			return std::format("{}[{}]", lvalue_id, rvalue_index);
+			return std::format("({})[({})]", lval, rval);
 		}
 	};
 	

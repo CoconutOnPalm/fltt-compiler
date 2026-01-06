@@ -21,6 +21,11 @@ namespace fl::ast
 
 		void add(const std::string& identifier) { param_ids.push_back(identifier); }
 
+		std::vector<std::shared_ptr<ASTNode>> getChildren()
+		{
+			return {};
+		}
+
 		size_t generateTAC(TACTable& tac_table) const override
 		{
 			for (const auto& id : param_ids)
@@ -50,14 +55,19 @@ namespace fl::ast
 		{}
 		~ProcCall() = default;
 
-		size_t generateTAC(TACTable& tac_table) const override
+		virtual std::vector<std::shared_ptr<ASTNode>> getChildren() override
+		{
+			return {};
+		}
+
+		virtual size_t generateTAC(TACTable& tac_table) const override
 		{
 			args.generateTAC(tac_table);
 			std::println("call {}", procedure_id);
 			return 0;
 		}
 
-		std::string __debug_string() const
+		virtual std::string __debug_string() const override
 		{
 			return std::format("call {}", procedure_id);
 		}

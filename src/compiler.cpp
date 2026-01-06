@@ -13,9 +13,19 @@ namespace fl
 			panic("entry point not defined");
 		}
 
+		// make in-block variable declarations 
+		// to add memory to 'for' loops' iterators
+		for (auto& [name, proc] : m_procedure_map)
+		{
+			proc.makeInBlockDeclarations();
+		}
+		
 		assignMemory();
 
-		m_procedure_map.at(config::prog_entry_name).generateTAC(m_tac_table);
+		for (auto& [name, proc] : m_procedure_map)
+		{
+			proc.generateTAC(m_tac_table);
+		}
 
 		m_tac_table.generateASM();
     }
@@ -23,8 +33,14 @@ namespace fl
 
 	void Compiler::defineProcedure(const std::string_view procedure_name, ast::ProcDecl* head, SymbolTable* symbol_table, ast::Block* body)
 	{
-		if (symbol_table == nullptr) panic("internal compiler error: defineProcedure - symbol table is null");
-		if (body == nullptr) panic("internal compiler error: defineProcedure - body is null");
+		if (symbol_table == nullptr)
+		{
+			symbol_table = new SymbolTable;
+		}
+		if (body == nullptr)
+		{
+			body = new ast::Block;
+		}
 
 		if (head != nullptr)
 		{

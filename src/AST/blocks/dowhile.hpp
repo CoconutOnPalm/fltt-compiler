@@ -27,7 +27,12 @@ namespace fl::ast
 
 		virtual ~DoWhile() = default;
 
-		size_t generateTAC(TACTable& tac_table) const override
+		virtual std::vector<std::shared_ptr<ASTNode>> getChildren() override
+		{
+			return {block};
+		}
+
+		virtual size_t generateTAC(TACTable& tac_table) const override
 		{
 			std::shared_ptr<uint64_t> do_label = std::make_shared<uint64_t>(0);
 
@@ -39,10 +44,10 @@ namespace fl::ast
 
 			// while
 			size_t cond = condition->generateTAC(tac_table);
-			return generateJump(cond, condition->getOperator(), do_label, tac_table);
+			return generateJumpIfTrue(cond, condition->getOperator(), do_label, tac_table);
 		}
 
-		std::string __debug_string() const override
+		virtual std::string __debug_string() const override
 		{
 			return std::format("repeat {{ }} until ({})", condition->__debug_string());
 		}

@@ -27,8 +27,8 @@ namespace fl::ast
 	private:
 	
 		CondOp op;
-		const std::shared_ptr<ASTNode> left;
-		const std::shared_ptr<ASTNode> right;
+		std::shared_ptr<ASTNode> left;
+		std::shared_ptr<ASTNode> right;
 
 	public:
 
@@ -39,7 +39,12 @@ namespace fl::ast
 
 		virtual ~Condition() = default;
 
-		size_t generateTAC(TACTable& tac_table) const override
+		virtual std::vector<std::shared_ptr<ASTNode>> getChildren() override
+		{
+			return {left, right};
+		}
+
+		virtual size_t generateTAC(TACTable& tac_table) const override
 		{
 			size_t lidx = left->generateTAC(tac_table);
 			size_t ridx = right->generateTAC(tac_table);
@@ -47,7 +52,7 @@ namespace fl::ast
 			return mapOperatorsToTAC(op, lidx, ridx, tac_table);
 		}
 
-		std::string __debug_string() const override
+		virtual std::string __debug_string() const override
 		{
 			return std::format("({:2}, {}, {})", op, left->__debug_string(), right->__debug_string());
 		}
@@ -122,7 +127,7 @@ namespace fl::ast
 
 	};
 
-	inline size_t generateJump(const size_t cond, const CondOp op, std::shared_ptr<uint64_t> label_id, TACTable& tac_table)
+	inline size_t generateJumpIfTrue(const size_t cond, const CondOp op, std::shared_ptr<uint64_t> label_id, TACTable& tac_table)
 	{
 		switch (op)
 		{

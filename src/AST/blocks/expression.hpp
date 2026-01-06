@@ -15,6 +15,7 @@
 #include "../../TAC/codes/expressions/mult.hpp"
 #include "../../TAC/codes/expressions/div.hpp"
 #include "../../TAC/codes/expressions/mod.hpp"
+#include "../../TAC/codes/expressions/index.hpp"
 
 
 namespace fl::ast
@@ -36,7 +37,12 @@ namespace fl::ast
 
 		virtual ~Expression() = default;
 
-		size_t generateTAC(TACTable& tac_table) const override
+		virtual std::vector<std::shared_ptr<ASTNode>> getChildren() override
+		{
+			return {left, right};
+		}
+
+		virtual size_t generateTAC(TACTable& tac_table) const override
 		{
 			size_t lidx = left->generateTAC(tac_table);
 			size_t ridx = right->generateTAC(tac_table);
@@ -44,7 +50,7 @@ namespace fl::ast
 			return mapOperatorsToTAC(lidx, ridx, tac_table);
 		}
 
-		std::string __debug_string() const override
+		virtual std::string __debug_string() const override
 		{
 			return std::format("({:2}, {}, {})", op, left->__debug_string(), right->__debug_string());
 		}
@@ -67,6 +73,8 @@ namespace fl::ast
 				return tac_table.add<tac::Div>(l, r);
 			case Operator::MOD:
 				return tac_table.add<tac::Mod>(l, r);
+			case Operator::INDEX:
+				return tac_table.add<tac::Index>(l, r);
 			default:
 				panic("internal compier error: no available mapping from operator '{}' to TAC table", op);
 				return 0;

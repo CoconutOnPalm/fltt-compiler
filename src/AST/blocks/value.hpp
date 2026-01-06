@@ -15,7 +15,7 @@ namespace fl::ast
 
 	class Number : public ASTNode
 	{
-	private:
+	public:
 
 		const uint64_t val;
 
@@ -23,12 +23,17 @@ namespace fl::ast
 
 		Number(const uint64_t val) : val(val) {}
 
-		size_t generateTAC(TACTable& tac_table) const 
+		virtual std::vector<std::shared_ptr<ASTNode>> getChildren() override
+		{
+			return {};
+		}
+
+		virtual size_t generateTAC(TACTable& tac_table) const override
 		{ 
 			return tac_table.add<tac::LDI>(val);
 		}
 
-		std::string __debug_string() const override
+		virtual std::string __debug_string() const override
 		{
 			return std::format("{}", val);
 		}
@@ -36,7 +41,7 @@ namespace fl::ast
 
 	struct Identifier : public ASTNode
 	{
-	private:
+	public:
 
 		const std::string identifier;
 
@@ -44,12 +49,17 @@ namespace fl::ast
 
 		Identifier(const std::string& id) : identifier(id) {}
 
-		size_t generateTAC(TACTable& tac_table) const override
+		virtual std::vector<std::shared_ptr<ASTNode>> getChildren() override
+		{
+			return {};
+		}
+
+		virtual size_t generateTAC(TACTable& tac_table) const override
 		{ 
 			return tac_table.add<tac::LD>(identifier);
 		}
 
-		std::string __debug_string() const override
+		virtual std::string __debug_string() const override
 		{
 			return identifier;
 		}

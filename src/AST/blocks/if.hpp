@@ -28,19 +28,24 @@ namespace fl::ast
 
 		virtual ~If() = default;
 
-		size_t generateTAC(TACTable& tac_table) const override
+		virtual std::vector<std::shared_ptr<ASTNode>> getChildren() override
+		{
+			return {block};
+		}
+
+		virtual size_t generateTAC(TACTable& tac_table) const override
 		{
 			std::shared_ptr<uint64_t> label_id = std::make_shared<uint64_t>(0);
 
 			condition->invert();
 			
 			size_t cond = condition->generateTAC(tac_table);
-			size_t jmp = generateJump(cond, condition->getOperator(), label_id, tac_table);
+			size_t jmp = generateJumpIfTrue(cond, condition->getOperator(), label_id, tac_table);
 			block->generateTAC(tac_table);
 			return tac_table.add<tac::Label>("endif", label_id);
 		}
 
-		std::string __debug_string() const override
+		virtual std::string __debug_string() const override
 		{
 			return std::format("if ({})", condition->__debug_string());
 		}

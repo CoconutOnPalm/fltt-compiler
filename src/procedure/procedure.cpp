@@ -11,6 +11,11 @@ namespace fl
 		m_alloc_size = m_symbol_table->size();
 	}
 
+	void Procedure::makeInBlockDeclarations()
+	{
+		m_body->declareInBlock(*m_symbol_table);
+	}
+
 	size_t Procedure::assignMemoryBlock(const size_t memshift)
 	{
 		m_symbol_table->assignMemory(memshift);
