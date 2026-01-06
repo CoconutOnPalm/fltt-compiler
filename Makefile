@@ -15,8 +15,8 @@ CXX_SRC = \
 	$(SRC_PATH)/symbol/*.cpp \
 	$(SRC_PATH)/AST/*.cpp \
 	$(SRC_PATH)/TAC/*.cpp \
-	$(LEXER_PATH)/*.cpp \
 	$(PARSER_PATH)/*.cpp \
+	$(LEXER_PATH)/*.cpp \
 
 CXX_HEAD = \
 	$(SRC_PATH)/*.hpp \
@@ -34,7 +34,9 @@ CXX_HEAD = \
 
 EXE_NAME = kompilator
 
-all: $(EXE_NAME) vm
+all: lexer parser $(EXE_NAME) vm
+lexer: $(LEXER_PATH)/lexer.cpp
+parser: $(PARSER_PATH)/parser.cpp
 
 $(EXE_NAME): $(CXX_SRC) $(CXX_HEAD) $(LEXER_PATH)/lexer.lex $(PARSER_PATH)/parser.y
 	$(CXX) $(FLAGS) -I $(INCLUDE) $(CXX_SRC) -o $@ $(LINKED_LIBS)
