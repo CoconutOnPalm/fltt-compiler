@@ -4,6 +4,7 @@
 
 #include "../ASTNode.hpp"
 #include "../../symbol/argument.hpp"
+#include "../../TAC/codes/other/label.hpp"
 
 
 namespace fl::ast
@@ -21,6 +22,8 @@ namespace fl::ast
 
 		void add(const Argument& arg) { args.push_back(arg); }
 		const std::vector<Argument>& get() const { return args; }
+
+		size_t size() const { return args.size(); }
 
 		std::string __debug_string() const 
 		{
@@ -55,8 +58,7 @@ namespace fl::ast
 
 		virtual size_t generateTAC(TACTable& tac_table) const override
 		{
-			std::println("func {}({})", procedure_id, args.__debug_string());
-			return 0;
+			return tac_table.add<tac::Label>(std::format("func {}(argc={})", procedure_id, args.size()), std::make_shared<uint64_t>(0));
 		}
 
 		virtual std::string __debug_string() const override

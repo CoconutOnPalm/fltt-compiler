@@ -46,7 +46,7 @@ namespace fl::ast
 	private:
 
 		const std::string procedure_id;
-		const Params args;
+		Params args;
 
 	public:
 

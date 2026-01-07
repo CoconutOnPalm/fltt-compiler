@@ -6,8 +6,8 @@
 
 #include "../ASTNode.hpp"
 
-#include "../../TAC/codes/LDI.hpp"
-#include "../../TAC/codes/LD.hpp"
+#include "../../TAC/codes/other/LDI.hpp"
+#include "../../TAC/codes/other/LD.hpp"
 
 
 namespace fl::ast

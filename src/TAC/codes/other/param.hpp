@@ -1,5 +1,7 @@
 #pragma once
 
+#pragma once
+
 #include <cstdint>
 #include <print>
 #include <format>

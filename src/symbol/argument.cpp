@@ -8,7 +8,7 @@ namespace fl
 {
 
 	Argument::Argument(const std::string_view name, const ArgType arg_type)
-		: Symbol(name, 0, mapArgTypes(arg_type))
+		: Symbol(name, 1, mapArgTypes(arg_type))
 	{}
 
     std::unique_ptr<Symbol> Argument::clone() const

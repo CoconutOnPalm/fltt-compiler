@@ -7,7 +7,7 @@
 #include "block.hpp"
 #include "../ASTNode.hpp"
 #include "value.hpp"
-#include "../../TAC/codes/label.hpp"
+#include "../../TAC/codes/other/label.hpp"
 
 
 namespace fl::ast

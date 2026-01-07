@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "../../tac.hpp"
-#include "../label.hpp"
+#include "../other/label.hpp"
 
 
 namespace fl::tac
