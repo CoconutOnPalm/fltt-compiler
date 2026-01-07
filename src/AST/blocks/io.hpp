@@ -2,6 +2,9 @@
 
 #include "../ASTNode.hpp"
 
+#include "../../TAC/codes/other/read.hpp"
+#include "../../TAC/codes/other/write.hpp"
+
 
 namespace fl::ast
 {
@@ -22,8 +25,7 @@ namespace fl::ast
 
 		size_t generateTAC(TACTable& tac_table) const override
 		{
-			std::println("READ");
-			return 0;
+			return tac_table.add<tac::Read>();
 		}
 
 		std::string __debug_string() const override
@@ -48,8 +50,7 @@ namespace fl::ast
 
 		virtual size_t generateTAC(TACTable& tac_table) const override
 		{
-			std::println("WRITE");
-			return 0;
+			return tac_table.add<tac::Write>();
 		}
 
 		virtual std::string __debug_string() const override

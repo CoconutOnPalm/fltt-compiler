@@ -28,7 +28,7 @@ namespace fl::tac
 
 		virtual std::string __debug_string() const
 		{
-			return "READ";
+			return "WRITE";
 		}
 	};
 	

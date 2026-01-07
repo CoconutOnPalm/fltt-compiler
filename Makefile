@@ -54,6 +54,9 @@ CXX_HEAD = \
 	$(wildcard $(SRC_PATH)/TAC/*.hpp) \
 	$(wildcard $(SRC_PATH)/TAC/codes/*.hpp) \
 	$(wildcard $(SRC_PATH)/TAC/codes/expressions/*.hpp) \
+	$(wildcard $(SRC_PATH)/TAC/codes/comparisons/*.hpp) \
+	$(wildcard $(SRC_PATH)/TAC/codes/jump/*.hpp) \
+	$(wildcard $(SRC_PATH)/TAC/codes/other/*.hpp) \
 	$(wildcard $(PARSER_PATH)/*.hpp) \
 
 
