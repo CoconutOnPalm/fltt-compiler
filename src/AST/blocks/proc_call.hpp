@@ -4,6 +4,8 @@
 
 #include "../ASTNode.hpp"
 #include "../../symbol/argument.hpp"
+#include "../../TAC/codes/other/param.hpp"
+#include "../../TAC/codes/other/call.hpp"
 
 
 namespace fl::ast
@@ -13,12 +15,14 @@ namespace fl::ast
 	private:
 
 		std::vector<std::string> param_ids;
+		std::string callee;
 
 	public:
 
 		Params() = default;
 		~Params() = default;
 
+		void setCallee(const std::string_view identifier) { callee = identifier; std::println("callee set"); }
 		void add(const std::string& identifier) { param_ids.push_back(identifier); }
 
 		std::vector<std::shared_ptr<ASTNode>> getChildren()
@@ -28,11 +32,22 @@ namespace fl::ast
 
 		size_t generateTAC(TACTable& tac_table) const override
 		{
+			if (callee.empty())
+			{
+				std::println("[debug] callee = {}", callee);
+				for (const std::string_view str : param_ids)
+					std::println("param {}", str);
+				panic("internal compiler error: callee not set in one of proc calls");
+			}
+			
+			size_t param = 0;
 			for (const auto& id : param_ids)
 			{
-				std::println("param {}", id);
+				param = tac_table.add<tac::LD>(id);
+				tac_table.add<tac::Param>(param, callee);
 			}
-			return 0;
+
+			return param;
 		}
 
 		std::string __debug_string() const 
@@ -50,9 +65,13 @@ namespace fl::ast
 
 	public:
 
-		ProcCall(const std::string_view proc, Params&& args)
-			: procedure_id(proc), args(std::move(args))
-		{}
+		ProcCall(const std::string_view proc, Params&& _args)
+			: procedure_id(proc), args(std::move(_args))
+		{ 
+			std::println("[debug]: {}", procedure_id);
+			args.setCallee(procedure_id);
+		}
+
 		~ProcCall() = default;
 
 		virtual std::vector<std::shared_ptr<ASTNode>> getChildren() override
@@ -62,8 +81,8 @@ namespace fl::ast
 
 		virtual size_t generateTAC(TACTable& tac_table) const override
 		{
-			args.generateTAC(tac_table);
-			std::println("call {}", procedure_id);
+			args.generateTAC(tac_table);			
+			tac_table.add<tac::Call>(procedure_id);
 			return 0;
 		}
 

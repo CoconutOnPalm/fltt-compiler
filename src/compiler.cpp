@@ -42,12 +42,18 @@ namespace fl
 			body = new ast::Block;
 		}
 
+		// add a variable holding return adress
+		symbol_table->add<Variable>("#return");
+		
 		if (head != nullptr)
 		{
 			// copy args into the symbol table
 			const auto& args = head->getArgs();
 			for (const Argument& arg : args)
-				symbol_table->add<Argument>(&arg);
+			{
+				symbol_table->addArgument(&arg); // this one adds arg to the arg table
+				// symbol_table->add<Argument>(&arg);
+			}
 		}
 		
 		m_procedure_map.emplace(procedure_name, Procedure(procedure_name, symbol_table, body));

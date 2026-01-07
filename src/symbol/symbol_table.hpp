@@ -7,6 +7,7 @@
 #include "symbol.hpp"
 #include "array.hpp"
 #include "variable.hpp"
+#include "argument.hpp"
 #include "../utils/panic.hpp"
 
 
@@ -18,6 +19,7 @@ namespace fl
 	private:
 
 		std::map<std::string, std::unique_ptr<Symbol>> m_symbol_table;
+		std::vector<std::string> m_arg_ids;
 		size_t m_size;
 
 	public:
@@ -45,6 +47,12 @@ namespace fl
 		inline void add(const Symbol* symbol)
 		{	
 			m_symbol_table.emplace(symbol->name, symbol->clone());
+		}
+
+		inline void addArgument(const Argument* argument)
+		{
+			m_symbol_table.emplace(argument->name, argument->clone());
+			m_arg_ids.push_back(argument->name);
 		}
 
 		const Symbol& get(const std::string& name) const;

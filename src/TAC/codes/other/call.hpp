@@ -12,19 +12,19 @@
 namespace fl::tac
 {
 	
-	class Param : public TAC
+	class Call : public TAC
 	{
+	private:
 
-		uint64_t param {0};
-		const std::string dest;
+		const std::string callee;
 
 	public:
 
-		Param(const uint64_t param, const std::string_view destination)
-			: param(param), dest(destination)
+		Call(const std::string_view callee)
+			: callee(callee)
 		{}
 
-		virtual ~Param() = default;
+		virtual ~Call() = default;
 
 		virtual void generateASM() const 
 		{
@@ -33,7 +33,7 @@ namespace fl::tac
 
 		virtual std::string __debug_string() const
 		{
-			return std::format("param '{}' => {}", param, dest);
+			return std::format("call @{}", callee);
 		}
 	};
 	

@@ -58,12 +58,12 @@ namespace fl::ast
 
 		virtual size_t generateTAC(TACTable& tac_table) const override
 		{
-			return tac_table.add<tac::Label>(std::format("func {}(argc={})", procedure_id, args.size()), std::make_shared<uint64_t>(0));
+			return tac_table.add<tac::Label>(std::format("func @{}", procedure_id), std::make_shared<uint64_t>(0));
 		}
 
 		virtual std::string __debug_string() const override
 		{
-			return std::format("func {}({})", procedure_id, args.__debug_string());
+			return std::format("func @{}", procedure_id);
 		}
 
 	};

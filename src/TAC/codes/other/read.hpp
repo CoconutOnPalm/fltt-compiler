@@ -12,19 +12,14 @@
 namespace fl::tac
 {
 	
-	class Param : public TAC
+	class Read : public TAC
 	{
-
-		uint64_t param {0};
-		const std::string dest;
+	private:
 
 	public:
 
-		Param(const uint64_t param, const std::string_view destination)
-			: param(param), dest(destination)
-		{}
-
-		virtual ~Param() = default;
+		Read() = default;
+		virtual ~Read() = default;
 
 		virtual void generateASM() const 
 		{
@@ -33,7 +28,7 @@ namespace fl::tac
 
 		virtual std::string __debug_string() const
 		{
-			return std::format("param '{}' => {}", param, dest);
+			return "READ";
 		}
 	};
 	
