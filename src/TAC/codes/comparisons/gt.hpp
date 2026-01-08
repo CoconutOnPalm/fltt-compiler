@@ -23,6 +23,17 @@ namespace fl::tac
 
 		virtual ~GreaterThan() = default;
 
+		TACInfo getSelfInfo() const
+		{
+			return TACInfo(TACType::CONDITION);
+		}
+
+		void updateNextUse(std::vector<TACInfo>& info_table) const override
+		{
+			info_table[left].useIn(p_index);
+			info_table[right].useIn(p_index);
+		}
+		
 		virtual void generateASM() const 
 		{
 			std::println("{}", __debug_string());

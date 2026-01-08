@@ -23,6 +23,18 @@ namespace fl::tac
 
 		virtual ~Mod() = default;
 
+
+		TACInfo getSelfInfo() const
+		{
+			return TACInfo(TACType::EXPRESSION);
+		}
+
+		void updateNextUse(std::vector<TACInfo>& info_table) const override
+		{
+			info_table[left_index].useIn(p_index);
+			info_table[right_index].useIn(p_index);
+		}
+		
 		virtual void generateASM() const override
 		{
 			std::println("{}", __debug_string());

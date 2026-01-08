@@ -26,6 +26,12 @@ namespace fl::tac
 
 		virtual ~Call() = default;
 
+
+		TACInfo getSelfInfo() const
+		{
+			return TACInfo(TACType::JUMP);
+		}
+		
 		virtual void generateASM() const 
 		{
 			std::println("{}", __debug_string());

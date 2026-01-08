@@ -1,7 +1,7 @@
 #pragma once
 
 #include <map>
-#include <variant>
+#include <memory>
 
 #include "symbol/symbol_table.hpp"
 #include "procedure/procedure.hpp"
@@ -17,6 +17,7 @@ namespace fl
 	private:
 
 		std::map<std::string, Procedure> m_procedure_map;
+		std::map<std::string, std::shared_ptr<SymbolTable>> m_symbol_tables;
 		TACTable m_tac_table;
 
 	public:

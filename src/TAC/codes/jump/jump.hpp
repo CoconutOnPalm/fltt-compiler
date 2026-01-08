@@ -23,6 +23,12 @@ namespace fl::tac
 		{}
 		virtual ~JUMP() = default;
 
+		
+		TACInfo getSelfInfo() const
+		{
+			return TACInfo(TACType::JUMP);
+		}
+		
 		virtual void generateASM() const override
 		{
 			std::println("{}", __debug_string());

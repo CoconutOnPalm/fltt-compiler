@@ -26,6 +26,17 @@ namespace fl::tac
 
 		virtual ~Param() = default;
 
+		
+		TACInfo getSelfInfo() const
+		{
+			return TACInfo(TACType::PARAM);
+		}
+
+		void updateNextUse(std::vector<TACInfo>& info_table) const override
+		{
+			info_table[param].useIn(p_index);
+		}
+		
 		virtual void generateASM() const 
 		{
 			std::println("{}", __debug_string());
@@ -33,7 +44,7 @@ namespace fl::tac
 
 		virtual std::string __debug_string() const
 		{
-			return std::format("param '{}' => {}", param, dest);
+			return std::format("param ({}) => {}", param, dest);
 		}
 	};
 	

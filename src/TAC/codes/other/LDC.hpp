@@ -10,23 +10,23 @@
 namespace fl::tac
 {
 	
-	class LD : public TAC
+	class LDC : public TAC
 	{
 
 		std::string identifier;
 
 	public:
 
-		LD(const std::string_view id)
+		LDC(const std::string_view id)
 			: identifier(id)
 		{}
 
-		virtual ~LD() = default;
+		virtual ~LDC() = default;
 
 
 		TACInfo getSelfInfo() const
 		{
-			return TACInfo(TACType::VARIABLE);
+			return TACInfo(TACType::CONSTANT);
 		}
 		
 		virtual void generateASM() const override
@@ -36,7 +36,7 @@ namespace fl::tac
 
 		virtual std::string __debug_string() const override
 		{
-			return std::format("LD '{}'", identifier);
+			return std::format("LDC '{}'", identifier);
 		}
 	};
 	

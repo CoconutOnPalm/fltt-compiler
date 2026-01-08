@@ -11,6 +11,26 @@ namespace fl
 	{
 	}
 
+    void Symbol::noticeAssign()
+    {
+		m_assignment_counter++;
+    }
+
+    uint64_t Symbol::assignments() const
+    {
+        return m_assignment_counter;
+    }
+
+    void Symbol::noticeUse()
+    {
+		m_usage_counter++;
+    }
+
+    uint64_t Symbol::usages() const
+    {
+        return m_usage_counter;
+    }
+
 	void Symbol::setMemoryPosition(const size_t position)
 	{
 		m_mempos = position;

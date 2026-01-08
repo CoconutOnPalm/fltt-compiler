@@ -3,7 +3,7 @@
 
 namespace fl
 {
-	const Symbol& SymbolTable::get(const std::string& name) const
+	Symbol& SymbolTable::get(const std::string& name)
 	{
 		if (!m_symbol_table.contains(name))
 		{

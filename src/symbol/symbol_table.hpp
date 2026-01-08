@@ -55,8 +55,10 @@ namespace fl
 			m_arg_ids.push_back(argument->name);
 		}
 
-		const Symbol& get(const std::string& name) const;
-		inline const Symbol& operator[](const std::string& name) const { return get(name); }
+		Symbol& get(const std::string& name);
+		inline Symbol& operator[](const std::string& name) { return get(name); }
+
+		// inline std::map<std::string, std::unique_ptr<Symbol>>& elements() { return m_symbol_table; }
 		
 		void assignMemory(const size_t shift);
 

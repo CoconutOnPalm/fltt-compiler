@@ -27,6 +27,12 @@ namespace fl::tac
 		{ *uuid = nextUUID(); }
 		~Label() = default;
 
+
+		TACInfo getSelfInfo() const
+		{
+			return TACInfo(TACType::LABEL);
+		}
+
 		virtual void generateASM() const override
 		{
 			std::println("# {}", __debug_string());
@@ -34,7 +40,7 @@ namespace fl::tac
 
 		virtual std::string __debug_string() const override
 		{
-			return std::format("{} [{}]", name, *uuid);
+			return std::format("# {} [{}]", name, *uuid);
 		}
 
 

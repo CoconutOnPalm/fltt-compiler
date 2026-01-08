@@ -24,6 +24,23 @@ namespace fl::tac
 
 		virtual ~Assign() = default;
 
+		TACInfo getSelfInfo() const
+		{
+			return TACInfo(TACType::ASSIGNMENT);
+		}
+
+		void updateNextUse(std::vector<TACInfo>& info_table) const override
+		{
+			info_table[lval].useIn(p_index);
+			info_table[rval].useIn(p_index);
+		}
+
+		void typeCheck(const std::vector<TACInfo>& info_table) const override
+		{
+			if (info_table[lval].code_type != TACType::VARIABLE)
+				panic("illegal operation - rvalue assignment");
+		}
+
 		virtual void generateASM() const override
 		{
 			std::println("{}", __debug_string());

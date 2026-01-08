@@ -23,6 +23,12 @@ namespace fl::tac
 
 		virtual ~LDI() = default;
 
+
+		TACInfo getSelfInfo() const
+		{
+			return TACInfo(TACType::CONSTANT);
+		}
+		
 		virtual void generateASM() const 
 		{
 			std::println("{}", __debug_string());
@@ -30,7 +36,7 @@ namespace fl::tac
 
 		virtual std::string __debug_string() const
 		{
-			return std::format("{}", value);
+			return std::format("LDI {}", value);
 		}
 	};
 	

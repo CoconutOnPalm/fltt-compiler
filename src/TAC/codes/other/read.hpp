@@ -21,6 +21,11 @@ namespace fl::tac
 		Read() = default;
 		virtual ~Read() = default;
 
+		TACInfo getSelfInfo() const
+		{
+			return TACInfo(TACType::IO);
+		}
+
 		virtual void generateASM() const 
 		{
 			std::println("{}", __debug_string());

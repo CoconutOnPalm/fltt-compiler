@@ -13,6 +13,7 @@ namespace fl
 	private:
 
 		std::vector<std::unique_ptr<TAC>> m_tac_table;
+		std::vector<TACInfo> m_tac_info;
 
 	public:
 
@@ -22,11 +23,16 @@ namespace fl
 		template <typename CT, typename... Args>
 		size_t add(Args&&... args)
 		{
-			m_tac_table.emplace_back(std::make_unique<CT>(std::forward<Args>(args)...));
+			auto& new_elem = m_tac_table.emplace_back(std::make_unique<CT>(std::forward<Args>(args)...));
+			m_tac_info.push_back(new_elem->getSelfInfo());
 			return m_tac_table.size() - 1;
 		}
 
+		void updateNextUse();
+
 		void generateASM() const;
+
+		void __debug_print() const;
 	};
 	
 } // namespace fl

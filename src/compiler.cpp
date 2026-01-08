@@ -21,13 +21,16 @@ namespace fl
 		}
 		
 		assignMemory();
-
+		
 		for (auto& [name, proc] : m_procedure_map)
 		{
 			proc.generateTAC(m_tac_table);
 		}
-
+		
+		m_tac_table.updateNextUse();
 		m_tac_table.generateASM();
+		
+		m_tac_table.__debug_print();
     }
 
 
@@ -43,7 +46,7 @@ namespace fl
 		}
 
 		// add a variable holding return adress
-		symbol_table->add<Variable>("#return");
+		symbol_table->add<Variable>(config::return_variable_name);
 		
 		if (head != nullptr)
 		{
@@ -56,7 +59,9 @@ namespace fl
 			}
 		}
 		
-		m_procedure_map.emplace(procedure_name, Procedure(procedure_name, symbol_table, body));
+		std::shared_ptr<SymbolTable> st_smartptr(symbol_table);
+		m_symbol_tables.emplace(procedure_name, st_smartptr);
+		m_procedure_map.emplace(procedure_name, Procedure(procedure_name, st_smartptr, body));
 	}
 
 	void Compiler::defineMain(SymbolTable* symbol_table, ast::Block* body)

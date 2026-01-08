@@ -12,7 +12,7 @@ namespace fl
 
 	public:
 
-		Variable(const std::string_view name);
+		Variable(const std::string_view name, const SymbolType custom_st_flags = SymbolType::NONE);
 		~Variable() = default;
 
 		std::unique_ptr<Symbol> clone() const override;

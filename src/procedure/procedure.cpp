@@ -3,9 +3,7 @@
 namespace fl
 {
 
-
-
-	Procedure::Procedure(const std::string_view name, SymbolTable* symbol_table_ptr, ast::Block* body_ptr)
+	Procedure::Procedure(const std::string_view name, std::shared_ptr<SymbolTable> symbol_table_ptr, ast::Block* body_ptr)
 		: name(name), m_symbol_table(symbol_table_ptr), m_body(body_ptr), m_call_count(0)
 	{
 		m_alloc_size = m_symbol_table->size();

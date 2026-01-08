@@ -41,6 +41,12 @@ namespace fl
 
 		virtual std::unique_ptr<Symbol> clone() const = 0;
 
+		void noticeAssign();
+		uint64_t assignments() const;
+
+		void noticeUse();
+		uint64_t usages() const;
+
 		virtual void setMemoryPosition(const size_t position);
 		
 		bool testFlag(const SymbolType type) const;

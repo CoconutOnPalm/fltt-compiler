@@ -74,7 +74,8 @@ namespace fl::ast
 
 		virtual void declareInBlock(SymbolTable& symbol_table) override
 		{
-			symbol_table.add<Variable>(iterator->identifier);
+			// mark variable as const
+			symbol_table.add<Variable>(iterator->identifier, SymbolType::IN);
 
 			auto children = getChildren();
 			for (size_t i = 0; const auto& child_ptr : children)
