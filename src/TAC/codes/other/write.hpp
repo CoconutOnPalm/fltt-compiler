@@ -16,14 +16,24 @@ namespace fl::tac
 	{
 	private:
 
+		const size_t rvalue;
+
 	public:
 
-		Write() = default;
+		Write(const size_t rval)
+			: rvalue(rval)
+		{}
+
 		virtual ~Write() = default;
 
 		TACInfo getSelfInfo() const
 		{
 			return TACInfo(TACType::IO);
+		}
+
+		void updateNextUse(std::vector<TACInfo>& info_table) const override
+		{
+			info_table[rvalue].useIn(p_index);
 		}
 		
 		virtual void generateASM() const 
@@ -33,7 +43,7 @@ namespace fl::tac
 
 		virtual std::string __debug_string() const
 		{
-			return "WRITE";
+			return std::format("WRITE ({})", rvalue);
 		}
 	};
 	

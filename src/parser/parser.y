@@ -237,11 +237,11 @@ statement
     }
     | READ identifier ';'
     {
-        $<ast>$ = new fl::ast::Read;
+        $<ast>$ = new fl::ast::Read($<ast>2);
     }
     | WRITE value ';'
     {
-        $<ast>$ = new fl::ast::Write;
+        $<ast>$ = new fl::ast::Write($<ast>2);
     }
 ;
 

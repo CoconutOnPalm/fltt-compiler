@@ -16,9 +16,14 @@ namespace fl::tac
 	{
 	private:
 
+		const size_t lvalue;
+
 	public:
 
-		Read() = default;
+		Read(const size_t lval)
+			: lvalue(lval)
+		{}
+
 		virtual ~Read() = default;
 
 		TACInfo getSelfInfo() const
@@ -26,6 +31,11 @@ namespace fl::tac
 			return TACInfo(TACType::IO);
 		}
 
+		void updateNextUse(std::vector<TACInfo>& info_table) const override
+		{
+			info_table[lvalue].useIn(p_index);
+		}
+		
 		virtual void generateASM() const 
 		{
 			std::println("{}", __debug_string());
@@ -33,7 +43,7 @@ namespace fl::tac
 
 		virtual std::string __debug_string() const
 		{
-			return "READ";
+			return std::format("READ ({})", lvalue);
 		}
 	};
 	

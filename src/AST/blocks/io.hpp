@@ -13,19 +13,25 @@ namespace fl::ast
 	{
 	private:
 
+		std::shared_ptr<ASTNode> identifier;
+
 	public:
 
-		Read() = default;
+		Read(ASTNode* id)
+			: identifier(id)
+		{}
+
 		~Read() = default;
 
 		std::vector<std::shared_ptr<ASTNode>> getChildren()
 		{
-			return {};
+			return {identifier};
 		}
 
 		size_t generateTAC(TACTable& tac_table) const override
 		{
-			return tac_table.add<tac::Read>();
+			size_t var = identifier->generateTAC(tac_table);
+			return tac_table.add<tac::Read>(var);
 		}
 
 		std::string __debug_string() const override
@@ -38,19 +44,25 @@ namespace fl::ast
 	{
 	private:
 
+		std::shared_ptr<ASTNode> identifier;
+
 	public:
 
-		Write() = default;
+		Write(ASTNode* id)
+			: identifier(id)
+		{}
+
 		~Write() = default;
 
 		virtual std::vector<std::shared_ptr<ASTNode>> getChildren() override
 		{
-			return {};
+			return {identifier};
 		}
 
 		virtual size_t generateTAC(TACTable& tac_table) const override
 		{
-			return tac_table.add<tac::Write>();
+			size_t var = identifier->generateTAC(tac_table);
+			return tac_table.add<tac::Write>(var);
 		}
 
 		virtual std::string __debug_string() const override
