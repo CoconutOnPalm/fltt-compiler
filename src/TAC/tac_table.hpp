@@ -2,8 +2,10 @@
 
 #include <vector>
 #include <memory>
+#include <map>
 
 #include "tac.hpp"
+#include "../symbol/symbol_table.hpp"
 
 namespace fl
 {
@@ -29,6 +31,7 @@ namespace fl
 		}
 
 		void updateNextUse();
+		void typeCheck(std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables);
 
 		void generateASM() const;
 

@@ -13,6 +13,14 @@ namespace fl
 		return *(m_symbol_table.at(name).get());
 	}
 
+    std::string SymbolTable::argAt(const size_t index)
+    {
+		if (index >= m_arg_ids.size())
+			panic("procedure called with too many arguments");
+
+		return m_arg_ids[index];
+    }
+
 
 	void SymbolTable::assignMemory(const size_t shift)
 	{

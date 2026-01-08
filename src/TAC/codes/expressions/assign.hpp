@@ -35,7 +35,7 @@ namespace fl::tac
 			info_table[rval].useIn(p_index);
 		}
 
-		void typeCheck(const std::vector<TACInfo>& info_table) const override
+		void typeCheck(const std::vector<TACInfo>& info_table, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override
 		{
 			if (info_table[lval].code_type != TACType::VARIABLE)
 				panic("illegal operation - rvalue assignment");

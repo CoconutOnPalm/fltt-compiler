@@ -4,7 +4,7 @@
 #include <string>
 
 #include "tac_info.hpp"
-
+#include "../symbol/symbol_table.hpp"
 
 
 namespace fl
@@ -27,7 +27,8 @@ namespace fl
 		
 		virtual TACInfo getSelfInfo() const = 0;
 		virtual void updateNextUse(std::vector<TACInfo>& info_table) const { /* empty as default */ };
-		virtual void typeCheck(const std::vector<TACInfo>& info_table) const { /* empty as default */ };
+		virtual void typeCheck(const std::vector<TACInfo>& info_table, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const 
+		{ /* empty as default */ };
 		
 		virtual void generateASM() const = 0;
 

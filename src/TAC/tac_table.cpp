@@ -13,6 +13,14 @@ namespace fl
 		}
     }
 
+    void TACTable::typeCheck(std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables)
+    {
+		for (const auto& tac_ptr : m_tac_table)
+		{
+			tac_ptr->typeCheck(m_tac_info, symbol_tables);
+		}
+    }
+
 	
 	void TACTable::generateASM() const
 	{
