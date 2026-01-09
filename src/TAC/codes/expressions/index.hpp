@@ -18,8 +18,8 @@ namespace fl::tac
 
 	public:
 
-		Index(const size_t lvalue, const size_t ind)
-			: lval(lvalue), index(ind)
+		Index(const size_t lvalue, const size_t ind, const std::string_view owning_proc)
+			: TAC(owning_proc), lval(lvalue), index(ind)
 		{}
 
 		virtual ~Index() = default;
@@ -27,7 +27,7 @@ namespace fl::tac
 
 		TACInfo getSelfInfo() const
 		{
-			return TACInfo(TACType::EXPRESSION);
+			return TACInfo(TACType::ARRELEM, p_owning_procedure);
 		}
 
 		void updateNextUse(std::vector<TACInfo>& info_table) const override

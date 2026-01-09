@@ -14,6 +14,7 @@ namespace fl::ast
 	protected:
 
 		std::vector<std::shared_ptr<ASTNode>> block;
+		std::string owning_proc; // associated procedure
 	
 	public:
 

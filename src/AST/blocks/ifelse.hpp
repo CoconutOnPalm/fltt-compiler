@@ -42,16 +42,16 @@ namespace fl::ast
 			
 			// if
 			size_t cond = 		condition->generateTAC(tac_table);
-			size_t jmp = 		generateJumpIfTrue(cond, condition->getOperator(), else_label, tac_table);
+			size_t jmp = 		generateJumpIfTrue(cond, condition->getOperator(), else_label, tac_table, p_owner);
 			size_t if_body = 	if_block->generateTAC(tac_table);
-			tac_table.add<tac::JUMP>(endif_label);
+			tac_table.add<tac::JUMP>(endif_label, p_owner);
 
 			// else
-			tac_table.add<tac::Label>("else", else_label);
+			tac_table.add<tac::Label>("else", else_label, p_owner);
 			size_t else_body = 	else_block->generateTAC(tac_table);
 
 			// endif
-			return tac_table.add<tac::Label>("endif", endif_label);
+			return tac_table.add<tac::Label>("endif", endif_label, p_owner);
 		}
 
 		virtual std::string __debug_string() const override

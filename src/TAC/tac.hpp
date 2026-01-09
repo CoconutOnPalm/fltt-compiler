@@ -19,10 +19,13 @@ namespace fl
 	protected:
 
 		const size_t p_index;
+		const std::string p_owning_procedure;
 
 	public:
 
-		TAC() : p_index(s_global_index++) {}
+		TAC(const std::string_view owning_proc) 
+			: p_index(s_global_index++), p_owning_procedure(owning_proc) 
+		{}
 		virtual ~TAC() = default;
 		
 		virtual TACInfo getSelfInfo() const = 0;

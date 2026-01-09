@@ -22,15 +22,15 @@ namespace fl::tac
 
 	public:
 
-		Label(const std::string_view _name, std::shared_ptr<uint64_t> uuid)
-			: name(_name), uuid(uuid)
+		Label(const std::string_view _name, std::shared_ptr<uint64_t> uuid, const std::string_view owning_proc)
+			: TAC(owning_proc), name(_name), uuid(uuid)
 		{ *uuid = nextUUID(); }
 		~Label() = default;
 
 
 		TACInfo getSelfInfo() const
 		{
-			return TACInfo(TACType::LABEL);
+			return TACInfo(TACType::LABEL, p_owning_procedure);
 		}
 
 		virtual void generateASM() const override

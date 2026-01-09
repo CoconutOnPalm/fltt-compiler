@@ -9,25 +9,31 @@ namespace fl
 	
 	void fl::TACInfo::useIn(const size_t tac_index)
 	{
-		m_next_use.push(tac_index);
+		m_usages.push_back(tac_index);
 	}
 
-    size_t TACInfo::nextUsage()
+    size_t TACInfo::nextUsage(const size_t current_tac_index)
     {
-		if (m_next_use.empty())
-		{
-			warning("nextUsage(): no further usage registered");
-			return -1;
-		}
-
-        const size_t next = m_next_use.front();
-		m_next_use.pop();
-		return next;
+		for (const size_t usage : m_usages)
+			if (usage > current_tac_index)
+				return usage;	
+	
+		warning("nextUsage(): no further usage registered");
+		return -1;
     }
 
-    bool TACInfo::hasNextUse() const
+    bool TACInfo::hasNextUse(const size_t current_tac_index) const
     {
-        return !m_next_use.empty();
+		for (const size_t usage : m_usages)
+			if (usage > current_tac_index)
+				return true;	
+
+		return false;
+    }
+
+    std::vector<size_t> TACInfo::usages() const
+    {
+        return m_usages;
     }
 
     bool TACInfo::mapBlockTerminators(const TACType type)
@@ -39,6 +45,8 @@ namespace fl
 		case TACType::CONDITION:
 			return false;
 		case TACType::CONSTANT:
+			return false;
+		case TACType::ARRELEM:
 			return false;
 		case TACType::EXPRESSION:
 			return false;

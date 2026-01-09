@@ -31,6 +31,7 @@ namespace fl
 		m_tac_table.generateASM();
 		
 		m_tac_table.__debug_print();
+		m_tac_table.typeCheck(m_symbol_tables);
     }
 
 
@@ -59,6 +60,8 @@ namespace fl
 			}
 		}
 		
+		
+		body->setOwner(std::string{procedure_name});
 		std::shared_ptr<SymbolTable> st_smartptr(symbol_table);
 		m_symbol_tables.emplace(procedure_name, st_smartptr);
 		m_procedure_map.emplace(procedure_name, Procedure(procedure_name, st_smartptr, body));

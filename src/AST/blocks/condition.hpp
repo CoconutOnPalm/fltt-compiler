@@ -99,26 +99,26 @@ namespace fl::ast
 			switch (_operator)
 			{
 			case CondOp::EQ:
-				return tac_table.add<tac::Equal>(l, r);
+				return tac_table.add<tac::Equal>(l, r, p_owner);
 				// size_t a = tac_table.add<tac::Sub>(l, r);
 				// size_t b = tac_table.add<tac::Sub>(r, l);
 				// size_t cond = tac_table.add<tac::Add>(a, b);
 
 			case CondOp::NEQ:
-				return tac_table.add<tac::NotEqual>(l, r);
+				return tac_table.add<tac::NotEqual>(l, r, p_owner);
 				// size_t a = tac_table.add<tac::Sub>(l, r);
 				// size_t b = tac_table.add<tac::Sub>(r, l);
 				// size_t cond = tac_table.add<tac::Add>(a, b);
 			case CondOp::GT:
-				return tac_table.add<tac::GreaterThan>(l, r);
+				return tac_table.add<tac::GreaterThan>(l, r, p_owner);
 				// size_t cond = tac_table.add<tac::Sub>(r, l);
 				// return tac_table.add<tac::JZ>(cond);
 			case CondOp::LT:
-				return tac_table.add<tac::LessThan>(l, r);
+				return tac_table.add<tac::LessThan>(l, r, p_owner);
 			case CondOp::GEQ:
-				return tac_table.add<tac::GreaterOrEqual>(l, r);
+				return tac_table.add<tac::GreaterOrEqual>(l, r, p_owner);
 			case CondOp::LEQ:
-				return tac_table.add<tac::LessOrEqual>(l, r);
+				return tac_table.add<tac::LessOrEqual>(l, r, p_owner);
 			default:
 				panic("internal compiler error: conditional operator '{}' not mapped", _operator);
 				return 0; // disable warning
@@ -127,22 +127,22 @@ namespace fl::ast
 
 	};
 
-	inline size_t generateJumpIfTrue(const size_t cond, const CondOp op, std::shared_ptr<uint64_t> label_id, TACTable& tac_table)
+	inline size_t generateJumpIfTrue(const size_t cond, const CondOp op, std::shared_ptr<uint64_t> label_id, TACTable& tac_table, const std::string_view owning_proc)
 	{
 		switch (op)
 		{
 		case CondOp::EQ:
-			return tac_table.add<tac::JZ>(cond, label_id);
+			return tac_table.add<tac::JZ>(cond, label_id, owning_proc);
 		case CondOp::NEQ:
-			return tac_table.add<tac::JNZ>(cond, label_id);
+			return tac_table.add<tac::JNZ>(cond, label_id, owning_proc);
 		case CondOp::GT:
-			return tac_table.add<tac::JNZ>(cond, label_id);
+			return tac_table.add<tac::JNZ>(cond, label_id, owning_proc);
 		case CondOp::LT:
-			return tac_table.add<tac::JNZ>(cond, label_id);
+			return tac_table.add<tac::JNZ>(cond, label_id, owning_proc);
 		case CondOp::GEQ:
-			return tac_table.add<tac::JZ>(cond, label_id);
+			return tac_table.add<tac::JZ>(cond, label_id, owning_proc);
 		case CondOp::LEQ:
-			return tac_table.add<tac::JZ>(cond, label_id);
+			return tac_table.add<tac::JZ>(cond, label_id, owning_proc);
 		default:
 			panic("internal compiler error: if AST - operator '{}' not handled", op);
 			return 0; // disable warning

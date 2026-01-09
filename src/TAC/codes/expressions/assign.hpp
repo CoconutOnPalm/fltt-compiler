@@ -18,27 +18,38 @@ namespace fl::tac
 
 	public:
 
-		Assign(const size_t lvalue, const size_t rvalue)
-			: lval(lvalue), rval(rvalue)
+		Assign(const size_t lvalue, const size_t rvalue, const std::string_view owning_proc)
+			: TAC(owning_proc), lval(lvalue), rval(rvalue)
 		{}
 
 		virtual ~Assign() = default;
 
-		TACInfo getSelfInfo() const
+		virtual TACInfo getSelfInfo() const
 		{
-			return TACInfo(TACType::ASSIGNMENT);
+			return TACInfo(TACType::ASSIGNMENT, p_owning_procedure);
 		}
 
-		void updateNextUse(std::vector<TACInfo>& info_table) const override
+		virtual void updateNextUse(std::vector<TACInfo>& info_table) const override
 		{
 			info_table[lval].useIn(p_index);
 			info_table[rval].useIn(p_index);
 		}
 
-		void typeCheck(const std::vector<TACInfo>& info_table, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override
+		virtual void typeCheck(const std::vector<TACInfo>& info_table, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override
 		{
-			if (info_table[lval].code_type != TACType::VARIABLE)
-				panic("illegal operation - rvalue assignment");
+			TACType ct = info_table[lval].code_type;
+			if (ct != TACType::VARIABLE && ct != TACType::ARRELEM)
+				panic("illegal operation - rvalue assignment ({})", static_cast<int>(info_table[lval].code_type));
+
+			std::string var = info_table[lval].associated_variable;
+			if (var.empty()) // array indexer
+				return;
+
+			SymbolTable& symbol_tab = *(symbol_tables[p_owning_procedure].get());
+			const Symbol& symbol = symbol_tab[var];
+			if (symbol.testFlag(SymbolType::IN))
+				panic("illegal operation - assignment to a const variable");
+
 		}
 
 		virtual void generateASM() const override
@@ -51,5 +62,23 @@ namespace fl::tac
 			return std::format("({}) = ({})", lval, rval);
 		}
 	};
+
+
+	class ForceAssign : public Assign
+	{
+	public:
+
+		ForceAssign(const size_t lvalue, const size_t rvalue, const std::string_view owning_proc)
+			: Assign(lvalue, rvalue, owning_proc)
+		{}
+
+		virtual ~ForceAssign() = default;
+
+		void typeCheck(const std::vector<TACInfo>& info_table, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override
+		{
+			/* override so the assignment doesn't type check */
+		}
+	};
+
 	
 } // namespace fl

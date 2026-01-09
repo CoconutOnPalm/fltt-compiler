@@ -39,12 +39,12 @@ namespace fl::ast
 			condition->invert();
 
 			// do
-			tac_table.add<tac::Label>("do", do_label);
+			tac_table.add<tac::Label>("do", do_label, p_owner);
 			block->generateTAC(tac_table);
 
 			// while
 			size_t cond = condition->generateTAC(tac_table);
-			return generateJumpIfTrue(cond, condition->getOperator(), do_label, tac_table);
+			return generateJumpIfTrue(cond, condition->getOperator(), do_label, tac_table, p_owner);
 		}
 
 		virtual std::string __debug_string() const override

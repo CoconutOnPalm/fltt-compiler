@@ -20,8 +20,8 @@ namespace fl::tac
 
 	public:
 
-		Call(const std::string_view callee)
-			: callee(callee)
+		Call(const std::string_view callee, const std::string_view owning_proc)
+			: TAC(owning_proc), callee(callee)
 		{}
 
 		virtual ~Call() = default;
@@ -29,7 +29,7 @@ namespace fl::tac
 
 		TACInfo getSelfInfo() const
 		{
-			return TACInfo(TACType::JUMP);
+			return TACInfo(TACType::JUMP, p_owning_procedure);
 		}
 		
 		virtual void generateASM() const 

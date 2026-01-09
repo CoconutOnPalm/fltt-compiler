@@ -21,8 +21,8 @@ namespace fl::tac
 
 	public:
 
-		Param(const uint64_t param, const std::string_view destination, const size_t argindex)
-			: param(param), dest(destination), index(argindex)
+		Param(const uint64_t param, const std::string_view destination, const size_t argindex, const std::string_view owning_proc)
+			: TAC(owning_proc), param(param), dest(destination), index(argindex)
 		{}
 
 		virtual ~Param() = default;
@@ -30,7 +30,7 @@ namespace fl::tac
 		
 		TACInfo getSelfInfo() const
 		{
-			return TACInfo(TACType::PARAM);
+			return TACInfo(TACType::PARAM, p_owning_procedure);
 		}
 
 		void updateNextUse(std::vector<TACInfo>& info_table) const override
@@ -54,8 +54,10 @@ namespace fl::tac
 
 			if (arg.testFlag(SymbolType::IN))
 			{
-				if (this_param.code_type != TACType::CONSTANT)
-					panic("param is not an IN argument");
+				if (p_owning_procedure.empty())
+					panic("internal compiler error: no owning procedure assigned");
+				if (symbol_tables[p_owning_procedure]->get(this_param.associated_variable).testFlag(SymbolType::ARGUMENT) && this_param.code_type != TACType::CONSTANT)
+					panic("param '{}' is not an IN argument", this_param.associated_variable);
 			}
 		}
 

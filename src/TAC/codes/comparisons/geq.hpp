@@ -17,15 +17,15 @@ namespace fl::tac
 
 	public:
 
-		GreaterOrEqual(const size_t l, const size_t r)
-			: left(l), right(r)
+		GreaterOrEqual(const size_t l, const size_t r, const std::string_view owning_proc)
+			: TAC(owning_proc), left(l), right(r)
 		{}
 
 		virtual ~GreaterOrEqual() = default;
 
 		TACInfo getSelfInfo() const
 		{
-			return TACInfo(TACType::CONDITION);
+			return TACInfo(TACType::CONDITION, p_owning_procedure);
 		}
 
 		void updateNextUse(std::vector<TACInfo>& info_table) const override

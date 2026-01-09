@@ -17,8 +17,8 @@ namespace fl::tac
 
 	public:
 
-		LDC(const std::string_view id)
-			: identifier(id)
+		LDC(const std::string_view id, const std::string_view owning_proc)
+			: TAC(owning_proc), identifier(id)
 		{}
 
 		virtual ~LDC() = default;
@@ -26,7 +26,7 @@ namespace fl::tac
 
 		TACInfo getSelfInfo() const
 		{
-			return TACInfo(TACType::CONSTANT);
+			return TACInfo(TACType::CONSTANT, p_owning_procedure, identifier);
 		}
 		
 		virtual void generateASM() const override

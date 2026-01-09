@@ -62,19 +62,19 @@ namespace fl::ast
 			switch (op)
 			{
 			case Operator::ASSIGN:
-				return tac_table.add<tac::Assign>(l, r);
+				return tac_table.add<tac::Assign>(l, r, p_owner);
 			case Operator::ADD:
-				return tac_table.add<tac::Add>(l, r);
+				return tac_table.add<tac::Add>(l, r, p_owner);
 			case Operator::SUB:
-				return tac_table.add<tac::Sub>(l, r);
+				return tac_table.add<tac::Sub>(l, r, p_owner);
 			case Operator::MULT:
-				return tac_table.add<tac::Mult>(l, r);
+				return tac_table.add<tac::Mult>(l, r, p_owner);
 			case Operator::DIV:
-				return tac_table.add<tac::Div>(l, r);
+				return tac_table.add<tac::Div>(l, r, p_owner);
 			case Operator::MOD:
-				return tac_table.add<tac::Mod>(l, r);
+				return tac_table.add<tac::Mod>(l, r, p_owner);
 			case Operator::INDEX:
-				return tac_table.add<tac::Index>(l, r);
+				return tac_table.add<tac::Index>(l, r, p_owner);
 			default:
 				panic("internal compier error: no available mapping from operator '{}' to TAC table", op);
 				return 0;

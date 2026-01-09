@@ -30,7 +30,7 @@ namespace fl::ast
 
 		virtual size_t generateTAC(TACTable& tac_table) const override
 		{ 
-			return tac_table.add<tac::LDI>(val);
+			return tac_table.add<tac::LDI>(val, p_owner);
 		}
 
 		virtual std::string __debug_string() const override
@@ -56,7 +56,7 @@ namespace fl::ast
 
 		virtual size_t generateTAC(TACTable& tac_table) const override
 		{ 
-			return tac_table.add<tac::LD>(identifier);
+			return tac_table.add<tac::LD>(identifier, p_owner);
 		}
 
 		virtual std::string __debug_string() const override

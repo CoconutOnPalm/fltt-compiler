@@ -19,15 +19,15 @@ namespace fl::tac
 		
 	public:
 
-		JZ(const size_t cond_index, std::shared_ptr<size_t> label)
-			: condition_index(cond_index), label_id(label)
+		JZ(const size_t cond_index, std::shared_ptr<size_t> label, const std::string_view owning_proc)
+			: TAC(owning_proc), condition_index(cond_index), label_id(label)
 		{}
 		virtual ~JZ() = default;
 
 
 		TACInfo getSelfInfo() const
 		{
-			return TACInfo(TACType::JUMP);
+			return TACInfo(TACType::JUMP, p_owning_procedure);
 		}
 
 		void updateNextUse(std::vector<TACInfo>& info_table) const override

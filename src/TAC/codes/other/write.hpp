@@ -20,15 +20,15 @@ namespace fl::tac
 
 	public:
 
-		Write(const size_t rval)
-			: rvalue(rval)
+		Write(const size_t rval, const std::string_view owning_proc)
+			: TAC(owning_proc), rvalue(rval)
 		{}
 
 		virtual ~Write() = default;
 
 		TACInfo getSelfInfo() const
 		{
-			return TACInfo(TACType::IO);
+			return TACInfo(TACType::IO, p_owning_procedure);
 		}
 
 		void updateNextUse(std::vector<TACInfo>& info_table) const override

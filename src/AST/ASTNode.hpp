@@ -10,12 +10,18 @@ namespace fl
 	
 	class ASTNode
 	{
+	protected:
+
+		std::string p_owner;
+		
 	public:
 
 		ASTNode() = default;
 		virtual ~ASTNode() = default;
 
-		virtual std::vector<std::shared_ptr<ASTNode>> getChildren() = 0;;
+		virtual std::vector<std::shared_ptr<ASTNode>> getChildren() = 0;
+		virtual void setOwner(const std::string& procedure);
+		
 		virtual size_t generateTAC(TACTable& tac_table) const = 0;
 
 		virtual void declareInBlock(SymbolTable& symbol_table);

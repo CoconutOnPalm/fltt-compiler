@@ -17,8 +17,8 @@ namespace fl::tac
 
 	public:
 
-		LDI(const uint64_t immediate)
-			: value(immediate)
+		LDI(const uint64_t immediate, const std::string_view owning_proc)
+			: TAC(owning_proc), value(immediate)
 		{}
 
 		virtual ~LDI() = default;
@@ -26,7 +26,7 @@ namespace fl::tac
 
 		TACInfo getSelfInfo() const
 		{
-			return TACInfo(TACType::CONSTANT);
+			return TACInfo(TACType::CONSTANT, p_owning_procedure);
 		}
 		
 		virtual void generateASM() const 

@@ -40,9 +40,9 @@ namespace fl::ast
 			condition->invert();
 			
 			size_t cond = condition->generateTAC(tac_table);
-			size_t jmp = generateJumpIfTrue(cond, condition->getOperator(), label_id, tac_table);
+			size_t jmp = generateJumpIfTrue(cond, condition->getOperator(), label_id, tac_table, p_owner);
 			block->generateTAC(tac_table);
-			return tac_table.add<tac::Label>("endif", label_id);
+			return tac_table.add<tac::Label>("endif", label_id, p_owner);
 		}
 
 		virtual std::string __debug_string() const override

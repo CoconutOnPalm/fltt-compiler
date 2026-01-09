@@ -20,15 +20,15 @@ namespace fl::tac
 
 	public:
 
-		Read(const size_t lval)
-			: lvalue(lval)
+		Read(const size_t lval, const std::string_view owning_proc)
+			: TAC(owning_proc), lvalue(lval)
 		{}
 
 		virtual ~Read() = default;
 
 		TACInfo getSelfInfo() const
 		{
-			return TACInfo(TACType::IO);
+			return TACInfo(TACType::IO, p_owning_procedure);
 		}
 
 		void updateNextUse(std::vector<TACInfo>& info_table) const override

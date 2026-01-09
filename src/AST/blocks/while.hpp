@@ -39,13 +39,13 @@ namespace fl::ast
 			
 			condition->invert();
 			
-			size_t while_begin = 	tac_table.add<tac::Label>("while", while_id);
+			size_t while_begin = 	tac_table.add<tac::Label>("while", while_id, p_owner);
 			size_t cond = 			condition->generateTAC(tac_table);
-			size_t endwhile_jmp = 	generateJumpIfTrue(cond, condition->getOperator(), endwhile_id, tac_table);
+			size_t endwhile_jmp = 	generateJumpIfTrue(cond, condition->getOperator(), endwhile_id, tac_table, p_owner);
 			size_t body = 			block->generateTAC(tac_table);
-			size_t while_jmp = 		tac_table.add<tac::JUMP>(while_id);
+			size_t while_jmp = 		tac_table.add<tac::JUMP>(while_id, p_owner);
 
-			return 					tac_table.add<tac::Label>("endwhile", endwhile_id);
+			return 					tac_table.add<tac::Label>("endwhile", endwhile_id, p_owner);
 			
 			condition->generateTAC(tac_table);
 			std::println("while (not {}) JMP <endwhile>", condition->__debug_string());

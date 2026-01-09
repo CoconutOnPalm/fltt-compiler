@@ -9,6 +9,7 @@
 
 #include "../../TAC/codes/other/inc.hpp"
 #include "../../TAC/codes/other/dec.hpp"
+#include "../../TAC/codes/other/LDC.hpp"
 
 namespace fl::ast
 {
@@ -43,33 +44,34 @@ namespace fl::ast
 			std::shared_ptr<uint64_t> begin_for = std::make_shared<uint64_t>(0);
 			
 			// for header
-			size_t it =  iterator->generateTAC(tac_table);
+			// size_t it =  iterator->generateTAC(tac_table);
+			size_t it = tac_table.add<tac::LDC>(iterator->identifier, p_owner);
 			size_t beg = from->generateTAC(tac_table);
 			size_t end = to->generateTAC(tac_table);
-			tac_table.add<tac::Assign>(it, beg);
+			tac_table.add<tac::ForceAssign>(it, beg, p_owner);
 
 			// for
-			tac_table.add<tac::Label>("for", begin_for);
-			size_t jmp_cond = tac_table.add<tac::Equal>(it, end);
+			tac_table.add<tac::Label>("for", begin_for, p_owner);
+			size_t jmp_cond = tac_table.add<tac::Equal>(it, end, p_owner);
 
 			if (step == 1)
 			{
 				// use >= as == is more expensive
-				generateJumpIfTrue(jmp_cond, CondOp::GEQ, end_for, tac_table);
-				tac_table.add<tac::Inc>(it);
+				generateJumpIfTrue(jmp_cond, CondOp::GEQ, end_for, tac_table, p_owner);
+				tac_table.add<tac::Inc>(it, p_owner);
 			}
 			else // step = -1 
 			{
-				generateJumpIfTrue(jmp_cond, CondOp::LEQ, end_for, tac_table);
-				tac_table.add<tac::Dec>(it);
+				generateJumpIfTrue(jmp_cond, CondOp::LEQ, end_for, tac_table, p_owner);
+				tac_table.add<tac::Dec>(it, p_owner);
 			}
 
 			block->generateTAC(tac_table);
 
-			tac_table.add<tac::JUMP>(begin_for);
+			tac_table.add<tac::JUMP>(begin_for, p_owner);
 
 			// endfor 
-			return tac_table.add<tac::Label>("endfor", end_for);
+			return tac_table.add<tac::Label>("endfor", end_for, p_owner);
 		}
 
 		virtual void declareInBlock(SymbolTable& symbol_table) override

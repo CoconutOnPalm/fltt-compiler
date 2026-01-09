@@ -17,8 +17,8 @@ namespace fl::tac
 	
 	public:
 
-		Mult(const size_t left, const size_t right)
-			: left_index(left), right_index(right)
+		Mult(const size_t left, const size_t right, const std::string_view owning_proc)
+			: TAC(owning_proc), left_index(left), right_index(right)
 		{}
 
 		virtual ~Mult() = default;
@@ -26,7 +26,7 @@ namespace fl::tac
 
 		TACInfo getSelfInfo() const
 		{
-			return TACInfo(TACType::EXPRESSION);
+			return TACInfo(TACType::EXPRESSION, p_owning_procedure);
 		}
 
 		void updateNextUse(std::vector<TACInfo>& info_table) const override

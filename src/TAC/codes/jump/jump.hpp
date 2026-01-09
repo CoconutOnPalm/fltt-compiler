@@ -18,15 +18,15 @@ namespace fl::tac
 		
 	public:
 
-		JUMP(std::shared_ptr<size_t> label)
-			: label_id(label)
+		JUMP(std::shared_ptr<size_t> label, const std::string_view owning_proc)
+			: TAC(owning_proc), label_id(label)
 		{}
 		virtual ~JUMP() = default;
 
 		
 		TACInfo getSelfInfo() const
 		{
-			return TACInfo(TACType::JUMP);
+			return TACInfo(TACType::JUMP, p_owning_procedure);
 		}
 		
 		virtual void generateASM() const override

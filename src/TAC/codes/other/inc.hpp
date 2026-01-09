@@ -16,8 +16,8 @@ namespace fl::tac
 	
 	public:
 
-		Inc(const size_t lvalue)
-			: lval(lvalue)
+		Inc(const size_t lvalue, const std::string_view owning_proc)
+			: TAC(owning_proc), lval(lvalue)
 		{}
 
 		virtual ~Inc() = default;
@@ -25,7 +25,7 @@ namespace fl::tac
 
 		TACInfo getSelfInfo() const
 		{
-			return TACInfo(TACType::EXPRESSION);
+			return TACInfo(TACType::EXPRESSION, p_owning_procedure);
 		}
 
 		void updateNextUse(std::vector<TACInfo>& info_table) const override

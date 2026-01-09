@@ -17,8 +17,8 @@ namespace fl::tac
 
 	public:
 
-		LessOrEqual(const size_t l, const size_t r)
-			: left(l), right(r)
+		LessOrEqual(const size_t l, const size_t r, const std::string_view owning_proc)
+			: TAC(owning_proc), left(l), right(r)
 		{}
 
 		virtual ~LessOrEqual() = default;
@@ -26,7 +26,7 @@ namespace fl::tac
 
 		TACInfo getSelfInfo() const
 		{
-			return TACInfo(TACType::CONDITION);
+			return TACInfo(TACType::CONDITION, p_owning_procedure);
 		}
 
 		void updateNextUse(std::vector<TACInfo>& info_table) const override
