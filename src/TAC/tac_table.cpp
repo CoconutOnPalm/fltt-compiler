@@ -5,11 +5,15 @@
 
 namespace fl
 {
+    TACTable::TACTable()
+		: m_tac_info(std::make_shared<std::vector<TACInfo>>())
+    {}
+
     void TACTable::updateNextUse()
     {
 		for (const auto& tac_ptr : m_tac_table)
 		{
-			tac_ptr->updateNextUse(m_tac_info);
+			tac_ptr->updateNextUse(*m_tac_info);
 		}
     }
 
@@ -17,7 +21,7 @@ namespace fl
     {
 		for (const auto& tac_ptr : m_tac_table)
 		{
-			tac_ptr->typeCheck(m_tac_info, symbol_tables);
+			tac_ptr->typeCheck(*m_tac_info, symbol_tables);
 		}
     }
 
@@ -26,9 +30,7 @@ namespace fl
 	{
 		for (size_t i = 0; const auto& tac_ptr : m_tac_table)
 		{
-			std::print("{:2}| ", i); 
 			tac_ptr->generateASM();
-			i++;
 		}
 	}
 
@@ -42,7 +44,7 @@ namespace fl
 
 		std::println();
 		std::println("NEXTUSE INFO");
-		for (size_t i = 0; TACInfo tac_info : m_tac_info)
+		for (size_t i = 0; TACInfo tac_info : *m_tac_info)
 		{
 			std::print("  {:2}| ", i++);
 			auto usages = tac_info.usages();

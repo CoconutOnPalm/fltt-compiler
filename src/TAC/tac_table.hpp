@@ -15,18 +15,20 @@ namespace fl
 	private:
 
 		std::vector<std::unique_ptr<TAC>> m_tac_table;
-		std::vector<TACInfo> m_tac_info;
+
+		// shared_ptr to extend its lifetime (used also in RegAlloc)
+		std::shared_ptr<std::vector<TACInfo>> m_tac_info;
 
 	public:
 
-		TACTable() = default;
+		TACTable();
 		~TACTable() = default;
 	
 		template <typename CT, typename... Args>
 		size_t add(Args&&... args)
 		{
 			auto& new_elem = m_tac_table.emplace_back(std::make_unique<CT>(std::forward<Args>(args)...));
-			m_tac_info.push_back(new_elem->getSelfInfo());
+			m_tac_info->push_back(new_elem->getSelfInfo());
 			return m_tac_table.size() - 1;
 		}
 
