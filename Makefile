@@ -25,6 +25,8 @@ CXX_SRC = \
 	$(wildcard $(SRC_PATH)/symbol/*.cpp) \
 	$(wildcard $(SRC_PATH)/AST/*.cpp) \
 	$(wildcard $(SRC_PATH)/TAC/*.cpp) \
+	$(wildcard $(SRC_PATH)/ASM/*.cpp) \
+	$(wildcard $(SRC_PATH)/ASM/memory/*.cpp) \
 # 	$(wildcard $(PARSER_PATH)/*.cpp) \
 # 	$(wildcard $(LEXER_PATH)/*.cpp) \
 
@@ -57,6 +59,9 @@ CXX_HEAD = \
 	$(wildcard $(SRC_PATH)/TAC/codes/comparisons/*.hpp) \
 	$(wildcard $(SRC_PATH)/TAC/codes/jump/*.hpp) \
 	$(wildcard $(SRC_PATH)/TAC/codes/other/*.hpp) \
+	$(wildcard $(SRC_PATH)/ASM/*.hpp) \
+	$(wildcard $(SRC_PATH)/ASM/instructions/*.hpp) \
+	$(wildcard $(SRC_PATH)/ASM/memory/*.hpp) \
 	$(wildcard $(PARSER_PATH)/*.hpp) \
 
 

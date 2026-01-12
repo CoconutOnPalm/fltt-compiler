@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <fstream>
 
 #include "instruction.hpp"
 
@@ -26,7 +27,7 @@ namespace fl
 			m_instructions.emplace_back(std::make_unique<InstrT>(std::forward<Args>(args)...));
 		}
 
-		void generate() const;
+		void generate(std::ofstream& ofstr) const;
 	
 	};
 	

@@ -29,7 +29,7 @@ namespace fl::tac
 			return TACInfo(TACType::JUMP, p_owning_procedure);
 		}
 		
-		virtual void generateASM() const override
+		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override
 		{
 			std::println("{}", __debug_string());
 		}

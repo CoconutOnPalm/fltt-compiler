@@ -2,6 +2,8 @@
 
 #include <print>
 
+#include "../ASM/instructions/halt.hpp"
+
 
 namespace fl
 {
@@ -25,14 +27,17 @@ namespace fl
 		}
     }
 
-	
-	void TACTable::generateASM() const
-	{
+    void TACTable::generateASM(std::shared_ptr<ASMTable> asm_table, const size_t stack_ptr, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const
+    {
+		RegAlloc regalloc(m_tac_info, asm_table, stack_ptr);
 		for (size_t i = 0; const auto& tac_ptr : m_tac_table)
 		{
-			tac_ptr->generateASM();
+			tac_ptr->generateASM(*asm_table, regalloc, symbol_tables);
+			regalloc.__debug_print();
 		}
-	}
+		asm_table->add<ins::HALT>();
+    }
+
 
     void TACTable::__debug_print() const
     {

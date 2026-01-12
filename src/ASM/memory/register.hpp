@@ -35,31 +35,31 @@ struct std::formatter<fl::REG, char_T> : std::formatter<std::string>
 		switch (reg)
 		{
 		case fl::REG::RA:
-			reg_str = "RA";
+			reg_str = "a";
 			break;
 		case fl::REG::RB:
-			reg_str = "RB";
+			reg_str = "b";
 			break;
 		case fl::REG::RC:
-			reg_str = "RC";
+			reg_str = "c";
 			break;
 		case fl::REG::RD:
-			reg_str = "RD";
+			reg_str = "d";
 			break;
 		case fl::REG::RE:
-			reg_str = "RE";
+			reg_str = "e";
 			break;
 		case fl::REG::RF:
-			reg_str = "RF";
+			reg_str = "f";
 			break;
 		case fl::REG::RG:
-			reg_str = "RG";
+			reg_str = "g";
 			break;
 		case fl::REG::RH:
-			reg_str = "RH";
+			reg_str = "h";
 			break;
 		default:
-			panic("internal compiler error: no formatter defined for register ({})", static_cast<size_t>(reg));
+			fl::panic("internal compiler error: no formatter defined for register ({})", static_cast<size_t>(reg));
 		}
 		
 		return std::formatter<std::string>::format(reg_str, ctx);

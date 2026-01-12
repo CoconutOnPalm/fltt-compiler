@@ -29,9 +29,10 @@ namespace fl::tac
 			return TACInfo(TACType::CONSTANT, p_owning_procedure, identifier);
 		}
 		
-		virtual void generateASM() const override
+		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override
 		{
-			std::println("{}", __debug_string());
+			size_t address = symbol_tables[p_owning_procedure]->get(identifier).address();
+			regalloc.load(p_index, address);
 		}
 
 		virtual std::string __debug_string() const override

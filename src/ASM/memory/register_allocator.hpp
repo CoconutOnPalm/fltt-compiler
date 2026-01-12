@@ -4,9 +4,12 @@
 #include <vector>
 #include <memory>
 #include <limits>
+#include <set>
 
 #include "../../TAC/tac_info.hpp"
 #include "address_descriptor.hpp"
+#include "../asm_table.hpp"
+#include "../../symbol/symbol_table.hpp"
 
 
 namespace fl
@@ -16,32 +19,59 @@ namespace fl
 	{
 	private:
 
-		constexpr static size_t empty_tac = std::numeric_limits<size_t>::max();
+		constexpr inline static size_t empty_tac = -1;
+
+		enum class DataType
+		{
+			NONE,
+			VARIABLE,	// variable identified by 
+			IMMEDIATE,	// loaded immediate
+			TEMPORARY,	// compiler-generated temporary
+		};
 
 		struct Register
 		{
-			size_t tac_index {empty_tac};
-			std::string assoc_variable;
+			size_t tac { empty_tac };
+			DataType data_type { DataType::NONE };
+			size_t address { 0 };
 		};
+		
+		std::array<Register, __reg_count> m_registers;
+		const size_t m_stack_ptr;
+		std::vector<Register> m_stack;
+
 
 		std::shared_ptr<std::vector<TACInfo>> m_tac_info;
-		std::array<Register, __reg_count> m_registers;
-		AddrDescriptor m_addr_descriptor;
-
-		const size_t m_stack_ptr;
+		std::shared_ptr<ASMTable> m_asm_table;
+		
 
 	public:
 
-		RegAlloc(std::shared_ptr<std::vector<TACInfo>> tac_info, const size_t stack_ptr);
+		RegAlloc(std::shared_ptr<std::vector<TACInfo>> tac_info, std::shared_ptr<ASMTable> asm_table, const size_t stack_ptr);
 		~RegAlloc() = default;
 
-		void allocate(const size_t tac);
-		void allocate(const size_t tac, const std::string_view variable_name);
+		// void allocate(const size_t tac);
+		// void allocate(const size_t tac, const std::string_view variable_name);
+
+		// void assign(const REG reg, const size_t tac);
+
+		void updateRA(const size_t tac);
 
 		// swaps 'reg' with RA
 		void swap(const REG reg);
 
+		REG allocImmediate(const size_t tac);
+		REG allocTemporary(const size_t tac);
+		REG load(const size_t tac, const size_t addr);
 		REG get(const size_t tac);
+
+		void copy(const size_t lval_tac, const size_t rval_tac, const size_t tac_index);
+
+		void __debug_print() const;
+
+	private:
+
+		REG getEmptyRegister(const size_t tac, const size_t addr = 0);
 	};
 
 } // namespace fl

@@ -8,6 +8,8 @@
 
 #include "../../tac.hpp"
 
+#include "../../../ASM/instructions/write.hpp"
+
 
 namespace fl::tac
 {
@@ -36,9 +38,10 @@ namespace fl::tac
 			info_table[rvalue].useIn(p_index);
 		}
 		
-		virtual void generateASM() const 
+		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override 
 		{
-			std::println("{}", __debug_string());
+			regalloc.swap(regalloc.get(rvalue));
+			asm_table.add<ins::WRITE>();
 		}
 
 		virtual std::string __debug_string() const

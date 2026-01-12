@@ -1,12 +1,19 @@
 #include "compiler.hpp"
 
+#include <fstream>
+
 #include "utils/panic.hpp"
 #include "utils/const.hpp"
 
+#include "ASM/memory/register_allocator.hpp"
 
 namespace fl
 {
-    void Compiler::compile()
+    Compiler::Compiler()
+		: m_asm_table(std::make_shared<ASMTable>())
+    {}
+
+    void Compiler::compile(const std::filesystem::path& outpath)
     {
 		if (!m_procedure_map.contains(config::prog_entry_name))
 		{
@@ -20,7 +27,7 @@ namespace fl
 			proc.makeInBlockDeclarations();
 		}
 		
-		assignMemory();
+		size_t stack_ptr = assignMemory();
 		
 		for (auto& [name, proc] : m_procedure_map)
 		{
@@ -28,10 +35,19 @@ namespace fl
 		}
 		
 		m_tac_table.updateNextUse();
-		m_tac_table.generateASM();
 		
 		m_tac_table.__debug_print();
 		m_tac_table.typeCheck(m_symbol_tables);
+
+		m_tac_table.generateASM(m_asm_table, stack_ptr, m_symbol_tables);
+
+
+		std::ofstream outfstream(outpath);
+		if (!outfstream.good())
+			panic("could not produce output file");
+		
+		std::println("ASM: ");
+		m_asm_table->generate(outfstream);
     }
 
 
@@ -80,7 +96,7 @@ namespace fl
 		}
 	}
 
-    void Compiler::assignMemory()
+    size_t Compiler::assignMemory()
     {
 		size_t next_free_address = 1; // 0 = null
 		for (auto& [name, proc] : m_procedure_map)
@@ -93,6 +109,8 @@ namespace fl
 		{
 			proc.__debug_print();
 		}
+
+		return next_free_address;
     }
 
 

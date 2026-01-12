@@ -6,7 +6,7 @@
 namespace fl::ins
 {
 	
-	class WRITE : public Instruction
+	class STORE : public Instruction
 	{
 	private:
 
@@ -14,14 +14,14 @@ namespace fl::ins
 
 	public:
 
-		WRITE(const size_t mem_addr)
+		STORE(const size_t mem_addr)
 			: addr(mem_addr)
 		{}
-		virtual ~WRITE() = default;
+		virtual ~STORE() = default;
 
 		std::string generate() const
 		{
-			return std::format("WRITE {}", addr);
+			return std::format("STORE {}", addr);
 		}
 	};
 	

@@ -22,7 +22,7 @@ namespace fl
 			argparser_error("invalid argument count; expected 2, got {}", argc - 1);
 
 		const std::string lang_src_path(argv[1]);
-		const std::string machine_code_path(argv[1]);
+		const std::string machine_code_path(argv[2]);
 
         return ProgramArgs{
 			.language_path{lang_src_path},

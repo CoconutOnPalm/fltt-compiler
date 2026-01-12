@@ -6,6 +6,10 @@
 #include "tac_info.hpp"
 #include "../symbol/symbol_table.hpp"
 
+#include "../ASM/memory/register_allocator.hpp"
+#include "../ASM/asm_table.hpp"
+
+
 
 namespace fl
 {
@@ -33,7 +37,7 @@ namespace fl
 		virtual void typeCheck(const std::vector<TACInfo>& info_table, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const 
 		{ /* empty as default */ };
 		
-		virtual void generateASM() const = 0;
+		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const = 0;
 
 		virtual std::string __debug_string() const = 0;
 

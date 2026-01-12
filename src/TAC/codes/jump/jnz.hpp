@@ -35,7 +35,7 @@ namespace fl::tac
 			info_table[condition_index].useIn(p_index);
 		}
 		
-		virtual void generateASM() const override
+		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override
 		{
 			std::println("{}", __debug_string());
 		}

@@ -48,6 +48,7 @@ namespace fl
 		uint64_t usages() const;
 
 		virtual void setMemoryPosition(const size_t position);
+		virtual size_t address() const { return m_mempos; }
 		
 		bool testFlag(const SymbolType type) const;
 		virtual std::string __debug_string() const = 0;

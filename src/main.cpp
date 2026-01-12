@@ -18,5 +18,5 @@ int main(const int argc, const char* const* argv)
 	std::println("compiling {}", args.language_path.string());
 	run_parser(compiler, file_handler.handler);
 
-	compiler.compile();
+	compiler.compile(args.machine_code_path);
 }

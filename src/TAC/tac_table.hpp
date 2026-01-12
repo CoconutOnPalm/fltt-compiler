@@ -35,7 +35,7 @@ namespace fl
 		void updateNextUse();
 		void typeCheck(std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables);
 
-		void generateASM() const;
+		void generateASM(std::shared_ptr<ASMTable> asm_table, const size_t stack_ptr, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const;
 
 		void __debug_print() const;
 	};
