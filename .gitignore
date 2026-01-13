@@ -46,6 +46,7 @@ examples/
 description-pl.pdf
 
 kompilator
+debugger
 
 src/lexer/lexer.cpp
 src/parser/parser.cpp

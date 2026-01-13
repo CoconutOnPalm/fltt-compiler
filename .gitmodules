@@ -1,0 +1,3 @@
+[submodule "fltt-compiler-tools"]
+	path = fltt-compiler-tools
+	url = https://github.com/CoconutOnPalm/fltt-compiler-tools.git
