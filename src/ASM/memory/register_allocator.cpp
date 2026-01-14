@@ -137,6 +137,8 @@ namespace fl
 			panic("null ptr dereference");
 
 		REG reg = this->getEmptyRegister(tac, addr);
+		const REG reg_position = reg;
+
 		this->swap(reg);
 
 		m_asm_table->add<ins::LOAD>(addr);
@@ -144,7 +146,10 @@ namespace fl
 		m_registers[0].data_type = DataType::VARIABLE;
 		m_registers[0].tac = tac;
 		m_registers[0].address = addr;
-		return REG::RA;
+
+		this->swap(reg_position);
+
+		return reg_position;
 	}
 
 	// warning - this destroys whatever's inside 'reg'
@@ -153,14 +158,16 @@ namespace fl
 		REG val_reg = this->getEmptyRegister(tac, 0);
 		const REG reg_position = val_reg;
 
+		this->resetRegister(reg);
+
 		if (reg == REG::RA) // prevent register loss
 			reg = val_reg;
-		
+
 		this->swap(val_reg); // RA = ptr_reg
 
 		m_asm_table->add<ins::RLOAD>(reg);
 
-		
+
 		m_registers[0].data_type = DataType::POINTER;
 		m_registers[0].tac = tac;
 		m_registers[0].address = 0;
@@ -263,6 +270,13 @@ namespace fl
 		return REG::RA;
 	}
 
+	void RegAlloc::resetRegister(const REG reg)
+	{
+		m_registers[static_cast<size_t>(reg)].data_type = DataType::NONE;
+		m_registers[static_cast<size_t>(reg)].tac = empty_tac;
+		m_registers[static_cast<size_t>(reg)].address = 0;
+	}
+
 	void RegAlloc::copy(const size_t tac_index, const size_t lval_tac, const size_t rval_tac)
 	{
 		REG lval_reg = this->get(lval_tac);
@@ -286,16 +300,15 @@ namespace fl
 			m_asm_table->add<ins::MOVE>(rval_reg);
 			m_asm_table->add<ins::RSTORE>(lval_reg);
 		}
-		else if (rdt == DataType::VARIABLE)
+		else if (ldt == DataType::VARIABLE)
 		{
-			rval_reg = this->get(rval_tac);
 			this->swap(rval_reg);
 			lval_reg = this->get(lval_tac);
 			m_asm_table->add<ins::STORE>(m_registers[static_cast<size_t>(lval_reg)].address);
 		}
 		else
 		{
-			panic("illegal operation - rvalue assignment");
+			panic("illegal operation - rvalue assignment; value-type={}", static_cast<size_t>(ldt));
 		}
 
 		// this->swap(rval_reg);
@@ -381,9 +394,7 @@ namespace fl
 
 			if (!m_tac_info->at(reg_tac).hasNextUse(tac))
 			{
-				m_registers[i].data_type = DataType::NONE;
-				m_registers[i].tac = empty_tac;
-				m_registers[i].address = 0;
+				this->resetRegister(static_cast<REG>(i));
 				return static_cast<REG>(i);
 			}
 		}

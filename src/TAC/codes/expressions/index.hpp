@@ -68,8 +68,8 @@ namespace fl::tac
 			}
 			else
 			{
-				setupImmediate(symbol->address() - shift, pointer_reg, asm_table);
-				asm_table.add<ins::ADD>(pointer_reg);
+				setupImmediate(symbol->address() - shift, index_reg, asm_table);
+				asm_table.add<ins::ADD>(index_reg);
 			}
 
 			// RA = array

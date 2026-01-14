@@ -72,6 +72,8 @@ namespace fl
 		REG get(const size_t tac);
 		REG getValue(const size_t tac);
 
+		void resetRegister(const REG reg);
+
 		void copy(const size_t tac_index, const size_t lval_tac, const size_t rval_tac);
 
 		void __debug_print() const;
