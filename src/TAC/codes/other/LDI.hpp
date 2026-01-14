@@ -11,6 +11,8 @@
 #include "../../../ASM/instructions/shl.hpp"
 #include "../../../ASM/instructions/rst.hpp"
 
+#include "../../../ASM/reg_utils.hpp"
+
 
 namespace fl::tac
 {
@@ -36,31 +38,12 @@ namespace fl::tac
 		
 		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override
 		{
-			const REG reg = regalloc.allocImmediate(p_index);
-			setupImmediate(reg, asm_table);
+			regalloc.loadImmediate(p_index, value);
 		}
 
 		virtual std::string __debug_string() const
 		{
 			return std::format("LDI {}", value);
-		}
-
-	private:
-
-		void setupImmediate(const REG reg, ASMTable& asm_table) const
-		{
-			asm_table.add<ins::RST>(reg);
-			const size_t width = std::bit_width(value);
-			for (size_t i = 0; i < width; i++)
-			{
-				bool bit = (value >> (width - i - 1)) & 1u;
-
-				if (bit)
-					asm_table.add<ins::INC>(reg);
-
-				if (i < width - 1) // don't shift the last bit
-					asm_table.add<ins::SHL>(reg);
-			}
 		}
 	
 	};

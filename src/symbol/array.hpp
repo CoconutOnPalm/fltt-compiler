@@ -8,7 +8,7 @@ namespace fl
 	
 	class Array : public Symbol
 	{
-	private:
+	public:
 
 		const uint64_t begin, end;
 

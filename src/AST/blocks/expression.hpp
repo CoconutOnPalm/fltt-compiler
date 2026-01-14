@@ -7,7 +7,8 @@
 #include "../ASTNode.hpp"
 #include "operators.hpp"
 #include "../../utils/panic.hpp"
-#include "value.hpp"
+#include "number.hpp"
+#include "identifier.hpp"
 
 #include "../../TAC/codes/expressions/assign.hpp"
 #include "../../TAC/codes/expressions/add.hpp"
@@ -61,8 +62,8 @@ namespace fl::ast
 		{
 			switch (op)
 			{
-			case Operator::ASSIGN:
-				return tac_table.add<tac::Assign>(l, r, p_owner);
+			// case Operator::ASSIGN:
+			// 	return tac_table.add<tac::Assign>(l, r, p_owner);
 			case Operator::ADD:
 				return tac_table.add<tac::Add>(l, r, p_owner);
 			case Operator::SUB:
@@ -73,8 +74,8 @@ namespace fl::ast
 				return tac_table.add<tac::Div>(l, r, p_owner);
 			case Operator::MOD:
 				return tac_table.add<tac::Mod>(l, r, p_owner);
-			case Operator::INDEX:
-				return tac_table.add<tac::Index>(l, r, p_owner);
+			// case Operator::INDEX:
+			// 	return tac_table.add<tac::Index>(l, r, p_owner);
 			default:
 				panic("internal compier error: no available mapping from operator '{}' to TAC table", op);
 				return 0;

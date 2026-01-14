@@ -5,7 +5,8 @@
 
 #include "operators.hpp"
 #include "../ASTNode.hpp"
-#include "value.hpp"
+#include "number.hpp"
+#include "identifier.hpp"
 
 #include "../../TAC/codes/comparisons/eq.hpp"
 #include "../../TAC/codes/comparisons/neq.hpp"

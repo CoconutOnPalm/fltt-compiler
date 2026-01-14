@@ -31,8 +31,18 @@ namespace fl::tac
 		
 		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override
 		{
-			size_t address = symbol_tables[p_owning_procedure]->get(identifier).address();
-			regalloc.load(p_index, address);
+			const Symbol& symbol = symbol_tables[p_owning_procedure]->get(identifier);
+
+			// pointers
+			if (symbol.testFlag(SymbolType::ARGUMENT) || symbol.testFlag(SymbolType::ARRAY))
+			{
+				const REG address = regalloc.loadImmediate(p_index, symbol.address());
+				regalloc.loadPointer(p_index, address);
+			}
+			else // variables
+			{
+				regalloc.loadVariable(p_index, symbol.address());
+			}
 		}
 
 		virtual std::string __debug_string() const override

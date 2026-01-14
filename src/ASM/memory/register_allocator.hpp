@@ -25,6 +25,7 @@ namespace fl
 		{
 			NONE,
 			VARIABLE,	// variable identified by 
+			POINTER,
 			IMMEDIATE,	// loaded immediate
 			TEMPORARY,	// compiler-generated temporary
 		};
@@ -60,12 +61,18 @@ namespace fl
 		// swaps 'reg' with RA
 		void swap(const REG reg);
 
+		REG allocPointer(const size_t tac);
 		REG allocImmediate(const size_t tac);
 		REG allocTemporary(const size_t tac);
-		REG load(const size_t tac, const size_t addr);
-		REG get(const size_t tac);
 
-		void copy(const size_t lval_tac, const size_t rval_tac, const size_t tac_index);
+		REG loadVariable(const size_t tac, const size_t addr);
+		REG loadPointer(const size_t tac, REG reg);
+		REG loadImmediate(const size_t tac, const uint64_t imm);
+		
+		REG get(const size_t tac);
+		REG getValue(const size_t tac);
+
+		void copy(const size_t tac_index, const size_t lval_tac, const size_t rval_tac);
 
 		void __debug_print() const;
 

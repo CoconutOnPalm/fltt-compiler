@@ -4,7 +4,8 @@
 
 
 #include "../ASTNode.hpp"
-#include "value.hpp"
+#include "number.hpp"
+#include "identifier.hpp"
 #include "block.hpp"
 
 #include "../../TAC/codes/other/inc.hpp"

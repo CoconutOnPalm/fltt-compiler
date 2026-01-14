@@ -9,6 +9,8 @@
 #include "../AST/syntax_tree.hpp"
 #include "../AST/blocks/block.hpp"
 #include "../AST/blocks/expression.hpp"
+#include "../AST/blocks/indexof.hpp"
+#include "../AST/blocks/assign.hpp"
 #include "../AST/blocks/if.hpp"
 #include "../AST/blocks/ifelse.hpp"
 #include "../AST/blocks/while.hpp"

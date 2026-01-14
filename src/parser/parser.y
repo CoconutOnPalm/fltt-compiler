@@ -36,6 +36,7 @@
     fl::ast::Block* block;
     fl::ast::Condition* cond;
     fl::SymbolTable* st;
+    fl::ast::Identifier* ident;
     fl::ast::ArgsDecl* argdecl;
     fl::ast::ProcDecl* procdecl;
     fl::ast::Params* param;
@@ -48,7 +49,7 @@
 %token <id>         pidentifier
 
 %type <block>       block
-%type <ast>         identifier
+%type <ident>       identifier
 %type <ast>         expression
 %type <cond>        condition
 %type <st>          declarations
@@ -203,9 +204,9 @@ block
 statement 
     : identifier ASSIGN expression ';'
     {
-        fl::ASTNode* lvalue = $<ast>1;
+        fl::ast::Identifier* lvalue = $<ident>1; 
         fl::ASTNode* rvalue = $<ast>3;
-        $<ast>$ = new fl::ast::Expression(fl::Operator::ASSIGN, lvalue, rvalue);
+        $<ast>$ = new fl::ast::Assign(lvalue, rvalue);
     }
     | IF condition THEN block[I] ELSE block[E] ENDIF
     {
@@ -237,7 +238,7 @@ statement
     }
     | READ identifier ';'
     {
-        $<ast>$ = new fl::ast::Read($<ast>2);
+        $<ast>$ = new fl::ast::Read($<ident>2);
     }
     | WRITE value ';'
     {
@@ -403,34 +404,32 @@ value
     }
     | identifier
     {
-        $<ast>$ = $<ast>1;
+        $<ast>$ = $<ident>1;
     }
 ;
 
 identifier 
     : pidentifier
     {
-        $<ast>$ = new fl::ast::Identifier($<id>1);
+        $<ident>$ = new fl::ast::Identifier($<id>1);
         free($<id>1);
     }
     | pidentifier '[' pidentifier ']'
     {
-        fl::ASTNode* arr = new fl::ast::Identifier($<id>1);
         fl::ASTNode* ind = new fl::ast::Identifier($<id>3);
-        fl::ASTNode* node = new fl::ast::Expression(fl::Operator::INDEX, arr, ind);
+        fl::ast::Identifier* node = new fl::ast::IndexOf($<id>1, ind);
 
-        $<ast>$ = node;
+        $<ident>$ = node;
 
         free($<id>1);
         free($<id>3);
     }
     | pidentifier '[' num ']'
     {
-        fl::ASTNode* arr = new fl::ast::Identifier($<id>1);
         fl::ASTNode* ind = new fl::ast::Number($<num>3);
-        fl::ASTNode* node = new fl::ast::Expression(fl::Operator::INDEX, arr, ind);
+        fl::ast::Identifier* node = new fl::ast::IndexOf($<id>1, ind);
 
-        $<ast>$ = node;
+        $<ident>$ = node;
 
         free($<id>1);
     }

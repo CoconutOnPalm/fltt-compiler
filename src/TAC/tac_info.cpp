@@ -25,7 +25,7 @@ namespace fl
     bool TACInfo::hasNextUse(const size_t current_tac_index) const
     {
 		for (const size_t usage : m_usages)
-			if (usage > current_tac_index)
+			if (usage >= current_tac_index)
 				return true;	
 
 		return false;

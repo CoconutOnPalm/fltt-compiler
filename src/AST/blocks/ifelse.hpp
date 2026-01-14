@@ -6,7 +6,8 @@
 #include "condition.hpp"
 #include "block.hpp"
 #include "../ASTNode.hpp"
-#include "value.hpp"
+#include "number.hpp"
+#include "identifier.hpp"
 
 
 namespace fl::ast

@@ -55,7 +55,7 @@ namespace fl::tac
 		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override
 		{
 			std::println("{:2}| lval={}, rval={}", p_index, regalloc.get(lval), rval);
-			regalloc.copy(lval, rval, p_index);
+			regalloc.copy(p_index, lval, rval);
 		}
 
 		virtual std::string __debug_string() const override
