@@ -1,0 +1,23 @@
+PROGRAM IS
+    var, t, arr[0:3]
+IN
+    var := 1;
+    WRITE var;      # 1
+
+    arr[0] := 0;
+    arr[1] := 1;
+    WRITE arr[0];   # 0
+    WRITE arr[1];   # 1
+
+    t := 2;
+    var := t;
+    WRITE var;      # 2
+    var := arr[0];
+    WRITE var;      # 0
+    var := arr[1];
+    WRITE var;      # 1
+    arr[2] := t;
+    WRITE arr[2];   # 2
+    arr[3] := arr[0];
+    WRITE arr[3];   # 0
+END

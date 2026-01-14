@@ -59,4 +59,6 @@ mw2025/lexer.cc
 mw2025/parser.cc
 mw2025/parser.hh
 
+tests/.compiled/
+
 *.mr
