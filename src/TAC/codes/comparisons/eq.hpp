@@ -65,7 +65,7 @@ namespace fl::tac
 			asm_table.add<ins::ADD>(left_reg);
 
 			// RA = result
-			regalloc.updateRA(p_index);
+			regalloc.overrideRA(p_index);
 		}
 
 		virtual std::string __debug_string() const

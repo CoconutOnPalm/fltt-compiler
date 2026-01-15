@@ -1,0 +1,52 @@
+PROGRAM IS
+    a, b, arr[0:1]
+IN
+    a := 1;
+    b := 2;
+    IF a <= b THEN
+        WRITE 1;
+    ELSE
+        WRITE 0;
+    ENDIF
+
+    a := 2;
+    b := 1;
+    IF a <= b THEN
+        WRITE 1;
+    ELSE
+        WRITE 0;
+    ENDIF
+
+    a := 2;
+    b := 2;
+    IF a <= b THEN
+        WRITE 1;
+    ELSE
+        WRITE 0;
+    ENDIF
+
+
+    arr[0] := 1;
+    arr[1] := 2;
+    IF arr[0] <= arr[1] THEN
+        WRITE 1;
+    ELSE
+        WRITE 0;
+    ENDIF
+
+    arr[0] := 2;
+    arr[1] := 1;
+    IF arr[0] <= arr[1] THEN
+        WRITE 1;
+    ELSE
+        WRITE 0;
+    ENDIF
+
+    arr[0] := 2;
+    arr[1] := 2;
+    IF arr[0] <= arr[1] THEN
+        WRITE 1;
+    ELSE
+        WRITE 0;
+    ENDIF
+END

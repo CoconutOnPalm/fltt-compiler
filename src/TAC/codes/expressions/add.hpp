@@ -45,7 +45,7 @@ namespace fl::tac
 			REG rreg = regalloc.getValue(right_index);
 			asm_table.add<ins::ADD>(rreg);
 			// RA = result
-			regalloc.updateRA(p_index);
+			regalloc.overrideRA(p_index);
 		}
 
 		virtual std::string __debug_string() const override

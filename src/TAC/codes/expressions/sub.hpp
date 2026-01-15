@@ -43,7 +43,7 @@ namespace fl::tac
 			// ADD RX
 			asm_table.add<ins::SUB>(regalloc.get(right_index));
 			// RA = result
-			regalloc.updateRA(p_index);
+			regalloc.overrideRA(p_index);
 		}
 
 		virtual std::string __debug_string() const override

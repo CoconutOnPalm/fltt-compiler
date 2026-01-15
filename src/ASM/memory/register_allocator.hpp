@@ -69,7 +69,7 @@ namespace fl
 
 		// void assign(const REG reg, const size_t tac);
 
-		void updateRA(const size_t tac);
+		void overrideRA(const size_t tac);
 
 		// swaps 'reg' with RA
 		REG swap(const REG reg);

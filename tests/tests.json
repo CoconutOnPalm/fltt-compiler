@@ -2,20 +2,41 @@
     {
         "file": "test-assign",
         "in": [],
-        "out": [
-            1,
-            0,
-            1,
-            2,
-            0,
-            1,
-            2,
-            0
-        ]
+        "out": [1, 0, 1, 2, 0, 1, 2, 0]
     },
     {
         "file": "test-array.imp",
         "in": [],
         "out": [1, 2, 1, 2, 2, 3, 2, 2]
+    },
+    {
+        "file": "test-eq.imp",
+        "in": [],
+        "out": [0, 0, 1, 0, 0, 1]
+    },
+    {
+        "file": "test-neq.imp",
+        "in": [],
+        "out": [1, 1, 0, 1, 1, 0]
+    },
+    {
+        "file": "test-lt.imp",
+        "in": [],
+        "out": [1, 0, 0, 1, 0, 0]
+    },
+    {
+        "file": "test-gt.imp",
+        "in": [],
+        "out": [0, 1, 0, 0, 1, 0]
+    },
+    {
+        "file": "test-leq.imp",
+        "in": [],
+        "out": [0, 1, 1, 0, 1, 1]
+    },
+    {
+        "file": "test-geq.imp",
+        "in": [],
+        "out": [1, 0, 1, 1, 0, 1]
     }
 ]

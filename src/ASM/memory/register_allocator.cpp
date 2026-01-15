@@ -87,7 +87,7 @@ namespace fl
 	// 	m_registers[static_cast<size_t>(reg)].tac.emplace(tac);
 	// }
 
-	void RegAlloc::updateRA(const size_t tac)
+	void RegAlloc::overrideRA(const size_t tac)
 	{
 		m_registers[0].data_type = DataType::TEMPORARY;
 		m_registers[0].address = 0;
