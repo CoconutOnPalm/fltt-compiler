@@ -31,7 +31,7 @@ namespace fl::ast
 
 		virtual std::vector<std::shared_ptr<ASTNode>> getChildren() override
 		{
-			return {block};
+			return {condition, block};
 		}
 
 		virtual size_t generateTAC(TACTable& tac_table) const override

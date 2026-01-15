@@ -94,13 +94,15 @@ namespace fl
 		m_registers[0].tac = tac;
 	}
 
-	void RegAlloc::swap(const REG reg)
+	REG RegAlloc::swap(const REG reg)
 	{
 		if (reg == REG::RA)
-			return;
+			return REG::RA;
 
 		std::swap(m_registers[0], m_registers[static_cast<size_t>(reg)]);
 		m_asm_table->add<ins::SWP>(reg);
+
+		return REG::RA;
 	}
 
 	REG RegAlloc::allocPointer(const size_t tac)
@@ -304,11 +306,17 @@ namespace fl
 		{
 			this->swap(rval_reg);
 			lval_reg = this->get(lval_tac);
+			// TODO: replace with ins::MOVE
 			m_asm_table->add<ins::STORE>(m_registers[static_cast<size_t>(lval_reg)].address);
 		}
-		else
+		else if (ldt == DataType::TEMPORARY)
 		{
-			panic("illegal operation - rvalue assignment; value-type={}", static_cast<size_t>(ldt));
+			lval_reg = this->swap(lval_reg);
+			m_asm_table->add<ins::MOVE>(rval_reg);
+			m_registers[0].address = 0;
+			m_registers[0].data_type = DataType::TEMPORARY;
+			m_registers[0].tac = tac_index;
+			// panic("illegal operation - rvalue assignment; value-type={}", static_cast<size_t>(ldt));
 		}
 
 		// this->swap(rval_reg);
@@ -351,6 +359,20 @@ namespace fl
 		// 	m_asm_table->add<ins::SWP>(rval_reg);
 		// }
 	}
+
+    void RegAlloc::flushTemporaryTAC()
+    {
+		for (size_t i = 0; i < m_registers.size(); i++)
+		{
+			for (const size_t t : temp_tac)
+			{
+				if (m_registers[i].tac == t)
+				{
+					this->resetRegister(static_cast<REG>(i));
+				}
+			}
+		}
+    }
 
 	void RegAlloc::__debug_print() const
 	{

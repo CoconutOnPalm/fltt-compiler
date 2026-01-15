@@ -7,6 +7,7 @@
 
 #include "../../tac.hpp"
 
+#include "../../../ASM/instructions/label.hpp"
 
 namespace fl::tac
 {
@@ -35,7 +36,7 @@ namespace fl::tac
 
 		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override
 		{
-			std::println("# {}", __debug_string());
+			asm_table.add<ins::LABEL>(*uuid);
 		}
 
 		virtual std::string __debug_string() const override

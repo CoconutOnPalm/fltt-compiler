@@ -6,6 +6,8 @@
 #include "../../tac.hpp"
 #include "../other/label.hpp"
 
+#include "../../../ASM/instructions/jzero.hpp"
+
 
 namespace fl::tac
 {
@@ -37,7 +39,10 @@ namespace fl::tac
 
 		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override
 		{
-			std::println("{}", __debug_string());
+			REG cond_reg = regalloc.get(condition_index);
+			cond_reg = regalloc.swap(cond_reg);	// cond_reg should be RA, but swap jic
+
+			asm_table.add<ins::JZERO>(*label_id);
 		}
 
 		virtual std::string __debug_string() const override

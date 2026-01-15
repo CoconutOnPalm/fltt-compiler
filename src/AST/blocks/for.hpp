@@ -36,14 +36,14 @@ namespace fl::ast
 
 		virtual std::vector<std::shared_ptr<ASTNode>> getChildren() override
 		{
-			return { block };
+			return { iterator, from, to, block };
 		}
 
 		virtual size_t generateTAC(TACTable& tac_table) const override
 		{
 			std::shared_ptr<uint64_t> end_for = std::make_shared<uint64_t>(0);
 			std::shared_ptr<uint64_t> begin_for = std::make_shared<uint64_t>(0);
-			
+
 			// for header
 			// size_t it =  iterator->generateTAC(tac_table);
 			size_t it = tac_table.add<tac::LDC>(iterator->identifier, p_owner);

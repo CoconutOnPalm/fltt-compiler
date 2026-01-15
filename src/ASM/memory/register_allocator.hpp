@@ -17,6 +17,19 @@ namespace fl
 
 	class RegAlloc
 	{
+	public:
+
+		constexpr inline static std::array<size_t, 8> temp_tac {
+			static_cast<size_t>(-2), 
+			static_cast<size_t>(-3), 
+			static_cast<size_t>(-4), 
+			static_cast<size_t>(-5), 
+			static_cast<size_t>(-6), 
+			static_cast<size_t>(-7), 
+			static_cast<size_t>(-8), 
+			static_cast<size_t>(-9),
+		};
+		
 	private:
 
 		constexpr inline static size_t empty_tac = -1;
@@ -59,7 +72,7 @@ namespace fl
 		void updateRA(const size_t tac);
 
 		// swaps 'reg' with RA
-		void swap(const REG reg);
+		REG swap(const REG reg);
 
 		REG allocPointer(const size_t tac);
 		REG allocImmediate(const size_t tac);
@@ -75,6 +88,8 @@ namespace fl
 		void resetRegister(const REG reg);
 
 		void copy(const size_t tac_index, const size_t lval_tac, const size_t rval_tac);
+
+		void flushTemporaryTAC();
 
 		void __debug_print() const;
 

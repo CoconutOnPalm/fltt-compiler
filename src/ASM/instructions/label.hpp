@@ -7,28 +7,29 @@
 namespace fl::ins
 {
 
-	class MOVE : public Instruction
+	class LABEL : public Instruction
 	{
-	private:
-
-		const REG reg;
-	
 	public:
 
-		MOVE(const REG _reg)
-			: reg(_reg)
+		const size_t id;
+
+	public:
+
+		LABEL(const size_t label_id)
+			: id(label_id)
 		{}
 
-		~MOVE() = default;
+		~LABEL() = default;
 
 		constexpr virtual size_t size() const override
 		{
-			return 2;
+			return 0;
 		}
 
 		std::string generate() const
 		{
-			return std::format("RST a\nADD {}", reg);
+			return std::format("# LABEL {}", id);
+			// return {};
 		}
 
 	};

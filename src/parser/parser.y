@@ -255,7 +255,7 @@ procedure_head
         $<procdecl>$ = procedure;
 
         delete args;
-        free($<id>1);
+        // free($<id>1);
     }
 ;
 
@@ -264,8 +264,8 @@ procedure_call
     {
         fl::ast::Params* params = $<param>3;
         fl::ASTNode* proc_call = new fl::ast::ProcCall($<id>1, std::move(*params));
-        free(params);
-        free($<id>1);
+        // free(params);
+        // free($<id>1);
 
         $<ast>$ = proc_call;
     }
@@ -277,28 +277,28 @@ declarations
         fl::SymbolTable* symbol_table = $<st>1;
         symbol_table->add<fl::Variable>($<id>3);
         $<st>$ = symbol_table;
-        free($<id>3);
+        // free($<id>3);
     }
     | declarations ',' pidentifier '[' num ':' num ']'
     {
         fl::SymbolTable* symbol_table = $<st>1;
         symbol_table->add<fl::Array>($<id>3, $<num>5, $<num>7);
         $<st>$ = symbol_table;
-        free($<id>3);
+        // free($<id>3);
     }
     | pidentifier
     {
         fl::SymbolTable* symbol_table = new fl::SymbolTable;
         symbol_table->add<fl::Variable>($<id>1);
         $<st>$ = symbol_table;
-        free($<id>1);
+        // free($<id>1);
     }
     | pidentifier '[' num ':' num ']'
     {
         fl::SymbolTable* symbol_table = new fl::SymbolTable;
         symbol_table->add<fl::Array>($<id>1, $<num>3, $<num>5);
         $<st>$ = symbol_table;
-        free($<id>1);
+        // free($<id>1);
     }
 ;
 
@@ -329,14 +329,14 @@ args
     {
         fl::ast::Params* params = $<param>1;
         params->add($<id>3);
-        free($<id>3);
+        // free($<id>3);
         $<param>$ = params;
     }
     | pidentifier
     {
         fl::ast::Params* params = new fl::ast::Params;
         params->add($<id>1);
-        free($<id>1);
+        // free($<id>1);
         $<param>$ = params;
     }
 ;
@@ -412,7 +412,7 @@ identifier
     : pidentifier
     {
         $<ident>$ = new fl::ast::Identifier($<id>1);
-        free($<id>1);
+        // free($<id>1);
     }
     | pidentifier '[' pidentifier ']'
     {
@@ -421,8 +421,8 @@ identifier
 
         $<ident>$ = node;
 
-        free($<id>1);
-        free($<id>3);
+        // free($<id>1);
+        // free($<id>3);
     }
     | pidentifier '[' num ']'
     {
@@ -431,7 +431,7 @@ identifier
 
         $<ident>$ = node;
 
-        free($<id>1);
+        // free($<id>1);
     }
 ;
 
