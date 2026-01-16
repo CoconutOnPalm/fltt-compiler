@@ -1,6 +1,7 @@
 #include "compiler.hpp"
 
 #include <fstream>
+#include <limits>
 
 #include "utils/panic.hpp"
 #include "utils/const.hpp"
@@ -15,6 +16,11 @@ namespace fl
 
     void Compiler::compile(const std::filesystem::path& outpath)
     {
+		for (auto& [name, st] : m_symbol_tables)
+		{
+			std::println("{}.uuid = {}", name, st->UUID());
+		}
+		
 		if (!m_procedure_map.contains(config::prog_entry_name))
 		{
 			panic("entry point not defined");
@@ -29,9 +35,12 @@ namespace fl
 		
 		size_t stack_ptr = assignMemory();
 		
+		m_procedure_map.at(config::prog_entry_name).generateTAC(m_tac_table);
+
 		for (auto& [name, proc] : m_procedure_map)
 		{
-			proc.generateTAC(m_tac_table);
+			if (name != config::prog_entry_name)
+				proc.generateTAC(m_tac_table);
 		}
 		
 		m_tac_table.updateNextUse();
@@ -53,6 +62,8 @@ namespace fl
 
 	void Compiler::defineProcedure(const std::string_view procedure_name, ast::ProcDecl* head, SymbolTable* symbol_table, ast::Block* body)
 	{
+		static uint64_t proc_uuid = std::numeric_limits<uint64_t>::max();
+
 		if (symbol_table == nullptr)
 		{
 			symbol_table = new SymbolTable;
@@ -63,6 +74,7 @@ namespace fl
 		}
 
 		// add a variable holding return adress
+		symbol_table->setUUID(proc_uuid--);
 		symbol_table->add<Variable>(config::return_variable_name);
 		
 		if (head != nullptr)

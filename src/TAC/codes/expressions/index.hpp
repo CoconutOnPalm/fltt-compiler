@@ -41,6 +41,15 @@ namespace fl::tac
 		
 		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override
 		{
+			
+			if (symbol_tables[p_owning_procedure]->get(identifier).testFlag(SymbolType::ARGUMENT))
+			{
+				// symbol = dynamic_cast<Array*>(&symbol_tables[p_owning_procedure]);
+				Argument* arg = dynamic_cast<Argument*>(&symbol_tables[p_owning_procedure]->get(identifier));
+				
+			}
+			
+			
 			Array* symbol = dynamic_cast<Array*>(&symbol_tables[p_owning_procedure]->get(identifier));
 			if (symbol == nullptr)
 			{

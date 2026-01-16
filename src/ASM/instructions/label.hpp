@@ -19,14 +19,14 @@ namespace fl::ins
 			: id(label_id)
 		{}
 
-		~LABEL() = default;
+		virtual ~LABEL() = default;
 
 		constexpr virtual size_t size() const override
 		{
 			return 0;
 		}
 
-		std::string generate() const
+		virtual std::string generate() const override
 		{
 			// return std::format("# LABEL {}", id);
 			return {};

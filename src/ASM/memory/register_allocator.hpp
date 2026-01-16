@@ -30,8 +30,7 @@ namespace fl
 			static_cast<size_t>(-9),
 		};
 		
-	private:
-
+		
 		constexpr inline static size_t empty_tac = -1;
 
 		enum class DataType
@@ -50,6 +49,8 @@ namespace fl
 			size_t address { 0 };
 		};
 		
+	private:
+
 		std::array<Register, __reg_count> m_registers;
 		const size_t m_stack_ptr;
 		std::vector<Register> m_stack;
@@ -69,6 +70,7 @@ namespace fl
 
 		// void assign(const REG reg, const size_t tac);
 
+		void overrideRA(const Register& regdata);
 		void overrideRA(const size_t tac);
 
 		// swaps 'reg' with RA

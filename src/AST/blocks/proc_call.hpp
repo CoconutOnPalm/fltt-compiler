@@ -38,10 +38,10 @@ namespace fl::ast
 			}
 			
 			size_t param = 0;
-			for (size_t i = 0; const auto& id : param_ids)
+			for (size_t i = 0; const std::string& id : param_ids)
 			{
-				param = tac_table.add<tac::LD>(id, p_owner);
-				tac_table.add<tac::Param>(param, callee, i++, p_owner);
+				// param = tac_table.add<tac::LD>(id, p_owner);
+				tac_table.add<tac::Param>(id, callee, i++, p_owner);
 			}
 
 			return param;

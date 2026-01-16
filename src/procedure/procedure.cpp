@@ -1,5 +1,10 @@
 #include "procedure.hpp"
 
+#include "../TAC/codes/other/proc_enter.hpp"
+#include "../TAC/codes/other/proc_exit.hpp"
+#include "../TAC/codes/other/halt.hpp"
+
+
 namespace fl
 {
 
@@ -22,7 +27,15 @@ namespace fl
 
 	size_t Procedure::generateTAC(TACTable& tac_table) const
 	{
-		return m_body->generateTAC(tac_table);
+		if (name != config::prog_entry_name)
+			tac_table.add<tac::ProcEnter>(name);
+
+		m_body->generateTAC(tac_table);
+
+		if (name != config::prog_entry_name)
+			return tac_table.add<tac::ProcExit>(name);
+		else
+			return tac_table.add<tac::Halt>();
 	}
 
 	uint64_t Procedure::callCount() const

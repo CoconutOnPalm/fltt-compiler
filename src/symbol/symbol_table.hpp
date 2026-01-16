@@ -20,7 +20,9 @@ namespace fl
 
 		std::map<std::string, std::unique_ptr<Symbol>> m_symbol_table;
 		std::vector<std::string> m_arg_ids;
-		size_t m_size;
+		size_t m_size {};
+
+		uint64_t proc_uuid {};
 
 	public:
 
@@ -61,6 +63,9 @@ namespace fl
 		std::string argAt(const size_t index);
 
 		// inline std::map<std::string, std::unique_ptr<Symbol>>& elements() { return m_symbol_table; }
+		
+		inline void setUUID(const uint64_t uuid) { proc_uuid = uuid; }
+		inline uint64_t UUID() const { return proc_uuid; }
 		
 		void assignMemory(const size_t shift);
 

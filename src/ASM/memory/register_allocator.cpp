@@ -87,6 +87,11 @@ namespace fl
 	// 	m_registers[static_cast<size_t>(reg)].tac.emplace(tac);
 	// }
 
+	void RegAlloc::overrideRA(const Register& regdata)
+	{
+		m_registers[0] = regdata;
+	}
+
 	void RegAlloc::overrideRA(const size_t tac)
 	{
 		m_registers[0].data_type = DataType::TEMPORARY;
@@ -154,12 +159,12 @@ namespace fl
 		return reg_position;
 	}
 
-    REG RegAlloc::storeVariable(REG reg, const size_t addr)
-    {
+	REG RegAlloc::storeVariable(REG reg, const size_t addr)
+	{
 		reg = this->swap(reg);
 		m_asm_table->add<ins::STORE>(addr);
 		return reg;
-    }
+	}
 
 	// warning - this destroys whatever's inside 'reg'
 	REG RegAlloc::loadPointer(const size_t tac, REG reg)
@@ -369,8 +374,8 @@ namespace fl
 		// }
 	}
 
-    void RegAlloc::flushTemporaryTAC()
-    {
+	void RegAlloc::flushTemporaryTAC()
+	{
 		for (size_t i = 0; i < m_registers.size(); i++)
 		{
 			for (const size_t t : temp_tac)
@@ -381,7 +386,7 @@ namespace fl
 				}
 			}
 		}
-    }
+	}
 
 	void RegAlloc::__debug_print() const
 	{

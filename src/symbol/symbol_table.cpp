@@ -27,9 +27,6 @@ namespace fl
 		size_t relative_pos = 0;
 		for (auto& [name, symb_ptr] : m_symbol_table)
 		{
-			if (symb_ptr->testFlag(SymbolType::ARGUMENT))
-				continue;
-
 			symb_ptr->setMemoryPosition(shift + relative_pos);
 			relative_pos += symb_ptr->memsize;
 		}

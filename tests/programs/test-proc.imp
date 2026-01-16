@@ -1,0 +1,39 @@
+PROCEDURE test_in(I a, T arr) IS
+    x
+IN
+    x := a;
+    WRITE x;        # 1
+    
+    WRITE a;        # 1
+    WRITE arr[0];   # 2
+
+    x := 3;
+    arr[0] := x;
+    WRITE arr[0];   # 3
+END
+
+
+PROCEDURE test_out(O a, T arr) IS
+    x
+IN
+    x := arr[0];
+    a := x;
+    WRITE arr[0];
+    WRITE a;
+END
+
+
+PROGRAM IS
+    x, arr[0:0]
+IN
+    x := 1;
+    arr[0] := 2;
+
+    test_in(x, arr);
+    WRITE x;        # 1
+    WRITE arr[0];   # 3
+
+    test_out(x, arr);
+    WRITE x;
+    WRITE arr[0];
+END

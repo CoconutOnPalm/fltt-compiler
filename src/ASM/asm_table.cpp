@@ -33,6 +33,7 @@ namespace fl
 			}
 
 			m_labels[cast_result->id] = pos;
+			std::println("[debug]: label={}", cast_result->id);
 		}
     }
 
