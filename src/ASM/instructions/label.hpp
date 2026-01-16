@@ -28,8 +28,8 @@ namespace fl::ins
 
 		std::string generate() const
 		{
-			return std::format("# LABEL {}", id);
-			// return {};
+			// return std::format("# LABEL {}", id);
+			return {};
 		}
 
 	};

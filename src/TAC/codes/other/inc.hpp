@@ -4,6 +4,8 @@
 
 #include "../../tac.hpp"
 
+#include "../../../ASM/instructions/store.hpp"
+
 
 namespace fl::tac
 {
@@ -12,12 +14,12 @@ namespace fl::tac
 	{
 	private:
 
-		const size_t lval;
+		const std::string identifier;
 	
 	public:
 
-		Inc(const size_t lvalue, const std::string_view owning_proc)
-			: TAC(owning_proc), lval(lvalue)
+		Inc(const std::string_view id, const std::string_view owning_proc)
+			: TAC(owning_proc), identifier(id)
 		{}
 
 		virtual ~Inc() = default;
@@ -30,17 +32,21 @@ namespace fl::tac
 
 		void updateNextUse(std::vector<TACInfo>& info_table) const override
 		{
-			info_table[lval].useIn(p_index);
+
 		}
 		
 		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override
-		{
-			std::println("{}", __debug_string());
+		{	
+			const size_t address = symbol_tables[p_owning_procedure]->get(identifier).address();
+			
+			REG lval_reg = regalloc.loadVariable(p_index, address);
+			asm_table.add<ins::INC>(lval_reg);
+			regalloc.storeVariable(lval_reg, address);
 		}
 
 		virtual std::string __debug_string() const override
 		{
-			return std::format("({})++", lval);
+			return std::format("'{}'++", identifier);
 		}
 		
 	};

@@ -19,17 +19,23 @@ namespace fl::ast
 	{
 	private:
 
+		enum class Step
+		{
+			TO,
+			DOWNTO,
+		};
+
 		std::shared_ptr<Identifier> iterator;
 		std::shared_ptr<ASTNode> from;
 		std::shared_ptr<ASTNode> to;
 		std::shared_ptr<Block> block;
 
-		const int step; // -1 / 1
+		const Step step;
 
 	public:
 
-		For(Identifier* id_ptr, ASTNode* from, ASTNode* to, Block* block, const int step)
-			: iterator(id_ptr), from(from), to(to), block(block), step(step)
+		For(Identifier* id_ptr, ASTNode* from, ASTNode* to, Block* block, const int _step)
+			: iterator(id_ptr), from(from), to(to), block(block), step(_step > 0 ? Step::TO : Step::DOWNTO)
 		{}
 
 		virtual ~For() = default;
@@ -48,31 +54,45 @@ namespace fl::ast
 			// size_t it =  iterator->generateTAC(tac_table);
 			size_t it = tac_table.add<tac::LDC>(iterator->identifier, p_owner);
 			size_t beg = from->generateTAC(tac_table);
-			size_t end = to->generateTAC(tac_table);
+			// size_t end = to->generateTAC(tac_table);
 			tac_table.add<tac::ForceAssign>(it, beg, p_owner);
 
 			// for
 			tac_table.add<tac::Label>("for", begin_for, p_owner);
-			size_t jmp_cond = tac_table.add<tac::Equal>(it, end, p_owner);
-
-			if (step == 1)
+			
+			it = tac_table.add<tac::LDC>(iterator->identifier, p_owner);
+			size_t end = to->generateTAC(tac_table);
+			if (step == Step::TO)
 			{
-				// use >= as == is more expensive
-				generateJumpIfTrue(jmp_cond, CondOp::GEQ, end_for, tac_table, p_owner);
-				tac_table.add<tac::Inc>(it, p_owner);
+				size_t jmp_cond = tac_table.add<tac::GreaterThan>(it, end, p_owner);
+				generateJumpIfTrue(jmp_cond, CondOp::GT, end_for, tac_table, p_owner);
 			}
-			else // step = -1 
+			else // step = Step::DOWNTO
 			{
+				size_t jmp_cond = tac_table.add<tac::LessOrEqual>(it, end, p_owner);
 				generateJumpIfTrue(jmp_cond, CondOp::LEQ, end_for, tac_table, p_owner);
-				tac_table.add<tac::Dec>(it, p_owner);
 			}
 
 			block->generateTAC(tac_table);
 
+			
+			if (step == Step::TO)
+				tac_table.add<tac::Inc>(iterator->identifier, p_owner);
+			else
+				tac_table.add<tac::Dec>(iterator->identifier, p_owner);
+			
 			tac_table.add<tac::JUMP>(begin_for, p_owner);
 
 			// endfor 
-			return tac_table.add<tac::Label>("endfor", end_for, p_owner);
+			size_t ret = tac_table.add<tac::Label>("endfor", end_for, p_owner);
+
+			if (step == Step::DOWNTO)
+			{
+				// generate one more pass
+				ret = block->generateTAC(tac_table);
+			}
+
+			return ret;
 		}
 
 		virtual void declareInBlock(SymbolTable& symbol_table) override

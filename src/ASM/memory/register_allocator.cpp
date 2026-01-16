@@ -154,6 +154,13 @@ namespace fl
 		return reg_position;
 	}
 
+    REG RegAlloc::storeVariable(REG reg, const size_t addr)
+    {
+		reg = this->swap(reg);
+		m_asm_table->add<ins::STORE>(addr);
+		return reg;
+    }
+
 	// warning - this destroys whatever's inside 'reg'
 	REG RegAlloc::loadPointer(const size_t tac, REG reg)
 	{
@@ -304,9 +311,11 @@ namespace fl
 		}
 		else if (ldt == DataType::VARIABLE)
 		{
+			// lval_reg = this->swap(lval_reg);
+			// rval_reg = this->getValue(rval_tac);
+			// m_asm_table->add<ins::MOVE>(rval_reg);
 			this->swap(rval_reg);
 			lval_reg = this->get(lval_tac);
-			// TODO: replace with ins::MOVE
 			m_asm_table->add<ins::STORE>(m_registers[static_cast<size_t>(lval_reg)].address);
 		}
 		else if (ldt == DataType::TEMPORARY)

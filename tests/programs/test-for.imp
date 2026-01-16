@@ -1,0 +1,19 @@
+PROGRAM IS
+    arr[0:9]
+IN
+    FOR i FROM 0 TO 9 DO
+        arr[i] := i;
+    ENDFOR
+
+    FOR i FROM 0 TO 9 DO
+        WRITE arr[i];
+    ENDFOR
+    
+    FOR i FROM 9 DOWNTO 0 DO
+        arr[i] := 9 - i;
+    ENDFOR
+
+    FOR i FROM 0 TO 9 DO
+        WRITE arr[i];
+    ENDFOR
+END

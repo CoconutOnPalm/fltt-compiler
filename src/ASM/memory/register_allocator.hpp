@@ -79,6 +79,7 @@ namespace fl
 		REG allocTemporary(const size_t tac);
 
 		REG loadVariable(const size_t tac, const size_t addr);
+		REG storeVariable(REG reg, const size_t addr);
 		REG loadPointer(const size_t tac, REG reg);
 		REG loadImmediate(const size_t tac, const uint64_t imm);
 		

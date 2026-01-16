@@ -1,0 +1,11 @@
+PROGRAM IS
+    x, arr[0:4]
+IN
+    x := 0;
+    REPEAT
+        arr[x] := x;
+        WRITE x;
+        WRITE arr[x];
+        x := x + 1;
+    UNTIL x > 4;
+END
