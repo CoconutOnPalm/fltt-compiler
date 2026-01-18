@@ -9,7 +9,8 @@ namespace fl
 	class Array : public Symbol
 	{
 	public:
-
+		
+		constexpr inline static size_t header_size = 1; // header = [shift]
 		const uint64_t begin, end;
 
 	public:

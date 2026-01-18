@@ -399,6 +399,24 @@ namespace fl
 
 	REG RegAlloc::getEmptyRegister(const size_t tac, const size_t addr)
 	{
+		if (tac >= m_tac_info->size())
+		{
+			// delete register with the least tac (NOT TESTED IF THIS WROKS)
+			size_t min_tac = -1;
+			REG min_reg = REG::RH;
+			for (size_t i = 0; i < m_registers.size(); i++)
+			{
+				if (m_registers[i].tac < min_tac)
+				{
+					min_tac = m_registers[i].tac;
+					min_reg = static_cast<REG>(i);
+				}
+			}
+
+			this->resetRegister(min_reg);
+			return min_reg;
+		}
+		
 		// if (addr > 0) // not null
 		// {
 		// 	// search for a register containing this address
@@ -426,7 +444,12 @@ namespace fl
 		for (size_t i = 0; i < m_registers.size(); i++)
 		{
 			size_t reg_tac = m_registers[i].tac;
-			if (reg_tac >= m_tac_info->size()) panic("internal compiler error: empty tac found after empty tac search (wft)");
+			if (reg_tac >= m_tac_info->size()) 
+			{
+				// panic("internal compiler error: empty tac found after empty tac search (wft)");
+				// temp tac found
+				continue;
+			}
 
 			if (!m_tac_info->at(reg_tac).hasNextUse(tac))
 			{

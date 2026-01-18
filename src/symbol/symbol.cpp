@@ -49,7 +49,7 @@ namespace fl
 		const static std::vector<std::string> mapper{
 			"VAR",	// SymbolType::VARIABLE
 			"ARG",	// SymbolType::ARGUMENT	
-			"T",	// SymbolType::ARRAY		
+			"ARR",	// SymbolType::ARRAY		
 			"I",	// SymbolType::IN			
 			"O"		// SymbolType::OUT			
 		};

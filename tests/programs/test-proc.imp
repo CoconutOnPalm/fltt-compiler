@@ -5,7 +5,7 @@ IN
     WRITE x;        # 1
     
     WRITE a;        # 1
-    WRITE arr[0];   # 2
+    WRITE arr[0];   # 2 
 
     x := 3;
     arr[0] := x;

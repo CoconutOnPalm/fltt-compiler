@@ -27,8 +27,7 @@ namespace fl
 
 	size_t Procedure::generateTAC(TACTable& tac_table) const
 	{
-		if (name != config::prog_entry_name)
-			tac_table.add<tac::ProcEnter>(name);
+		tac_table.add<tac::ProcEnter>(name);
 
 		m_body->generateTAC(tac_table);
 

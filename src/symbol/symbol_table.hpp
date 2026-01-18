@@ -60,6 +60,8 @@ namespace fl
 		Symbol& get(const std::string& name);
 		inline Symbol& operator[](const std::string& name) { return get(name); }
 
+		std::map<std::string, std::unique_ptr<Symbol>>& elements() { return m_symbol_table; }
+
 		std::string argAt(const size_t index);
 
 		// inline std::map<std::string, std::unique_ptr<Symbol>>& elements() { return m_symbol_table; }

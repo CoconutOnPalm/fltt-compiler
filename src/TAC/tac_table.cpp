@@ -33,6 +33,7 @@ namespace fl
 		for (size_t i = 0; const auto& tac_ptr : m_tac_table)
 		{
 			tac_ptr->generateASM(*asm_table, regalloc, symbol_tables);
+			// regalloc.__debug_print();
 			regalloc.flushTemporaryTAC();
 		}
 		asm_table->add<ins::HALT>();
