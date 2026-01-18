@@ -1,0 +1,18 @@
+PROGRAM IS
+    x, y, arr[0:1]
+IN
+    x := 5;
+    y := 3;
+    x := x * y;
+    WRITE x;
+
+    arr[0] := 4;
+    arr[1] := 0;
+    x := arr[0] * arr[1];
+    WRITE x;
+
+    x := 1000000000000;
+    y := 1000000000000;
+    arr[0] := x * y;
+    WRITE arr[0];
+END
