@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import re
 import subprocess
 import sys
 import os
@@ -11,13 +12,26 @@ CONFIG_FILE = Path("tests/config.json")
 TESTS_FILE = Path("tests/tests.json")
 OUTPUT_PREFIX = "> "
 INPUT_PREFIX = "? "
+REMOVE_ANSI = re.compile(r"\x1b[^m]*m")
+COST_PATTERN = re.compile(r"koszt: ([\d,]+); w tym i\/o: ([\d,]+)")
 
 # ANSI Colors
 class Colors:
     GREEN = '\033[92m'
     RED = '\033[91m'
+    BLUE = '\033[94m'
+    CYAN = '\033[96m'
+    MAGENTA = '\033[95m'
+    YELLOW = '\033[93m'
     BOLD = '\033[1m'
+    FAINT = '\033[2m'
     RESET = '\033[0m'
+    
+    # ANSI escape sequences add hidden chars; these constants help with alignment
+    STATUS_ANSI_LEN = len(GREEN) + len(BOLD) + len(RESET)
+    FILENAME_ANSI_LEN = len(CYAN) + len(RESET)
+    COST_ANSI_LEN = len(BLUE) + len(RESET)
+    IO_COST_ANSI_LEN = len(MAGENTA) + len(FAINT) + len(RESET)
 
     @staticmethod
     def success(text: str) -> str:
@@ -26,6 +40,26 @@ class Colors:
     @staticmethod
     def failure(text: str) -> str:
         return f"{Colors.RED}{Colors.BOLD}{text}{Colors.RESET}"
+    
+    @staticmethod
+    def filename(text: str) -> str:
+        return f"{Colors.CYAN}{text}{Colors.RESET}"
+    
+    @staticmethod
+    def cost(text: str) -> str:
+        return f"{Colors.BLUE}{text}{Colors.RESET}"
+    
+    @staticmethod
+    def io_cost(text: str) -> str:
+        return f"{Colors.MAGENTA}{Colors.FAINT}{text}{Colors.RESET}"
+    
+    @staticmethod
+    def bold(text: str) -> str:
+        return f"{Colors.BOLD}{text}{Colors.RESET}"
+    
+    @staticmethod
+    def faint(text: str) -> str:
+        return f"{Colors.FAINT}{text}{Colors.RESET}"
 
 def load_json(path: Path) -> Any:
     try:
@@ -73,9 +107,9 @@ def compile_program(compiler: str, source: Path, dest: Path) -> Tuple[bool, str]
     except Exception as e:
         return False, str(e)
 
-def run_vm(vm_path: str, program_path: Path, input_data: List[int]) -> Tuple[bool, List[str], str]:
+def run_vm(vm_path: str, program_path: Path, input_data: List[int]) -> Tuple[bool, List[str], str, str, str]:
     """
-    Runs the VM with the compiled program. Returns (success, output_lines, error_message).
+    Runs the VM with the compiled program. Returns (success, output_lines, error_message, cost, io_cost).
     """
     input_str = "\n".join(map(str, input_data)) + "\n"
     cmd = [vm_path, str(program_path)]
@@ -91,14 +125,25 @@ def run_vm(vm_path: str, program_path: Path, input_data: List[int]) -> Tuple[boo
         stdout, stderr = process.communicate(input=input_str)
         
         if process.returncode != 0:
-            return False, [], stderr
+            return False, [], stderr, "", ""
         
         output = stdout.splitlines()
-        output = [line.replace(INPUT_PREFIX, "") for line in output]  # Remove empty lines
+        output = [line.replace(INPUT_PREFIX, "") for line in output]
+        
+        # Extract cost info from output (always the last line)
+        cost = ""
+        io_cost = ""
+        if output:
+            last_line = output[-1]
+            last_line = REMOVE_ANSI.sub("", last_line)
+            match = COST_PATTERN.search(last_line)
+            if match:
+                cost = match.group(1).replace(",", "'")
+                io_cost = match.group(2).replace(",", "'")
             
-        return True, output, ""
+        return True, output, "", cost, io_cost
     except Exception as e:
-        return False, [], str(e)
+        return False, [], str(e), "", ""
 
 def parse_vm_output(lines: List[str]) -> List[int]:
     """
@@ -154,8 +199,19 @@ def main():
     failed_tests = []
     total_tests = len(tests)
     passed_count = 0
+    
+    # Calculate max filename length for alignment (+ ansi code length)
+    max_filename_len = max(len(tc["file"]) for tc in tests) if tests else 20
+
+    # Result column width (visible chars); ANSI codes add extra hidden chars
+    result_width = 7  # "SUCCESS" or "FAILED "
+    result_col = result_width + Colors.STATUS_ANSI_LEN
 
     print("Running tests...\n")
+    print(f"{'File':<{max_filename_len}}  {'Result':<{result_width}}  {'Cost':>13}  {'I/O':>8}")
+    print("-" * (max_filename_len + 2 + result_width + 2 + 12 + 2 + 8))
+
+    max_filename_len += Colors.FILENAME_ANSI_LEN
 
     for test_case in tests:
         filename = test_case["file"]
@@ -171,37 +227,40 @@ def main():
         # 1. Compile
         success, err = compile_program(compiler_executable, source_file, compiled_file)
         if not success:
-            print(f"{filename} {Colors.failure('FAILED')} (Compilation Error)")
+            print(f"{filename:<{max_filename_len}}  {Colors.failure('FAILED'):<{result_col}}  {'N/A':>13}  {'N/A':>8}  (Compilation Error)")
             print(f"Error output:\n{err}")
             failed_tests.append(filename)
             continue
             
         # 2. Run VM
-        success, output_lines, err = run_vm(vm_executable, compiled_file, expected_in)
+        success, output_lines, err, cost, io_cost = run_vm(vm_executable, compiled_file, expected_in)
         if not success:
-            print(f"{filename} {Colors.failure('FAILED')} (Runtime/VM Error)")
+            print(f"{filename:<{max_filename_len}}  {Colors.failure('FAILED'):<{result_col}}  {'N/A':>13}  {'N/A':>8}  (Runtime/VM Error)")
             print(f"Error output:\n{err}")
             failed_tests.append(filename)
             continue
             
         # 3. Validate
-        actual_out = parse_vm_output(output_lines)
+        parsed_out = parse_vm_output(output_lines)
         
-        if actual_out == expected_out:
-            print(f"{filename} {Colors.success('SUCCESS')}")
+        cost_str = cost if cost else "N/A"
+        io_str = io_cost if io_cost else "N/A"
+        
+        if parsed_out == expected_out:
+            print(f"{Colors.filename(filename):<{max_filename_len}}  {Colors.success('SUCCESS'):<{result_col}}  {Colors.cost(cost_str):>{12 + Colors.COST_ANSI_LEN}}  {Colors.io_cost(io_str):>{8 + Colors.IO_COST_ANSI_LEN}}")
             passed_count += 1
         else:
-            print(f"{filename} {Colors.failure('FAILED')}")
-            print(f"Input: {expected_in}")
-            print(f"Expected: {expected_out}")
-            print(f"Got:      {actual_out}")
+            print(f"{Colors.filename(filename):<{max_filename_len}}  {Colors.failure('FAILED'):<{result_col}}  {Colors.cost(cost_str):>{12 + Colors.COST_ANSI_LEN}}  {Colors.io_cost(io_str):>{8 + Colors.IO_COST_ANSI_LEN}}")
+            print(f"{Colors.faint('Input:')}    {expected_in}")
+            print(f"{Colors.faint('Expected:')} {expected_out}")
+            print(f"{Colors.faint('Got:')}      {parsed_out}")
             failed_tests.append(filename)
             
-    print("\nSummary:")
+    print("\nSUMMARY:")
     if passed_count == total_tests:
-        print(f"{Colors.success('All tests passed!')}")
+        print(f"{Colors.success('ALL TESTS PASSED')} ({Colors.GREEN}{passed_count}{Colors.RESET}{Colors.FAINT}/{Colors.GREEN}{total_tests}{Colors.RESET})")
     else:
-        print(f"Passed: {passed_count}/{total_tests}")
+        print(f"Passed: {Colors.RED}{passed_count}{Colors.FAINT}/{Colors.RED}{total_tests}{Colors.RESET}")
         print("Failed tests:")
         for t in failed_tests:
             print(f" - {t}")
