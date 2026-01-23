@@ -1,5 +1,13 @@
+PROCEDURE foo(I n, T arr) IS
+IN
+    FOR i FROM 2 TO n DO
+        arr[i] := i;
+        WRITE arr[i];
+    ENDFOR
+END
+
 PROGRAM IS
-    arr[0:9]
+    arr[0:9], n
 IN
     FOR i FROM 0 TO 9 DO
         arr[i] := i;
@@ -16,4 +24,7 @@ IN
     FOR i FROM 0 TO 9 DO
         WRITE arr[i];
     ENDFOR
+
+    n := 9;
+    foo(n, arr);
 END

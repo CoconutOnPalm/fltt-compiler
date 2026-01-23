@@ -18,8 +18,8 @@ PROCEDURE test_out(O a, T arr) IS
 IN
     x := arr[0];
     a := x;
-    WRITE arr[0];
-    WRITE a;
+    WRITE arr[0];   # 3
+    WRITE a;        # 3
 END
 
 
@@ -34,6 +34,6 @@ IN
     WRITE arr[0];   # 3
 
     test_out(x, arr);
-    WRITE x;
-    WRITE arr[0];
+    WRITE x;        # 3
+    WRITE arr[0];   # 3
 END

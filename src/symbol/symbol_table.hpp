@@ -49,12 +49,14 @@ namespace fl
 		inline void add(const Symbol* symbol)
 		{	
 			m_symbol_table.emplace(symbol->name, symbol->clone());
+			m_size += symbol->memsize;
 		}
 
 		inline void addArgument(const Argument* argument)
 		{
 			m_symbol_table.emplace(argument->name, argument->clone());
 			m_arg_ids.push_back(argument->name);
+			m_size += argument->memsize;
 		}
 
 		Symbol& get(const std::string& name);

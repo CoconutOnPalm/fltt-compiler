@@ -1,0 +1,44 @@
+PROCEDURE mod_test(I x, I y) IS
+    d
+IN
+    d := x % y;
+    WRITE d;
+END
+
+
+
+PROGRAM IS
+    x, y, d, arr[0:1]
+IN
+    x := 0; y := 0;
+    mod_test(x, y); # 0
+    x := 0; y := 1;
+    mod_test(x, y); # 0
+    x := 1; y := 0;
+    mod_test(x, y); # 0
+    x := 1; y := 1;
+    mod_test(x, y); # 0
+
+    x := 13;
+    y := 5;
+    d := x % y;
+    WRITE d;        # 3
+    
+    arr[0] := 13;
+    arr[1] := 5;
+    arr[0] := arr[0] % arr[1];
+    WRITE arr[0];   # 3
+    
+    x := 10;
+    y := 20;
+    d := x % y;
+    WRITE d;        # 10
+
+    # big mod
+    x := 1152921504606846976;
+    y := 1024;
+    x := x * y;
+    y := 561;
+    x := x % y;
+    WRITE x;        # 166
+END
