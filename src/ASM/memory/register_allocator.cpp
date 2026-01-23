@@ -139,7 +139,6 @@ namespace fl
 
 	REG RegAlloc::loadVariable(const size_t tac, const size_t addr)
 	{
-		// TODO: swap back just like in loadPointer
 		if (addr == 0)
 			panic("null ptr dereference");
 

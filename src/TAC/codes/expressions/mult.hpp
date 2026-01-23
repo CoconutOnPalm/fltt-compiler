@@ -94,6 +94,11 @@ namespace fl::tac
 			asm_table.add<ins::RST>(REG::RE); // i = 0;
 			asm_table.add<ins::RST>(REG::RF); // k = 0;
 
+			regalloc.resetRegister(REG::RA);
+			regalloc.resetRegister(REG::RD);
+			regalloc.resetRegister(REG::RE);
+			regalloc.resetRegister(REG::RF);
+
 			asm_table.add<ins::LABEL>(loop_begin); // while begin
 			// JZ right
 			asm_table.add<ins::SWP>(REG::RC); // RA = right, RC = total
