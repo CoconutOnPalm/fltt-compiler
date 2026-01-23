@@ -11,7 +11,7 @@
 
 namespace fl::tac
 {
-	
+
 	class Param : public TAC
 	{
 
@@ -23,29 +23,31 @@ namespace fl::tac
 
 		Param(const std::string_view param_id, const std::string_view destination, const size_t argindex, const std::string_view owning_proc)
 			: TAC(owning_proc), param(param_id), dest(destination), index(argindex)
-		{}
+		{
+		}
 
 		virtual ~Param() = default;
 
-		
+
 		TACInfo getSelfInfo() const
 		{
 			return TACInfo(TACType::PARAM, p_owning_procedure);
 		}
 
 		void updateNextUse(std::vector<TACInfo>& info_table) const override
-		{}
+		{
+		}
 
 		void typeCheck(const std::vector<TACInfo>& info_table, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override
 		{
 			if (!symbol_tables.contains(dest))
 				panic("undefined procedure '{}'", dest);
-			
+
 			std::string arg_id = symbol_tables[dest]->argAt(index);
 			Symbol& arg = symbol_tables[dest]->get(arg_id);
 
 			Symbol& this_param = symbol_tables[p_owning_procedure]->get(param);
-			
+
 			if (!arg.testFlag(SymbolType::ARGUMENT))
 				panic("internal compiler error: Param::typeCheck - symbol '{}' is not an argument", arg.name);
 
@@ -60,17 +62,26 @@ namespace fl::tac
 			}
 		}
 
-		
-		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override 
+
+		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override
 		{
 			std::shared_ptr<SymbolTable> callee = symbol_tables[dest];
 			std::string arg_identifier = callee->argAt(index);
 			size_t passed_address = callee->get(arg_identifier).address();
+			Symbol& param_obj = symbol_tables[p_owning_procedure]->get(param);
 
-			size_t address = symbol_tables[p_owning_procedure]->get(param).address();
+			if (param_obj.testFlag(SymbolType::ARGUMENT))
+			{
+				const REG reg = regalloc.loadVariable(p_index, param_obj.address());
+				regalloc.storeVariable(reg, passed_address);
+			}
+			else
+			{
+				size_t address = param_obj.address();
 
-			const REG reg = regalloc.loadImmediate(p_index, address);
-			regalloc.storeVariable(reg, passed_address);
+				const REG reg = regalloc.loadImmediate(p_index, address);
+				regalloc.storeVariable(reg, passed_address);
+			}
 		}
 
 		virtual std::string __debug_string() const
@@ -78,5 +89,5 @@ namespace fl::tac
 			return std::format("param ({}) => {}", param, dest);
 		}
 	};
-	
+
 } // namespace fl

@@ -101,7 +101,7 @@ namespace fl::tac
 
 			// forget index register and make it act as temporary
 			size_t shift = symbol->begin; // we know the shift and compile time so we omit it
-			std::println("[debug]: {}[({})] shift = {} + {} = {}", identifier, index, symbol->begin, symbol->header_size, shift);
+			// std::println("[debug]: {}[({})] shift = {} + {} = {}", identifier, index, symbol->begin, symbol->header_size, shift);
 			if (shift > symbol->address())
 			{
 				setupImmediate(shift - symbol->address() - symbol->header_size, index_reg, asm_table);

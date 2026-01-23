@@ -64,8 +64,7 @@ namespace fl::ast
 
 		ProcCall(const std::string_view proc, Params&& _args)
 			: procedure_id(proc), args(std::make_shared<Params>(std::move(_args)))
-		{ 
-			std::println("[debug]: {}", procedure_id);
+		{
 			args->setCallee(procedure_id);
 		}
 

@@ -39,9 +39,9 @@ namespace fl::tac
 		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override
 		{
 			// RA = left
-			regalloc.swap(regalloc.get(left_index));
+			regalloc.swap(regalloc.getValue(left_index));
 			// ADD RX
-			asm_table.add<ins::SUB>(regalloc.get(right_index));
+			asm_table.add<ins::SUB>(regalloc.getValue(right_index));
 			// RA = result
 			regalloc.overrideRA(p_index);
 		}
