@@ -98,7 +98,9 @@ namespace fl
 
 	private:
 
-		REG getEmptyRegister(const size_t tac, const size_t addr = 0);
+		REG getEmptyRegister(size_t tac, const size_t relative_tac = empty_tac);
+
+		bool isTemporary(const size_t tac) const;
 	};
 
 } // namespace fl

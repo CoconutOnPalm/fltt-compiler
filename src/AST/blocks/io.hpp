@@ -31,7 +31,8 @@ namespace fl::ast
 		size_t generateTAC(TACTable& tac_table) const override
 		{
 			size_t var = identifier->generateTAC(tac_table);
-			return tac_table.add<tac::Read>(var, p_owner);
+			size_t read = tac_table.add<tac::Read>(var, p_owner);
+			return read;
 		}
 
 		std::string __debug_string() const override

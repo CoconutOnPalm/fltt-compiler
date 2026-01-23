@@ -10,6 +10,7 @@ from typing import List, Tuple, Optional, Any
 CONFIG_FILE = Path("tests/config.json")
 TESTS_FILE = Path("tests/tests.json")
 OUTPUT_PREFIX = "> "
+INPUT_PREFIX = "? "
 
 # ANSI Colors
 class Colors:
@@ -78,7 +79,7 @@ def run_vm(vm_path: str, program_path: Path, input_data: List[int]) -> Tuple[boo
     """
     input_str = "\n".join(map(str, input_data)) + "\n"
     cmd = [vm_path, str(program_path)]
-    
+
     try:
         process = subprocess.Popen(
             cmd,
@@ -91,8 +92,11 @@ def run_vm(vm_path: str, program_path: Path, input_data: List[int]) -> Tuple[boo
         
         if process.returncode != 0:
             return False, [], stderr
+        
+        output = stdout.splitlines()
+        output = [line.replace(INPUT_PREFIX, "") for line in output]  # Remove empty lines
             
-        return True, stdout.splitlines(), ""
+        return True, output, ""
     except Exception as e:
         return False, [], str(e)
 

@@ -168,10 +168,10 @@ namespace fl
 	// warning - this destroys whatever's inside 'reg'
 	REG RegAlloc::loadPointer(const size_t tac, REG reg)
 	{
-		REG val_reg = this->getEmptyRegister(tac, 0);
+		REG val_reg = this->getEmptyRegister(tac);
 		const REG reg_position = val_reg;
 
-		this->resetRegister(reg);
+		this->resetRegister(reg); // TODO: remove
 
 		if (reg == REG::RA) // prevent register loss
 			reg = val_reg;
@@ -192,7 +192,7 @@ namespace fl
 
 	REG RegAlloc::loadImmediate(const size_t tac, const uint64_t imm)
 	{
-		REG imm_reg = this->getEmptyRegister(tac, 0);
+		REG imm_reg = this->getEmptyRegister(tac);
 
 		m_registers[static_cast<size_t>(imm_reg)].data_type = DataType::IMMEDIATE;
 		m_registers[static_cast<size_t>(imm_reg)].tac = tac;
@@ -396,25 +396,40 @@ namespace fl
 		}
 	}
 
-	REG RegAlloc::getEmptyRegister(const size_t tac, const size_t addr)
+	REG RegAlloc::getEmptyRegister(size_t tac, const size_t relative_tac)
 	{
-		if (tac >= m_tac_info->size())
+		if (this->isTemporary(tac))
 		{
-			// delete register with the least tac (NOT TESTED IF THIS WROKS)
-			size_t min_tac = -1;
-			REG min_reg = REG::RH;
+			// make the search relative to the largest non-temp tac 
+			size_t max_tac = 0;
 			for (size_t i = 0; i < m_registers.size(); i++)
 			{
-				if (m_registers[i].tac < min_tac)
+				if (!this->isTemporary(m_registers[i].tac))
 				{
-					min_tac = m_registers[i].tac;
-					min_reg = static_cast<REG>(i);
+					max_tac = std::max(max_tac, m_registers[i].tac);
 				}
 			}
 
-			this->resetRegister(min_reg);
-			return min_reg;
+			tac = max_tac;
 		}
+		
+		// if (tac >= m_tac_info->size())
+		// {
+		// 	// delete register with the least tac (NOT TESTED IF THIS WROKS)
+		// 	size_t min_tac = -1;
+		// 	REG min_reg = REG::RH;
+		// 	for (size_t i = 0; i < m_registers.size(); i++)
+		// 	{
+		// 		if (m_registers[i].tac < min_tac)
+		// 		{
+		// 			min_tac = m_registers[i].tac;
+		// 			min_reg = static_cast<REG>(i);
+		// 		}
+		// 	}
+
+		// 	this->resetRegister(min_reg);
+		// 	return min_reg;
+		// }
 		
 		// if (addr > 0) // not null
 		// {
@@ -443,13 +458,11 @@ namespace fl
 		for (size_t i = 0; i < m_registers.size(); i++)
 		{
 			size_t reg_tac = m_registers[i].tac;
-			if (reg_tac >= m_tac_info->size()) 
-			{
-				// panic("internal compiler error: empty tac found after empty tac search (wft)");
-				// temp tac found
-				continue;
-			}
 
+			if (this->isTemporary(reg_tac))
+				continue;
+
+			// std::println("[debug]: reg_tac={}", reg_tac);
 			if (!m_tac_info->at(reg_tac).hasNextUse(tac))
 			{
 				this->resetRegister(static_cast<REG>(i));
@@ -475,6 +488,17 @@ namespace fl
 		return static_cast<REG>(reg);
 
 	}
+
+    bool RegAlloc::isTemporary(const size_t tac) const
+    {
+        for (const size_t temp : temp_tac)
+		{
+			if (tac == temp)
+				return true;
+		}
+
+		return false;
+    }
 
 } // namespace fl
 

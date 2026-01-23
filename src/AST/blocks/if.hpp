@@ -43,6 +43,9 @@ namespace fl::ast
 			size_t cond = condition->generateTAC(tac_table);
 			size_t jmp = generateJumpIfTrue(cond, condition->getOperator(), label_id, tac_table, p_owner);
 			block->generateTAC(tac_table);
+
+			condition->invert(); // re-invert in case it is used again (for loop DOWNTO +block)
+			
 			return tac_table.add<tac::Label>("endif", label_id, p_owner);
 		}
 

@@ -49,8 +49,12 @@ namespace fl::tac
 				// symbol = dynamic_cast<Array*>(&symbol_tables[p_owning_procedure]);
 				Argument* arg = dynamic_cast<Argument*>(&symbol_tables[p_owning_procedure]->get(identifier));
 
-				REG ptr_reg = regalloc.loadVariable(RegAlloc::temp_tac[0], symbol_tables[p_owning_procedure]->get(identifier).address());
-				REG shift_reg = regalloc.loadPointer(p_index, ptr_reg);
+				const size_t ptr_tac = RegAlloc::temp_tac[0];
+				const size_t shift_tac = RegAlloc::temp_tac[1];
+
+				REG ptr_reg = regalloc.loadVariable(ptr_tac, symbol_tables[p_owning_procedure]->get(identifier).address());
+				REG shift_reg = regalloc.loadPointer(shift_tac, ptr_reg);
+				ptr_reg = regalloc.loadVariable(ptr_tac, symbol_tables[p_owning_procedure]->get(identifier).address());
 
 				// // load ptr_reg again and set it to the first elem
 				// REG ptr_reg = regalloc.loadVariable(RegAlloc::temp_tac[0], symbol_tables[p_owning_procedure]->get(identifier).address());
@@ -58,13 +62,14 @@ namespace fl::tac
 
 				// convert index register to the 'normal' 0..n array indexing
 				REG index_reg = regalloc.getValue(index);
-				index_reg = regalloc.swap(index_reg);
-				shift_reg = regalloc.getValue(p_index);
+				index_reg = regalloc.swap(index_reg); // RA = index
+				shift_reg = regalloc.get(shift_tac);
 				asm_table.add<ins::SUB>(shift_reg);
 
-				ptr_reg = regalloc.loadVariable(RegAlloc::temp_tac[0], symbol_tables[p_owning_procedure]->get(identifier).address());
+				ptr_reg = regalloc.getValue(ptr_tac);
 				asm_table.add<ins::INC>(ptr_reg); // set to the first elem
 
+				// RA = index_reg
 				asm_table.add<ins::ADD>(ptr_reg);
 				// RA = &arr[i]
 				regalloc.overrideRA(RegAlloc::Register{

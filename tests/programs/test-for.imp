@@ -6,8 +6,19 @@ IN
     ENDFOR
 END
 
+PROCEDURE bar(T arr) IS
+IN
+    FOR i FROM 4 DOWNTO 2 DO
+        arr[i] := 10;
+    ENDFOR
+    
+    FOR i FROM 4 DOWNTO 2 DO
+        WRITE arr[i];
+    ENDFOR
+END
+
 PROGRAM IS
-    arr[0:9], n
+    arr[0:9], n, vec[2:4]
 IN
     FOR i FROM 0 TO 9 DO
         arr[i] := i;
@@ -27,4 +38,5 @@ IN
 
     n := 9;
     foo(n, arr);
+    bar(vec);
 END
