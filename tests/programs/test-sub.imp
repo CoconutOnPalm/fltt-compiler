@@ -1,0 +1,33 @@
+PROCEDURE sub_elems(I sub_from, T arr, I beg, I end, O result) IS
+IN
+    result := sub_from;
+    FOR i FROM beg TO end DO
+        result := result - arr[i];
+    ENDFOR
+END
+
+PROCEDURE sub(I a, I b, O result) IS
+IN
+    result := a - b;
+END
+
+PROGRAM IS
+    arr[0:100], a, b, x, beg, end, subfrom
+IN
+    subfrom := 10000;
+
+    FOR i FROM 0 TO 100 DO
+        arr[i] := i;
+    ENDFOR
+
+    READ a;
+    READ b;
+    READ beg;
+    READ end;
+    x := a - b;
+    WRITE x;
+    sub(a, b, x);
+    WRITE x;
+    sub_elems(subfrom, arr, beg, end, x);
+    WRITE x;
+END

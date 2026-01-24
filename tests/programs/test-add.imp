@@ -1,0 +1,33 @@
+PROCEDURE sum(T arr, I beg, I end, O result) IS
+    sum
+IN
+    sum := 0;
+    FOR i FROM beg TO end DO
+        sum := sum + arr[i];
+    ENDFOR
+    result := sum;
+END
+
+PROCEDURE add(I a, I b, O result) IS
+IN
+    result := a + b;
+END
+
+PROGRAM IS
+    arr[0:100], a, b, x, beg, end
+IN
+    FOR i FROM 0 TO 100 DO
+        arr[i] := i;
+    ENDFOR
+
+    READ a;
+    READ b;
+    READ beg;
+    READ end;
+    x := a + b;
+    WRITE x;
+    add(a, b, x);
+    WRITE x;
+    sum(arr, beg, end, x);
+    WRITE x;
+END
