@@ -1,6 +1,6 @@
 {
-    "compiler-path": "kompilator",
-    "vm-path": "mw2025-p/maszyna-wirtualna-cln",
+    "compiler-exe": "kompilator",
+    "vm-exe": "mw2025-p/maszyna-wirtualna-cln",
     "tests-dir": "tests/programs",
     "compiled-dir": "tests/.compiled"
 }

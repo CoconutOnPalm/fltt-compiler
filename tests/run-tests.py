@@ -170,8 +170,8 @@ def main():
     tests = load_json(TESTS_FILE)
 
     # Resolve paths relative to CWD
-    compiler_cfg = config.get("compiler-path", "kompilator")
-    vm_cfg = config.get("vm-path", "vm")
+    compiler_cfg = config.get("compiler-exe", "kompilator")
+    vm_cfg = config.get("vm-exe", "vm")
     
     compiler_path = Path(compiler_cfg)
     vm_path = Path(vm_cfg)
