@@ -27,6 +27,9 @@
 
 %parse-param { fl::Compiler& compiler }
 
+%define parse.error verbose
+%define parse.trace
+
 
 %union {
     uint64_t num;

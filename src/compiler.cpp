@@ -15,15 +15,10 @@ namespace fl
     {}
 
     void Compiler::compile(const std::filesystem::path& outpath)
-    {
-		for (auto& [name, st] : m_symbol_tables)
-		{
-			std::println("{}.uuid = {}", name, st->UUID());
-		}
-		
+    {	
 		if (!m_procedure_map.contains(config::prog_entry_name))
 		{
-			panic("entry point not defined");
+			panic("entry point not defined / syntax error");
 		}
 
 		// make in-block variable declarations 
