@@ -25,6 +25,8 @@ namespace fl::ast
 		void setCallee(const std::string_view identifier) { callee = identifier; std::println("callee set"); }
 		void add(const std::string& identifier) { param_ids.push_back(identifier); }
 
+		size_t size() const { return param_ids.size(); }
+
 		std::vector<std::shared_ptr<ASTNode>> getChildren()
 		{
 			return {};
@@ -78,6 +80,9 @@ namespace fl::ast
 
 		virtual size_t generateTAC(TACTable& tac_table) const override
 		{
+			if (tac_table.getProcInfo(procedure_id) != args->size())
+				panic("invalid number of arguments passed to '{}' at '{}' - required={}, provided={}", procedure_id, p_owner, args->size(), tac_table.getProcInfo(procedure_id));
+			
 			args->generateTAC(tac_table);			
 			tac_table.add<tac::Call>(procedure_id, p_owner);
 			return 0;

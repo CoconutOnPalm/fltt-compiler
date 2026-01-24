@@ -7,6 +7,7 @@
 #include "utils/const.hpp"
 
 #include "ASM/memory/register_allocator.hpp"
+#include "AST/blocks/proc_decl.hpp"
 
 namespace fl
 {
@@ -82,12 +83,14 @@ namespace fl
 				// symbol_table->add<Argument>(&arg);
 			}
 		}
-		
+
+		size_t argcount = (head != nullptr) ? head->getArgs().size() : 0;
+		m_tac_table.declProc(procedure_name, argcount);
 		
 		body->setOwner(std::string{procedure_name});
 		std::shared_ptr<SymbolTable> st_smartptr(symbol_table);
 		m_symbol_tables.emplace(procedure_name, st_smartptr);
-		m_procedure_map.emplace(procedure_name, Procedure(procedure_name, st_smartptr, body));
+		m_procedure_map.emplace(procedure_name, Procedure(procedure_name, st_smartptr, body, argcount));
 	}
 
 	void Compiler::defineMain(SymbolTable* symbol_table, ast::Block* body)

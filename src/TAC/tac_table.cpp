@@ -39,6 +39,22 @@ namespace fl
 		asm_table->add<ins::HALT>();
     }
 
+    void TACTable::declProc(const std::string_view proc_id, const size_t argc)
+    {
+		if (m_argcount_map.contains(std::string(proc_id)))
+			panic("redeclaration of proc '{}'", proc_id);
+
+		m_argcount_map.emplace(proc_id, argc);
+    }
+
+    size_t TACTable::getProcInfo(const std::string& proc_id)
+    {
+		if (!m_argcount_map.contains(proc_id))
+			panic("undefined procedure '{}'", proc_id);
+
+		return m_argcount_map[proc_id];
+    }
+
 
     void TACTable::__debug_print() const
     {

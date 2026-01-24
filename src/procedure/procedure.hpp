@@ -16,6 +16,7 @@ namespace fl
 	public:
 
 		const std::string name;
+		const size_t argcount;
 		
 	private:
 		
@@ -27,7 +28,7 @@ namespace fl
 
 	public:
 
-		Procedure(const std::string_view name, std::shared_ptr<SymbolTable> symbol_table_ptr, ast::Block* body_ptr);
+		Procedure(const std::string_view name, std::shared_ptr<SymbolTable> symbol_table_ptr, ast::Block* body_ptr, const size_t argc);
 		Procedure(Procedure&& procedure) = default;
 		~Procedure() = default;
 

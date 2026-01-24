@@ -19,6 +19,8 @@ namespace fl
 		// shared_ptr to extend its lifetime (used also in RegAlloc)
 		std::shared_ptr<std::vector<TACInfo>> m_tac_info;
 
+		std::map<std::string, size_t> m_argcount_map;
+
 	public:
 
 		TACTable();
@@ -36,6 +38,9 @@ namespace fl
 		void typeCheck(std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables);
 
 		void generateASM(std::shared_ptr<ASMTable> asm_table, const size_t stack_ptr, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const;
+
+		void declProc(const std::string_view proc_id, const size_t argc);
+		size_t getProcInfo(const std::string& proc_id); // currently returns only argcount
 
 		void __debug_print() const;
 	};
