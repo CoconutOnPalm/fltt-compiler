@@ -35,7 +35,7 @@ namespace fl::tac
 
 		}
 		
-		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override
+		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, const std::vector<TACInfo>& info_table) const override
 		{	
 			const size_t address = symbol_tables[p_owning_procedure]->get(identifier).address();
 			

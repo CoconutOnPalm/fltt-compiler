@@ -33,10 +33,10 @@ namespace fl::tac
 
 		TACInfo getSelfInfo() const
 		{
-			return TACInfo(TACType::CONSTANT, p_owning_procedure);
+			return TACInfo(TACType::CONSTANT, p_owning_procedure, value);
 		}
 		
-		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override
+		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, const std::vector<TACInfo>& info_table) const override
 		{
 			regalloc.loadImmediate(p_index, value);
 		}

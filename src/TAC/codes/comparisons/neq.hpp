@@ -33,7 +33,7 @@ namespace fl::tac
 			info_table[right].useIn(p_index);
 		}
 		
-		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override 
+		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, const std::vector<TACInfo>& info_table) const override 
 		{
 			// l == r --> (l - r) + (r - l) == 0 --> (r - l) + (l - r) == 0
 			// because substraction is not associative

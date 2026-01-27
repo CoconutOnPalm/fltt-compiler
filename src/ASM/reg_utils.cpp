@@ -23,4 +23,20 @@ namespace fl
 		}
 	}
 
+	// void setupImmediate(const cln::cl_I value, const REG reg, ASMTable& asm_table)
+	// {
+	// 	asm_table.add<ins::RST>(reg);
+	// 	const size_t width = cln::integer_length(value);
+	// 	for (size_t i = 0; i < width; i++)
+	// 	{
+	// 		bool bit = cln::logbitp(value, i);
+			
+	// 		if (bit)
+	// 			asm_table.add<ins::INC>(reg);
+
+	// 		if (i < width - 1) // don't shift the last bit
+	// 			asm_table.add<ins::SHL>(reg);
+	// 	}
+	// }
+
 } // namespace fl

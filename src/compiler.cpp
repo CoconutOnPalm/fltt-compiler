@@ -46,7 +46,6 @@ namespace fl
 
 		m_tac_table.generateASM(m_asm_table, stack_ptr, m_symbol_tables);
 
-
 		std::ofstream outfstream(outpath);
 		if (!outfstream.good())
 			panic("could not produce output file");

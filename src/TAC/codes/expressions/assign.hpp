@@ -52,7 +52,7 @@ namespace fl::tac
 
 		}
 
-		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override
+		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, const std::vector<TACInfo>& info_table) const override
 		{
 			std::println("{:2}| lval={}, rval={}", p_index, regalloc.get(lval), rval);
 			regalloc.copy(p_index, lval, rval);

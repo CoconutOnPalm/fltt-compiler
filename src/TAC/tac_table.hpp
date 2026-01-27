@@ -42,6 +42,8 @@ namespace fl
 		void declProc(const std::string_view proc_id, const size_t argc);
 		size_t getProcInfo(const std::string& proc_id); // currently returns only argcount
 
+		const std::vector<TACInfo>&getTACInfoTable() const { return *m_tac_info; }
+
 		void __debug_print() const;
 	};
 	

@@ -32,7 +32,7 @@ namespace fl
 		RegAlloc regalloc(m_tac_info, asm_table, stack_ptr);
 		for (size_t i = 0; const auto& tac_ptr : m_tac_table)
 		{
-			tac_ptr->generateASM(*asm_table, regalloc, symbol_tables);
+			tac_ptr->generateASM(*asm_table, regalloc, symbol_tables, *m_tac_info);
 			// regalloc.__debug_print();
 			regalloc.flushTemporaryTAC();
 		}
