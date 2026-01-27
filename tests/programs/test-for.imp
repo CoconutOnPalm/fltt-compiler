@@ -39,4 +39,12 @@ IN
     n := 9;
     foo(n, arr);
     bar(vec);
+
+    FOR i FROM 0 TO 0 DO
+        WRITE 1;
+    ENDFOR
+
+    FOR i FROM 0 DOWNTO 0 DO
+        WRITE 1;
+    ENDFOR
 END

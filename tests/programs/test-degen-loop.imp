@@ -1,0 +1,17 @@
+PROGRAM IS
+    x, y
+IN
+    x := 0;
+    y := 0;
+
+    FOR i FROM 3 TO 0 DO
+        x := x + 1;
+    ENDFOR
+
+    FOR i FROM 0 DOWNTO 3 DO
+        y := y + 1;
+    ENDFOR
+
+    WRITE x;
+    WRITE y;
+END

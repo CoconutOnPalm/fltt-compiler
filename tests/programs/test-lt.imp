@@ -49,4 +49,12 @@ IN
     ELSE
         WRITE 0;
     ENDIF
+
+    a := 0;
+    b := 3;
+    IF a < b THEN
+        WRITE 1;
+    ELSE
+        WRITE 0;
+    ENDIF
 END

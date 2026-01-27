@@ -1,0 +1,26 @@
+PROGRAM IS
+    x
+IN
+    FOR a FROM 3 DOWNTO 0 DO
+        FOR b FROM 3 DOWNTO 0 DO
+            FOR c FROM 3 DOWNTO 0 DO
+                FOR d FROM 3 DOWNTO 0 DO
+                    FOR e FROM 3 DOWNTO 0 DO
+                        FOR f FROM 3 DOWNTO 0 DO
+                            FOR g FROM 3 DOWNTO 0 DO
+                                FOR h FROM 3 DOWNTO 0 DO
+                                    FOR i FROM 3 DOWNTO 0 DO
+                                        FOR j FROM 3 DOWNTO 0 DO
+                                            x := x + j;
+                                        ENDFOR
+                                    ENDFOR
+                                ENDFOR
+                            ENDFOR
+                        ENDFOR
+                    ENDFOR
+                ENDFOR
+            ENDFOR
+        ENDFOR
+    ENDFOR
+    WRITE x;
+END

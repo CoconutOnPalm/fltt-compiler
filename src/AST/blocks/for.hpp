@@ -47,8 +47,9 @@ namespace fl::ast
 
 		virtual size_t generateTAC(TACTable& tac_table) const override
 		{
-			std::shared_ptr<uint64_t> end_for = std::make_shared<uint64_t>(0);
 			std::shared_ptr<uint64_t> begin_for = std::make_shared<uint64_t>(0);
+			std::shared_ptr<uint64_t> end_for = std::make_shared<uint64_t>(0);
+			std::shared_ptr<uint64_t> exit_for = std::make_shared<uint64_t>(0);
 
 			// for header
 			// size_t it =  iterator->generateTAC(tac_table);
@@ -56,6 +57,15 @@ namespace fl::ast
 			size_t beg = from->generateTAC(tac_table);
 			// size_t end = to->generateTAC(tac_table);
 			tac_table.add<tac::ForceAssign>(it, beg, p_owner);
+
+			if (step == Step::DOWNTO)
+			{
+				// to prevent "for i FROM 0 DOWNTO x DO" (where x > 0) from generating block on exit
+				it = tac_table.add<tac::LDC>(iterator->identifier, p_owner);
+				size_t end = to->generateTAC(tac_table);
+				size_t jmp_cond = tac_table.add<tac::LessThan>(it, end, p_owner);
+				generateJumpIfTrue(jmp_cond, CondOp::LT, exit_for, tac_table, p_owner);
+			}
 
 			// for
 			tac_table.add<tac::Label>("for", begin_for, p_owner);
@@ -92,7 +102,7 @@ namespace fl::ast
 				ret = block->generateTAC(tac_table);
 			}
 
-			return ret;
+			return tac_table.add<tac::Label>("exitfor", exit_for, p_owner);
 		}
 
 		virtual void declareInBlock(SymbolTable& symbol_table) override
