@@ -30,4 +30,19 @@ IN
     WRITE x;
     sum(arr, beg, end, x);
     WRITE x;
+
+    a := 1;
+    b := 3;
+    # imm + imm
+    x := 1 + 3;
+    WRITE x;        # 4
+    # imm + id
+    x := 1 + b;
+    WRITE x;        # 4
+    # id + imm
+    x := a + 3;
+    WRITE x;        # 4
+    # id + id
+    x := a + b;
+    WRITE x;        # 4
 END

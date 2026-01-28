@@ -353,23 +353,23 @@ expression
     {
         fl::ASTNode* left = $<ast>L;
         fl::ASTNode* right = $<ast>R;
-        $<ast>$ = new fl::ast::Expression(fl::Operator::ADD, left, right);
+        $<ast>$ = new fl::ast::Addition(left, right);
     }
     | value[L] SUB value[R]
     {
-        $<ast>$ = new fl::ast::Expression(fl::Operator::SUB, $<ast>L, $<ast>R);
+        $<ast>$ = new fl::ast::Substraction($<ast>L, $<ast>R);
     }
     | value[L] MULT value[R]
     {
-        $<ast>$ = new fl::ast::Expression(fl::Operator::MULT, $<ast>L, $<ast>R);
+        $<ast>$ = new fl::ast::Multiplication($<ast>L, $<ast>R);
     }
     | value[L] DIV value[R]
     {
-        $<ast>$ = new fl::ast::Expression(fl::Operator::DIV, $<ast>L, $<ast>R);
+        $<ast>$ = new fl::ast::Division($<ast>L, $<ast>R);
     }
     | value[L] MOD value[R]
     {
-        $<ast>$ = new fl::ast::Expression(fl::Operator::MOD, $<ast>L, $<ast>R);
+        $<ast>$ = new fl::ast::Modulo($<ast>L, $<ast>R);
     }
 ;
 

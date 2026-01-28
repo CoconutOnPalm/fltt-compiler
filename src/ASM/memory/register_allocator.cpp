@@ -99,6 +99,18 @@ namespace fl
 		m_registers[0].tac = tac;
 	}
 
+    void RegAlloc::overrideRegister(const REG reg, const Register& regdata)
+    {
+		m_registers[static_cast<size_t>(reg)] = regdata;
+    }
+
+    void RegAlloc::overrideRegister(const REG reg, const size_t tac)
+    {
+		m_registers[static_cast<size_t>(reg)].data_type = DataType::TEMPORARY;
+		m_registers[static_cast<size_t>(reg)].address = 0;
+		m_registers[static_cast<size_t>(reg)].tac = tac;
+    }
+
 	REG RegAlloc::swap(const REG reg)
 	{
 		if (reg == REG::RA)

@@ -4,25 +4,26 @@
 
 #include "../../tac.hpp"
 
-#include "../../../ASM/instructions/store.hpp"
+#include "../../../ASM/instructions/shr.hpp"
 
 
 namespace fl::tac
 {
-	
-	class Inc : public TAC
+
+	// WARNING: use only on temporaries
+	class Shr : public TAC
 	{
 	private:
 
-		const std::string identifier;
+		const size_t code;
 	
 	public:
 
-		Inc(const std::string_view id, const std::string_view owning_proc)
-			: TAC(owning_proc), identifier(id)
+		Shr(const size_t code, const std::string_view owning_proc)
+			: TAC(owning_proc), code(code)
 		{}
 
-		virtual ~Inc() = default;
+		virtual ~Shr() = default;
 
 
 		TACInfo getSelfInfo() const
@@ -37,16 +38,14 @@ namespace fl::tac
 		
 		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, const std::vector<TACInfo>& info_table) const override
 		{	
-			const size_t address = symbol_tables[p_owning_procedure]->get(identifier).address();
-			
-			REG lval_reg = regalloc.loadVariable(p_index, address);
-			asm_table.add<ins::INC>(lval_reg);
-			regalloc.storeVariable(lval_reg, address);
+			REG reg = regalloc.getValue(code);
+			reg = regalloc.swap(reg); // we have to swap due to the behaviour of other TACs
+			asm_table.add<ins::SHR>(reg);
 		}
 
 		virtual std::string __debug_string() const override
 		{
-			return std::format("'{}'++", identifier);
+			return std::format("({}) >> 1", code);
 		}
 		
 	};

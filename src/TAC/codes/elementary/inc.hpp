@@ -4,26 +4,26 @@
 
 #include "../../tac.hpp"
 
-#include "../../../ASM/instructions/dec.hpp"
 #include "../../../ASM/instructions/store.hpp"
 
 
 namespace fl::tac
 {
 	
-	class Dec : public TAC
+	// WARNING: use only on temporaries
+	class IterInc : public TAC
 	{
 	private:
 
-		const std::string identifier;
+		const size_t code;
 	
 	public:
 
-		Dec(const std::string_view id, const std::string_view owning_proc)
-			: TAC(owning_proc), identifier(id)
+		IterInc(const size_t code, const std::string_view owning_proc)
+			: TAC(owning_proc), code(code)
 		{}
 
-		virtual ~Dec() = default;
+		virtual ~IterInc() = default;
 
 
 		TACInfo getSelfInfo() const
@@ -38,16 +38,12 @@ namespace fl::tac
 		
 		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, const std::vector<TACInfo>& info_table) const override
 		{	
-			const size_t address = symbol_tables[p_owning_procedure]->get(identifier).address();
-			
-			REG lval_reg = regalloc.loadVariable(p_index, address);
-			asm_table.add<ins::DEC>(lval_reg);
-			regalloc.storeVariable(lval_reg, address);
+			panic("not implemented");
 		}
 
 		virtual std::string __debug_string() const override
 		{
-			return std::format("'{}'--", identifier);
+			return std::format("({})++", code);
 		}
 		
 	};

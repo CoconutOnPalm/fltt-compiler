@@ -8,8 +8,8 @@
 #include "identifier.hpp"
 #include "block.hpp"
 
-#include "../../TAC/codes/other/inc.hpp"
-#include "../../TAC/codes/other/dec.hpp"
+#include "../../TAC/codes/other/iterator_inc.hpp"
+#include "../../TAC/codes/other/iterator_dec.hpp"
 #include "../../TAC/codes/other/LDC.hpp"
 
 namespace fl::ast
@@ -87,9 +87,9 @@ namespace fl::ast
 
 			
 			if (step == Step::TO)
-				tac_table.add<tac::Inc>(iterator->identifier, p_owner);
+				tac_table.add<tac::IterInc>(iterator->identifier, p_owner);
 			else
-				tac_table.add<tac::Dec>(iterator->identifier, p_owner);
+				tac_table.add<tac::IterDec>(iterator->identifier, p_owner);
 			
 			tac_table.add<tac::JUMP>(begin_for, p_owner);
 

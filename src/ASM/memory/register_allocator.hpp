@@ -73,6 +73,9 @@ namespace fl
 		void overrideRA(const Register& regdata);
 		void overrideRA(const size_t tac);
 
+		void overrideRegister(const REG reg, const Register& regdata);
+		void overrideRegister(const REG reg, const size_t tac);
+
 		// swaps 'reg' with RA
 		REG swap(const REG reg);
 

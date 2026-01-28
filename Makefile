@@ -53,10 +53,13 @@ CXX_HEAD = \
 	$(wildcard $(SRC_PATH)/symbol/*.hpp) \
 	$(wildcard $(SRC_PATH)/AST/*.hpp) \
 	$(wildcard $(SRC_PATH)/AST/blocks/*.hpp) \
+	$(wildcard $(SRC_PATH)/AST/blocks/expressions/*.hpp) \
 	$(wildcard $(SRC_PATH)/TAC/*.hpp) \
 	$(wildcard $(SRC_PATH)/TAC/codes/*.hpp) \
 	$(wildcard $(SRC_PATH)/TAC/codes/expressions/*.hpp) \
 	$(wildcard $(SRC_PATH)/TAC/codes/comparisons/*.hpp) \
+	$(wildcard $(SRC_PATH)/TAC/codes/special/*.hpp) \
+	$(wildcard $(SRC_PATH)/TAC/codes/elementary/*.hpp) \
 	$(wildcard $(SRC_PATH)/TAC/codes/jump/*.hpp) \
 	$(wildcard $(SRC_PATH)/TAC/codes/other/*.hpp) \
 	$(wildcard $(SRC_PATH)/ASM/*.hpp) \

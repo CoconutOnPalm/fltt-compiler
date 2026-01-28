@@ -22,6 +22,7 @@
 namespace fl::ast
 {
 
+	[[deprecated]]
 	class Expression : public ASTNode
 	{
 	private:
