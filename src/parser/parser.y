@@ -207,9 +207,18 @@ block
 statement 
     : identifier ASSIGN expression ';'
     {
-        fl::ast::Identifier* lvalue = $<ident>1; 
+        fl::ast::Identifier* original = $<ident>1;
         fl::ASTNode* rvalue = $<ast>3;
-        $<ast>$ = new fl::ast::Assign(lvalue, rvalue);
+
+        if (dynamic_cast<fl::ast::IndexOf*>(original))
+        {
+            $<ast>$ = new fl::ast::Assign(original, rvalue);
+        }
+        else
+        {
+            fl::ast::LvalIdentifier* lvalue = new fl::ast::LvalIdentifier(original->identifier); 
+            $<ast>$ = new fl::ast::Assign(lvalue, rvalue);
+        }
     }
     | IF condition THEN block[I] ELSE block[E] ENDIF
     {

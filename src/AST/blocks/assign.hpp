@@ -1,6 +1,7 @@
 #pragma once
 
 #include "identifier.hpp"
+#include "lval.hpp"
 #include "number.hpp"
 #include "../../TAC/codes/expressions/assign.hpp"
 

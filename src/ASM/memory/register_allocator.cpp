@@ -124,7 +124,7 @@ namespace fl
 
 	REG RegAlloc::allocPointer(const size_t tac)
 	{
-		REG reg = this->getEmptyRegister(tac);
+		const REG reg = this->getEmptyRegister(tac);
 		m_registers[static_cast<size_t>(reg)].data_type = DataType::POINTER;
 		m_registers[static_cast<size_t>(reg)].tac = tac;
 		m_registers[static_cast<size_t>(reg)].address = 0;
@@ -133,7 +133,7 @@ namespace fl
 
 	REG RegAlloc::allocImmediate(const size_t tac)
 	{
-		REG reg = this->getEmptyRegister(tac);
+		const REG reg = this->getEmptyRegister(tac);
 		m_registers[static_cast<size_t>(reg)].data_type = DataType::IMMEDIATE;
 		m_registers[static_cast<size_t>(reg)].tac = tac;
 		m_registers[static_cast<size_t>(reg)].address = 0;
@@ -142,12 +142,21 @@ namespace fl
 
 	REG RegAlloc::allocTemporary(const size_t tac)
 	{
-		REG reg = this->getEmptyRegister(tac);
+		const REG reg = this->getEmptyRegister(tac);
 		m_registers[static_cast<size_t>(reg)].data_type = DataType::TEMPORARY;
 		m_registers[static_cast<size_t>(reg)].tac = tac;
 		m_registers[static_cast<size_t>(reg)].address = 0;
 		return reg;
 	}
+
+    REG RegAlloc::allocVariable(const size_t tac, const uint64_t address)
+    {
+		const REG reg = this->getEmptyRegister(tac);
+		m_registers[static_cast<size_t>(reg)].data_type = DataType::VARIABLE;
+		m_registers[static_cast<size_t>(reg)].tac = tac;
+		m_registers[static_cast<size_t>(reg)].address = address;
+		return reg;
+    }
 
 	REG RegAlloc::loadVariable(const size_t tac, const size_t addr)
 	{
@@ -255,6 +264,7 @@ namespace fl
 		}
 
 		warning("register not found - searching the stack");
+		panic("register lost for TAC ({})", tac);
 
 		// search the stack
 		for (size_t i = 0; i < m_stack.size(); i++)
@@ -268,7 +278,6 @@ namespace fl
 		}
 
 		__debug_print();
-		panic("register lost for TAC ({})", tac);
 		return REG::RA;
 	}
 

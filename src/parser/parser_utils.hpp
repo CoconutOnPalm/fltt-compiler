@@ -8,7 +8,7 @@
 
 #include "../AST/syntax_tree.hpp"
 #include "../AST/blocks/block.hpp"
-#include "../AST/blocks/expression.hpp"
+#include "../AST/blocks/lval.hpp"
 #include "../AST/blocks/expressions/addition.hpp"
 #include "../AST/blocks/expressions/substraction.hpp"
 #include "../AST/blocks/expressions/multiplication.hpp"
