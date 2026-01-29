@@ -141,37 +141,36 @@ namespace fl
 		
 		const auto [reads, writes] = m_asm_table->countIO();
 
-		// TODO: uncomment
-		// if (writes == 0)
-		// {
-		// 	// no output - mock the read instructions and halt
+		if (writes == 0)
+		{
+			// no output - mock the read instructions and halt
 
-		// 	ASMTable new_program;
-		// 	for (size_t i = 0; i < reads; i++)
-		// 	{
-		// 		new_program.add<ins::READ>();
-		// 	}
-		// 	new_program.add<ins::HALT>();
-		// 	new_program.generate(outfstream);
-		// }
-		// else if (reads == 0)
-		// {
-		// 	// simulate the program, as the output is consteval
-		// 	std::println("no READ instructions - consteval output");
-		// 	std::vector<std::string> instructions;
-		// 	m_asm_table->generate(instructions);
-		// 	std::vector<cln::cl_I> vm_output = vm::runVM(instructions);
+			ASMTable new_program;
+			for (size_t i = 0; i < reads; i++)
+			{
+				new_program.add<ins::READ>();
+			}
+			new_program.add<ins::HALT>();
+			new_program.generate(outfstream);
+		}
+		else if (reads == 0)
+		{
+			// simulate the program, as the output is consteval
+			std::println("no READ instructions - consteval output");
+			std::vector<std::string> instructions;
+			m_asm_table->generate(instructions);
+			std::vector<cln::cl_I> vm_output = vm::runVM(instructions);
 
-		// 	ASMTable new_program;
-		// 	for (const cln::cl_I& output : vm_output)
-		// 	{
-		// 		setupImmediate(output, REG::RA, new_program);
-		// 		new_program.add<ins::WRITE>();
-		// 	}
-		// 	new_program.add<ins::HALT>();
-		// 	new_program.generate(outfstream);
-		// }
-		// else 
+			ASMTable new_program;
+			for (const cln::cl_I& output : vm_output)
+			{
+				setupImmediate(output, REG::RA, new_program);
+				new_program.add<ins::WRITE>();
+			}
+			new_program.add<ins::HALT>();
+			new_program.generate(outfstream);
+		}
+		else 
 		{
 			std::println("ASM: ");
 			m_asm_table->generate(outfstream);
