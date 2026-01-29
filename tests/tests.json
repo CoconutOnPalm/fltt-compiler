@@ -268,5 +268,10 @@
         "file": "test-degen-loop.imp",
         "in": [],
         "out": [0, 0]
+    },
+    {
+        "file": "test-no-read.imp",
+        "in": [],
+        "out": [1000000000000000000000000000]
     }
 ]
