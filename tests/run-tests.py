@@ -120,9 +120,9 @@ def run_vm(vm_path: str, program_path: Path, input_data: List[int]) -> Tuple[boo
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            text=True
+            text=True,
         )
-        stdout, stderr = process.communicate(input=input_str)
+        stdout, stderr = process.communicate(input=input_str, timeout=10)
         
         if process.returncode != 0:
             return False, [], stderr, "", ""

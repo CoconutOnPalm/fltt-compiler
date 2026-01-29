@@ -8,7 +8,7 @@ END
 
 
 PROGRAM IS
-    x, y, d, arr[0:1]
+    x, y, d, arr[0:1], a, b
 IN
     x := 0; y := 0;
     div_test(x, y); # 0
@@ -41,4 +41,19 @@ IN
     y := 1048576;
     x := x / y;
     WRITE x; # 1125899906842624
+
+    a := 6;
+    b := 3;
+    # imm / imm
+    x := 6 / 3;
+    WRITE x;        # 2
+    # imm / id
+    x := 6 / b;
+    WRITE x;        # 2
+    # id / imm
+    x := a / 3;
+    WRITE x;        # 2
+    # id / id
+    x := a / b;
+    WRITE x;        # 2
 END

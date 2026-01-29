@@ -8,7 +8,7 @@ END
 
 
 PROGRAM IS
-    x, y, d, arr[0:1]
+    x, y, d, arr[0:1], a, b
 IN
     x := 0; y := 0;
     mod_test(x, y); # 0
@@ -41,4 +41,34 @@ IN
     y := 561;
     x := x % y;
     WRITE x;        # 166
+
+    a := 6;
+    b := 2;
+    # imm % imm
+    x := 6 % 2;
+    WRITE x;        # 0
+    # imm % id
+    x := 6 % b;
+    WRITE x;        # 0
+    # id % imm
+    x := a % 2;
+    WRITE x;        # 0
+    # id % id
+    x := a % b;
+    WRITE x;        # 0
+
+    a := 11;
+    b := 2;
+    # imm % imm
+    x := 11 % 2;
+    WRITE x;        # 1
+    # imm % id
+    x := 11 % b;
+    WRITE x;        # 1
+    # id % imm
+    x := a % 2;
+    WRITE x;        # 1
+    # id % id
+    x := a % b;
+    WRITE x;        # 1
 END

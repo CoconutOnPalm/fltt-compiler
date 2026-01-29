@@ -51,10 +51,10 @@ namespace fl::ast
 			else if (dynamic_cast<Number*>(left.get()) && dynamic_cast<Identifier*>(right.get()))
 			{
 				// 'a' is an immediate, 'b' is an identifier
-				size_t ridx = right->generateTAC(tac_table);
 				uint64_t a = dynamic_cast<Number*>(left.get())->val;
 				if (std::bitset<64>(a).count() == 1) // is a power of 2
 				{
+					size_t ridx = right->generateTAC(tac_table);
 					size_t exponent = std::bit_width(a) - 1;
 					return tac_table.add<tac::Pow2>(ridx, exponent, p_owner);
 				}
@@ -63,10 +63,10 @@ namespace fl::ast
 			else if (dynamic_cast<Identifier*>(left.get()) && dynamic_cast<Number*>(right.get()))
 			{
 				// 'a' is an identifier, 'b' is an immediate
-				size_t lidx = left->generateTAC(tac_table);
 				uint64_t b = dynamic_cast<Number*>(right.get())->val;
 				if (std::bitset<64>(b).count() == 1) // is a power of 2
 				{
+					size_t lidx = left->generateTAC(tac_table);
 					size_t exponent = std::bit_width(b) - 1;
 					return tac_table.add<tac::Pow2>(lidx, exponent, p_owner);
 				}

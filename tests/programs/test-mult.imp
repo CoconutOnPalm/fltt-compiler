@@ -15,7 +15,7 @@ IN
     y := 1000000000000;
     arr[0] := x * y;
     WRITE arr[0];
-
+    
     a := 2;
     b := 3;
     # imm * imm

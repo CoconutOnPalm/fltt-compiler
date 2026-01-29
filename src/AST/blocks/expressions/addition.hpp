@@ -12,6 +12,7 @@
 #include "../indexof.hpp"
 
 #include "../../../TAC/codes/expressions/add.hpp"
+#include "../../../TAC/codes/special/small_add.hpp"
 
 
 namespace fl::ast
@@ -48,34 +49,34 @@ namespace fl::ast
 				if (a <= std::numeric_limits<uint64_t>::max() - b) // a + b will overflow
 					return tac_table.add<tac::LDI>(a + b, p_owner);
 			}
-			// else if (dynamic_cast<Number*>(left.get()) && dynamic_cast<Identifier*>(right.get()) && !dynamic_cast<IndexOf*>(right.get()))
+			// too much overhead cost
+			// else if (dynamic_cast<Number*>(left.get()) && dynamic_cast<Identifier*>(right.get()))
 			// {
 			// 	// 'a' is an immediate, 'b' is an identifier
 			// 	uint64_t a = dynamic_cast<Number*>(left.get())->val;
-			// 	std::string b = dynamic_cast<Identifier*>(right.get())->identifier;
-			// 	if (a <= 4)
+			// 	if (a <= 3) // is 'small'
 			// 	{
-			// 		size_t last_tac = 0;
-			// 		for (uint64_t i = 0; i < a; i++)
-			// 			last_tac = tac_table.add<tac::Inc>(b, p_owner);
-			// 		return last_tac;
+			// 		size_t ridx = right->generateTAC(tac_table);
+			// 		return tac_table.add<tac::SmallAdd>(ridx, a, p_owner);
 			// 	}
+
 			// }
-			// else if (dynamic_cast<Identifier*>(left.get()) && dynamic_cast<Number*>(right.get()) && !dynamic_cast<IndexOf*>(left.get()))
+			// else if (dynamic_cast<Identifier*>(left.get()) && dynamic_cast<Number*>(right.get()))
 			// {
 			// 	// 'a' is an identifier, 'b' is an immediate
-			// 	std::string a = dynamic_cast<Identifier*>(left.get())->identifier;
 			// 	uint64_t b = dynamic_cast<Number*>(right.get())->val;
-			// 	if (b <= 4)
+			// 	if (b <= 3) // is 'small'
 			// 	{
-			// 		size_t last_tac = 0;
-			// 		for (uint64_t i = 0; i < b; i++)
-			// 			last_tac = tac_table.add<tac::Inc>(a, p_owner);
-			// 		return last_tac;
+			// 		size_t lidx = left->generateTAC(tac_table);
+			// 		return tac_table.add<tac::SmallAdd>(lidx, b, p_owner);
 			// 	}
 			// }
+
+
+			size_t lidx = left->generateTAC(tac_table);
+			size_t ridx = right->generateTAC(tac_table);
 			
-			return defaultAddition(tac_table);
+			return tac_table.add<tac::Add>(lidx, ridx, p_owner);
 		}
 
 		virtual std::string __debug_string() const override
@@ -83,16 +84,6 @@ namespace fl::ast
 			return std::format("( +, {}, {})", left->__debug_string(), right->__debug_string());
 		}
 	
-	private:
-
-		size_t defaultAddition(TACTable& tac_table) const
-		{
-			size_t lidx = left->generateTAC(tac_table);
-			size_t ridx = right->generateTAC(tac_table);
-			
-			return tac_table.add<tac::Add>(lidx, ridx, p_owner);
-		}
-
 	};
 
 } // namespace fl
