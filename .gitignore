@@ -61,6 +61,7 @@ mw2025/parser.cc
 mw2025/parser.hh
 
 tests/.compiled/
+.benchmark-snaps/
 
 *.mr
 
