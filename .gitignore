@@ -40,7 +40,16 @@
 # debug information files
 *.dwo
 
+# Bison/Flex generated files
+src/lexer/lexer.cpp
+src/parser/parser.cpp
+src/parser/parser.hpp
+src/integrated-vm/vm-lexer.cpp
+src/integrated-vm/vm-parser.cpp
+src/integrated-vm/vm-parser.hpp
+
 # custom
+build/
 _trash/
 examples/
 testy2025/
@@ -48,10 +57,6 @@ description-pl.pdf
 
 kompilator
 debugger
-
-src/lexer/lexer.cpp
-src/parser/parser.cpp
-src/parser/parser.hpp
 
 mw2025/maszyna-wirtualna
 mw2025/maszyna-wirtualna-cln
