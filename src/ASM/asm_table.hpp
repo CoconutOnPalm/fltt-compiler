@@ -45,12 +45,17 @@ namespace fl
 			m_instructions.emplace_back(std::make_unique<InstrT>(std::forward<Args>(args)...));
 		}
 
+		// <#READ, #WRITE>
+		[[nodiscard]] std::pair<uint64_t, uint64_t> countIO() const; 
+
 		void generate(std::ofstream& ofstr);
+		void generate(std::vector<std::string>& instructions);
 
 	private:
 
 		void updateInstructionIndicies();
 		void updateJumpPositions();
+		void removeRedundantInstructions();
 
 	};
 

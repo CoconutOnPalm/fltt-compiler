@@ -7,7 +7,14 @@
 #include "utils/const.hpp"
 
 #include "ASM/memory/register_allocator.hpp"
+#include "ASM/reg_utils.hpp"
+#include "ASM/instructions/write.hpp"
+#include "ASM/instructions/read.hpp"
+#include "ASM/instructions/halt.hpp"
 #include "AST/blocks/proc_decl.hpp"
+
+#include "integrated-vm/run_vm.hpp"
+
 
 namespace fl
 {
@@ -31,13 +38,7 @@ namespace fl
 		
 		size_t stack_ptr = assignMemory();
 		
-		m_procedure_map.at(config::prog_entry_name).generateTAC(m_tac_table);
-
-		for (auto& [name, proc] : m_procedure_map)
-		{
-			if (name != config::prog_entry_name)
-				proc.generateTAC(m_tac_table);
-		}
+		generateTAC();
 		
 		m_tac_table.updateNextUse();
 		
@@ -46,12 +47,7 @@ namespace fl
 
 		m_tac_table.generateASM(m_asm_table, stack_ptr, m_symbol_tables);
 
-		std::ofstream outfstream(outpath);
-		if (!outfstream.good())
-			panic("could not produce output file");
-		
-		std::println("ASM: ");
-		m_asm_table->generate(outfstream);
+		generateProgram(outpath);
     }
 
 
@@ -120,6 +116,67 @@ namespace fl
 		}
 
 		return next_free_address;
+    }
+
+    void Compiler::generateTAC()
+    {
+		m_procedure_map.at(config::prog_entry_name).generateTAC(m_tac_table);
+
+		for (auto& [name, proc] : m_procedure_map)
+		{
+			if (name != config::prog_entry_name)
+				proc.generateTAC(m_tac_table);
+		}
+    }
+
+    void Compiler::generateProgram(const std::filesystem::path& outpath)
+    {
+		std::ofstream outfstream(outpath);
+		if (!outfstream.good())
+			panic("could not produce output file");
+		
+		// special cases:
+		// 1. the program has no READs
+		// 2. the program has no WRITEs
+		
+		const auto [reads, writes] = m_asm_table->countIO();
+
+		// TODO: uncomment
+		// if (writes == 0)
+		// {
+		// 	// no output - mock the read instructions and halt
+
+		// 	ASMTable new_program;
+		// 	for (size_t i = 0; i < reads; i++)
+		// 	{
+		// 		new_program.add<ins::READ>();
+		// 	}
+		// 	new_program.add<ins::HALT>();
+		// 	new_program.generate(outfstream);
+		// }
+		// else if (reads == 0)
+		// {
+		// 	// simulate the program, as the output is consteval
+		// 	std::println("no READ instructions - consteval output");
+		// 	std::vector<std::string> instructions;
+		// 	m_asm_table->generate(instructions);
+		// 	std::vector<cln::cl_I> vm_output = vm::runVM(instructions);
+
+		// 	ASMTable new_program;
+		// 	for (const cln::cl_I& output : vm_output)
+		// 	{
+		// 		setupImmediate(output, REG::RA, new_program);
+		// 		new_program.add<ins::WRITE>();
+		// 	}
+		// 	new_program.add<ins::HALT>();
+		// 	new_program.generate(outfstream);
+		// }
+		// else 
+		{
+			std::println("ASM: ");
+			m_asm_table->generate(outfstream);
+		}
+			
     }
 
 

@@ -41,6 +41,8 @@ namespace fl
 	private:
 
 		size_t assignMemory();
+		void generateTAC();
+		void generateProgram(const std::filesystem::path& outpath);
 
 	};
 
