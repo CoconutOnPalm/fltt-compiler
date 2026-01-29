@@ -63,3 +63,5 @@ mw2025/parser.hh
 tests/.compiled/
 
 *.mr
+
+run-benchmark.sh
