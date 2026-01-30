@@ -1,0 +1,18 @@
+# Find Maximum Element
+# Finds the maximum value in an array
+
+PROGRAM IS
+  n, arr[0:100], i, max
+IN
+  READ n;
+  FOR i FROM 0 TO n DO
+    READ arr[i];
+  ENDFOR
+  max:=arr[0];
+  FOR i FROM 1 TO n DO
+    IF arr[i]>max THEN
+      max:=arr[i];
+    ENDIF
+  ENDFOR
+  WRITE max;
+END

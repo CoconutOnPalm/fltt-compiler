@@ -1,0 +1,11 @@
+PROCEDURE test(dummy) IS
+IN
+    WRITE 42;
+END
+
+PROGRAM IS
+    x
+IN
+    x := 0;
+    test(x);
+END

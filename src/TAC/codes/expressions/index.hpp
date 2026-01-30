@@ -33,7 +33,7 @@ namespace fl::tac
 
 		TACInfo getSelfInfo() const
 		{
-			return TACInfo(TACType::ARRELEM, p_owning_procedure);
+			return TACInfo(TACType::POINTER, p_owning_procedure);
 		}
 
 		void updateNextUse(std::vector<TACInfo>& info_table) const override
@@ -41,7 +41,7 @@ namespace fl::tac
 			info_table[index].useIn(p_index);
 		}
 
-		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, const std::vector<TACInfo>& info_table) const override
+		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, std::vector<TACInfo>& info_table) const override
 		{
 
 			if (symbol_tables[p_owning_procedure]->get(identifier).testFlag(SymbolType::ARGUMENT))
@@ -101,16 +101,19 @@ namespace fl::tac
 
 			// forget index register and make it act as temporary
 			size_t shift = symbol->begin; // we know the shift and compile time so we omit it
+			REG temp = regalloc.allocTemporary(RegAlloc::temp_tac[0]);
 			// std::println("[debug]: {}[({})] shift = {} + {} = {}", identifier, index, symbol->begin, symbol->header_size, shift);
 			if (shift > symbol->address())
 			{
-				setupImmediate(shift - symbol->address() - symbol->header_size, index_reg, asm_table);
-				asm_table.add<ins::SUB>(index_reg);
+				setupImmediate(shift - symbol->address() - symbol->header_size, temp, asm_table);
+				asm_table.add<ins::SUB>(temp);
+				// regalloc.resetRegister(index_reg);
 			}
 			else
 			{
-				setupImmediate(symbol->address() - shift + symbol->header_size, index_reg, asm_table);
-				asm_table.add<ins::ADD>(index_reg);
+				setupImmediate(symbol->address() - shift + symbol->header_size, temp, asm_table);
+				asm_table.add<ins::ADD>(temp);
+				// regalloc.resetRegister(index_reg);
 			}
 
 			// RA = &arr[i]

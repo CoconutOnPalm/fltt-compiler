@@ -1,0 +1,6 @@
+PROGRAM IS
+    x
+IN
+    x := 0;
+    WRITE x;
+END

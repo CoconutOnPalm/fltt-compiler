@@ -47,7 +47,7 @@ namespace fl::tac
 			info_table[right_index].useIn(p_index);
 		}
 		
-		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, const std::vector<TACInfo>& info_table) const override
+		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, std::vector<TACInfo>& info_table) const override
 		{
 			// for this, use hard-coded registers
 			// RA = total
@@ -154,6 +154,13 @@ namespace fl::tac
 			asm_table.add<ins::LABEL>(loop_end);
 			asm_table.add<ins::SWP>(REG::RC); // RA = total, RC = right
 
+			regalloc.resetRegister(REG::RA);
+			regalloc.resetRegister(REG::RB); // trash RB
+			regalloc.resetRegister(REG::RC); // trash RC
+			regalloc.resetRegister(REG::RD);
+			regalloc.resetRegister(REG::RE);
+			regalloc.resetRegister(REG::RF);
+
 			regalloc.overrideRA(RegAlloc::Register{
 				.tac = p_index,
 				.data_type = RegAlloc::DataType::TEMPORARY,
@@ -169,7 +176,7 @@ namespace fl::tac
 
 	private:
 
-		void multLVRV(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, const std::vector<TACInfo>& info_table) const
+		void multLVRV(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, std::vector<TACInfo>& info_table) const
 		{
 			// for this, use hard-coded registers
 			// RA = total
@@ -281,7 +288,7 @@ namespace fl::tac
 			});
 		}
 		
-		void multLVRI(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, const std::vector<TACInfo>& info_table) const
+		void multLVRI(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, std::vector<TACInfo>& info_table) const
 		{
 			const uint64_t right = info_table[right_index].const_value;
 

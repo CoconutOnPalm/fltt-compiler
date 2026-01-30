@@ -49,4 +49,20 @@ IN
     ELSE
         WRITE 0;
     ENDIF
+
+    arr[0] := 4;
+    a := 5;
+    IF arr[0] = a THEN
+        WRITE 1;
+    ELSE
+        WRITE 0;
+    ENDIF
+
+    arr[1] := 6;
+    b := 6;
+    IF arr[1] = b THEN
+        WRITE 1;
+    ELSE
+        WRITE 0;
+    ENDIF
 END

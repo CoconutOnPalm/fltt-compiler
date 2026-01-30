@@ -1,0 +1,13 @@
+PROCEDURE writeseq(dummy) IS
+IN
+    WRITE 1;
+    WRITE 2;
+    WRITE 3;
+END
+
+PROGRAM IS
+    x
+IN
+    x := 0;
+    writeseq(x);
+END

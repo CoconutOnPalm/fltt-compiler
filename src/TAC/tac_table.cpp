@@ -35,6 +35,11 @@ namespace fl
 			tac_ptr->generateASM(*asm_table, regalloc, symbol_tables, *m_tac_info);
 			// regalloc.__debug_print();
 			regalloc.flushTemporaryTAC();
+			
+			if (m_tac_info->at(tac_ptr->p_index).block_terminator)
+			{
+				regalloc.flushRegisters();
+			}
 		}
 		asm_table->add<ins::HALT>();
     }

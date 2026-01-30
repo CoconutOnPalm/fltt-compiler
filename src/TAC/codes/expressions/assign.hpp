@@ -38,7 +38,7 @@ namespace fl::tac
 		virtual void typeCheck(const std::vector<TACInfo>& info_table, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables) const override
 		{
 			TACType ct = info_table[lval].code_type;
-			if (ct != TACType::VARIABLE && ct != TACType::ARRELEM)
+			if (ct != TACType::VARIABLE && ct != TACType::POINTER)
 				panic("illegal operation - rvalue assignment ({})", static_cast<int>(info_table[lval].code_type));
 
 			std::string var = info_table[lval].associated_variable;
@@ -52,7 +52,7 @@ namespace fl::tac
 
 		}
 
-		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, const std::vector<TACInfo>& info_table) const override
+		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, std::vector<TACInfo>& info_table) const override
 		{
 			regalloc.copy(p_index, lval, rval);
 		}

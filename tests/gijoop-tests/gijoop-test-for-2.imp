@@ -1,0 +1,9 @@
+PROGRAM IS
+    result
+IN
+    result := 0;
+    FOR i FROM 5 TO 5 DO
+        result := result + 1;
+    ENDFOR
+    WRITE result;
+END

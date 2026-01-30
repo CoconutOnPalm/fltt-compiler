@@ -1,0 +1,342 @@
+[
+    {
+        "file": "gijoop-test-add-1.imp",
+        "in": [],
+        "out": [42]
+    },
+    {
+        "file": "gijoop-test-add-2.imp",
+        "in": [],
+        "out": [58]
+    },
+    {
+        "file": "gijoop-test-add-3.imp",
+        "in": [],
+        "out": [45]
+    },
+    {
+        "file": "gijoop-test-add-4.imp",
+        "in": [],
+        "out": [777777]
+    },
+    {
+        "file": "gijoop-test-add-5.imp",
+        "in": [],
+        "out": [0]
+    },
+    {
+        "file": "gijoop-test-add-6.imp",
+        "in": [],
+        "out": [10]
+    },
+    {
+        "file": "gijoop-test-add-7.imp",
+        "in": [],
+        "out": [100]
+    },
+    {
+        "file": "gijoop-test-sub-1.imp",
+        "in": [],
+        "out": [42]
+    },
+    {
+        "file": "gijoop-test-sub-2.imp",
+        "in": [],
+        "out": [0]
+    },
+    {
+        "file": "gijoop-test-sub-3.imp",
+        "in": [],
+        "out": [50]
+    },
+    {
+        "file": "gijoop-test-sub-4.imp",
+        "in": [],
+        "out": [0]
+    },
+    {
+        "file": "gijoop-test-sub-5.imp",
+        "in": [],
+        "out": [42]
+    },
+    {
+        "file": "gijoop-test-sub-6.imp",
+        "in": [],
+        "out": [876543]
+    },
+    {
+        "file": "gijoop-test-sub-7.imp",
+        "in": [],
+        "out": [0]
+    },
+    {
+        "file": "gijoop-test-sub-8.imp",
+        "in": [],
+        "out": [99]
+    },
+    {
+        "file": "gijoop-test-sub-9.imp",
+        "in": [],
+        "out": [40]
+    },
+    {
+        "file": "gijoop-test-sub-10.imp",
+        "in": [],
+        "out": [0, 0]
+    },
+    {
+        "file": "gijoop-test-sub-11.imp",
+        "in": [],
+        "out": [0]
+    },
+    {
+        "file": "gijoop-test-sub-12.imp",
+        "in": [],
+        "out": [5, 0]
+    },
+    {
+        "file": "gijoop-test-mul-1.imp",
+        "in": [],
+        "out": [42]
+    },
+    {
+        "file": "gijoop-test-mul-2.imp",
+        "in": [],
+        "out": [0]
+    },
+    {
+        "file": "gijoop-test-mul-3.imp",
+        "in": [],
+        "out": [42]
+    },
+    {
+        "file": "gijoop-test-mul-4.imp",
+        "in": [],
+        "out": [7006652]
+    },
+    {
+        "file": "gijoop-test-mul-5.imp",
+        "in": [],
+        "out": [42]
+    },
+    {
+        "file": "gijoop-test-mul-6.imp",
+        "in": [],
+        "out": [0]
+    },
+    {
+        "file": "gijoop-test-mul-7.imp",
+        "in": [],
+        "out": [16]
+    },
+    {
+        "file": "gijoop-test-mul-8.imp",
+        "in": [],
+        "out": [32]
+    },
+    {
+        "file": "gijoop-test-mul-9.imp",
+        "in": [],
+        "out": [120]
+    },
+    {
+        "file": "gijoop-test-div-1.imp",
+        "in": [],
+        "out": [7]
+    },
+    {
+        "file": "gijoop-test-div-2.imp",
+        "in": [],
+        "out": [100]
+    },
+    {
+        "file": "gijoop-test-div-3.imp",
+        "in": [],
+        "out": [0]
+    },
+    {
+        "file": "gijoop-test-div-4.imp",
+        "in": [],
+        "out": [1]
+    },
+    {
+        "file": "gijoop-test-div-5.imp",
+        "in": [],
+        "out": [3]
+    },
+    {
+        "file": "gijoop-test-div-6.imp",
+        "in": [],
+        "out": [10]
+    },
+    {
+        "file": "gijoop-test-div-7.imp",
+        "in": [],
+        "out": [1001]
+    },
+    {
+        "file": "gijoop-test-div-8.imp",
+        "in": [],
+        "out": [0]
+    },
+    {
+        "file": "gijoop-test-div-9.imp",
+        "in": [],
+        "out": [8]
+    },
+    {
+        "file": "gijoop-test-div-10.imp",
+        "in": [],
+        "out": [10]
+    },
+    {
+        "file": "gijoop-test-mod-1.imp",
+        "in": [],
+        "out": [1]
+    },
+    {
+        "file": "gijoop-test-mod-2.imp",
+        "in": [],
+        "out": [0]
+    },
+    {
+        "file": "gijoop-test-mod-3.imp",
+        "in": [],
+        "out": [0]
+    },
+    {
+        "file": "gijoop-test-mod-4.imp",
+        "in": [],
+        "out": [0]
+    },
+    {
+        "file": "gijoop-test-mod-5.imp",
+        "in": [],
+        "out": [5]
+    },
+    {
+        "file": "gijoop-test-write-1.imp",
+        "in": [],
+        "out": [0]
+    },
+    {
+        "file": "gijoop-test-write-2.imp",
+        "in": [],
+        "out": [42]
+    },
+    {
+        "file": "gijoop-test-write-3.imp",
+        "in": [],
+        "out": [7, 15, 23]
+    },
+    {
+        "file": "gijoop-test-var-1.imp",
+        "in": [],
+        "out": [0]
+    },
+    {
+        "file": "gijoop-test-var-2.imp",
+        "in": [],
+        "out": [67]
+    },
+    {
+        "file": "gijoop-test-var-3.imp",
+        "in": [],
+        "out": [12, 34, 56]
+    },
+    {
+        "file": "gijoop-test-var-4.imp",
+        "in": [],
+        "out": [1234]
+    },
+    {
+        "file": "gijoop-test-if-1.imp",
+        "in": [],
+        "out": [42]
+    },
+    {
+        "file": "gijoop-test-if-2.imp",
+        "in": [],
+        "out": [84]
+    },
+    {
+        "file": "gijoop-test-if-3.imp",
+        "in": [],
+        "out": [1]
+    },
+    {
+        "file": "gijoop-test-while-1.imp",
+        "in": [],
+        "out": [5]
+    },
+    {
+        "file": "gijoop-test-while-2.imp",
+        "in": [],
+        "out": [10]
+    },
+    {
+        "file": "gijoop-test-while-3.imp",
+        "in": [],
+        "out": [1, 2, 3]
+    },
+    {
+        "file": "gijoop-test-for-1.imp",
+        "in": [],
+        "out": [15]
+    },
+    {
+        "file": "gijoop-test-for-2.imp",
+        "in": [],
+        "out": [1]
+    },
+    {
+        "file": "gijoop-test-for-3.imp",
+        "in": [],
+        "out": [1, 2, 3, 4, 5]
+    },
+    {
+        "file": "gijoop-test-repeat-1.imp",
+        "in": [],
+        "out": [5]
+    },
+    {
+        "file": "gijoop-test-repeat-2.imp",
+        "in": [],
+        "out": [11]
+    },
+    {
+        "file": "gijoop-test-repeat-3.imp",
+        "in": [],
+        "out": [1, 2, 3]
+    },
+    {
+        "file": "gijoop-test-array-1.imp",
+        "in": [],
+        "out": [10, 20, 30]
+    },
+    {
+        "file": "gijoop-test-array-2.imp",
+        "in": [],
+        "out": [100, 200, 300]
+    },
+    {
+        "file": "gijoop-test-array-3.imp",
+        "in": [],
+        "out": [50, 60, 100]
+    },
+    {
+        "file": "gijoop-test-proc-1.imp",
+        "in": [],
+        "out": [42]
+    },
+    {
+        "file": "gijoop-test-proc-2.imp",
+        "in": [],
+        "out": [1, 2, 3]
+    },
+    {
+        "file": "gijoop-test-proc-3.imp",
+        "in": [],
+        "out": [15]
+    }
+]

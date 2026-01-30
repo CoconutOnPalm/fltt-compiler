@@ -1,0 +1,16 @@
+# Array Product
+# Calculates the product of all elements in an array
+
+PROGRAM IS
+  n, arr[0:100], i, product
+IN
+  READ n;
+  FOR i FROM 0 TO n DO
+    READ arr[i];
+  ENDFOR
+  product:=1;
+  FOR i FROM 0 TO n DO
+    product:=product*arr[i];
+  ENDFOR
+  WRITE product;
+END

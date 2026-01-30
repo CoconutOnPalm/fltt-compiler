@@ -1,0 +1,25 @@
+# Digit Frequency Counter
+# Counts how many times each digit (0-9) appears in a number
+
+PROGRAM IS
+  n, digit, freq[0:9], i
+IN
+  READ n;
+  
+  # Initialize frequency array
+  FOR i FROM 0 TO 9 DO
+    freq[i]:=0;
+  ENDFOR
+  
+  # Count digits
+  WHILE n>0 DO
+    digit:=n%10;
+    freq[digit]:=freq[digit]+1;
+    n:=n/10;
+  ENDWHILE
+  
+  # Output frequencies
+  FOR i FROM 0 TO 9 DO
+    WRITE freq[i];
+  ENDFOR
+END

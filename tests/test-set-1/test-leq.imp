@@ -3,7 +3,7 @@ PROGRAM IS
 IN
     a := 1;
     b := 2;
-    IF a >= b THEN
+    IF a <= b THEN
         WRITE 1;
     ELSE
         WRITE 0;
@@ -11,7 +11,7 @@ IN
 
     a := 2;
     b := 1;
-    IF a >= b THEN
+    IF a <= b THEN
         WRITE 1;
     ELSE
         WRITE 0;
@@ -19,7 +19,7 @@ IN
 
     a := 2;
     b := 2;
-    IF a >= b THEN
+    IF a <= b THEN
         WRITE 1;
     ELSE
         WRITE 0;
@@ -28,7 +28,7 @@ IN
 
     arr[0] := 1;
     arr[1] := 2;
-    IF arr[0] >= arr[1] THEN
+    IF arr[0] <= arr[1] THEN
         WRITE 1;
     ELSE
         WRITE 0;
@@ -36,7 +36,7 @@ IN
 
     arr[0] := 2;
     arr[1] := 1;
-    IF arr[0] >= arr[1] THEN
+    IF arr[0] <= arr[1] THEN
         WRITE 1;
     ELSE
         WRITE 0;
@@ -44,7 +44,31 @@ IN
 
     arr[0] := 2;
     arr[1] := 2;
-    IF arr[0] >= arr[1] THEN
+    IF arr[0] <= arr[1] THEN
+        WRITE 1;
+    ELSE
+        WRITE 0;
+    ENDIF
+
+    arr[0] := 4;
+    a := 5;
+    IF arr[0] <= a THEN
+        WRITE 1;
+    ELSE
+        WRITE 0;
+    ENDIF
+
+    arr[0] := 5;
+    a := 4;
+    IF arr[0] <= a THEN
+        WRITE 1;
+    ELSE
+        WRITE 0;
+    ENDIF
+
+    arr[1] := 6;
+    b := 6;
+    IF arr[1] <= b THEN
         WRITE 1;
     ELSE
         WRITE 0;

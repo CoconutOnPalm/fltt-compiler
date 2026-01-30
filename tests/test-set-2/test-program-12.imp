@@ -1,0 +1,21 @@
+# Linear Search
+# Searches for a target value in an array
+# Returns 1 if found, 0 otherwise
+
+PROGRAM IS
+  n, arr[0:100], i, target, found, size
+IN
+  READ n;
+  size := n - 1;
+  FOR i FROM 0 TO size DO
+    READ arr[i];
+  ENDFOR
+  READ target;
+  found:=0;
+  FOR i FROM 0 TO n DO
+    IF arr[i]=target THEN
+      found:=1;
+    ENDIF
+  ENDFOR
+  WRITE found;
+END

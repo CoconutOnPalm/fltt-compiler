@@ -250,7 +250,17 @@ statement
     }
     | READ identifier ';'
     {
-        $<ast>$ = new fl::ast::Read($<ident>2);
+        fl::ast::Identifier* original = $<ident>2;
+
+        if (dynamic_cast<fl::ast::IndexOf*>(original))
+        {
+            $<ast>$ = new fl::ast::Read(original);
+        }
+        else
+        {
+            fl::ast::LvalIdentifier* lvalue = new fl::ast::LvalIdentifier(original->identifier); 
+            $<ast>$ = new fl::ast::Read(lvalue);
+        }
     }
     | WRITE value ';'
     {

@@ -11,6 +11,7 @@
 #include "../../TAC/codes/other/iterator_inc.hpp"
 #include "../../TAC/codes/other/iterator_dec.hpp"
 #include "../../TAC/codes/other/LDC.hpp"
+#include "../../TAC/codes/other/label.hpp"
 
 namespace fl::ast
 {

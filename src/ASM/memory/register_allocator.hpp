@@ -76,6 +76,8 @@ namespace fl
 		void overrideRegister(const REG reg, const Register& regdata);
 		void overrideRegister(const REG reg, const size_t tac);
 
+		void flushRegisters();
+
 		// swaps 'reg' with RA
 		REG swap(const REG reg);
 
@@ -84,8 +86,8 @@ namespace fl
 		REG allocTemporary(const size_t tac);
 		REG allocVariable(const size_t tac, const uint64_t address);
 
-		REG loadVariable(const size_t tac, const size_t addr);
-		REG storeVariable(REG reg, const size_t addr);
+		REG loadVariable(const size_t tac, const size_t addr, bool use_reg_search = true);
+		REG storeVariable(REG reg, const size_t addr, const size_t stored_var_tac);
 		REG loadPointer(const size_t tac, REG reg);
 		REG loadImmediate(const size_t tac, const uint64_t imm);
 		

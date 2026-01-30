@@ -1,0 +1,10 @@
+PROGRAM IS
+    a, b, c
+IN
+    a := 64;
+    b := 2;
+    c := a / b;
+    c := c / b;
+    c := c / b;
+    WRITE c;
+END

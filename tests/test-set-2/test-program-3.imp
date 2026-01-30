@@ -1,0 +1,15 @@
+# Sum of Digits Calculator
+# Calculates the sum of all digits in a number
+
+PROGRAM IS
+  n, sum, digit
+IN
+  READ n;
+  sum:=0;
+  WHILE n>0 DO
+    digit:=n%10;
+    sum:=sum+digit;
+    n:=n/10;
+  ENDWHILE
+  WRITE sum;
+END

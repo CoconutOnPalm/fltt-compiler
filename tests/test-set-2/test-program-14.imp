@@ -1,0 +1,19 @@
+# Count Occurrences
+# Counts how many times a target value appears in an array
+
+PROGRAM IS
+  n, arr[0:100], i, target, count
+IN
+  READ n;
+  FOR i FROM 0 TO n DO
+    READ arr[i];
+  ENDFOR
+  READ target;
+  count:=0;
+  FOR i FROM 0 TO n DO
+    IF arr[i]=target THEN
+      count:=count+1;
+    ENDIF
+  ENDFOR
+  WRITE count;
+END

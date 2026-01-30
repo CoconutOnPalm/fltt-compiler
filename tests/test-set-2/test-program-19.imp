@@ -1,0 +1,23 @@
+# Check All Equal
+# Checks if all elements in an array are equal
+# Returns 1 if all equal, 0 otherwise
+
+PROGRAM IS
+  n, arr[0:100], i, all_equal, first
+IN
+  READ n;
+  FOR i FROM 0 TO n DO
+    READ arr[i];
+  ENDFOR
+  first:=arr[0];
+  all_equal:=1;
+  FOR i FROM 1 TO n DO
+    IF arr[i]>first THEN
+      all_equal:=0;
+    ENDIF
+    IF first>arr[i] THEN
+      all_equal:=0;
+    ENDIF
+  ENDFOR
+  WRITE all_equal;
+END

@@ -1,0 +1,12 @@
+PROGRAM IS
+    a, b, c
+IN
+    a := 42;
+    b := 42;
+    IF a = b THEN
+        c := 1;
+    ELSE
+        c := 0;
+    ENDIF
+    WRITE c;
+END

@@ -1,0 +1,12 @@
+PROGRAM IS
+    a, b, c
+IN
+    a := 30;
+    b := 20;
+    IF a < b THEN
+        c := 42;
+    ELSE
+        c := 84;
+    ENDIF
+    WRITE c;
+END

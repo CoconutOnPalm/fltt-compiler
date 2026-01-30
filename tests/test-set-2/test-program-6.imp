@@ -1,0 +1,21 @@
+# Average Calculator
+# Calculates the average of n numbers
+
+PROGRAM IS
+  n, count, num, sum, avg
+IN
+  READ n;
+  sum:=0;
+  count:=0;
+  WHILE count<n DO
+    READ num;
+    sum:=sum+num;
+    count:=count+1;
+  ENDWHILE
+  IF n>0 THEN
+    avg:=sum/n;
+    WRITE avg;
+  ELSE
+    WRITE 0;
+  ENDIF
+END

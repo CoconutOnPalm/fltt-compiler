@@ -46,7 +46,7 @@ namespace fl
 			return false;
 		case TACType::CONSTANT:
 			return false;
-		case TACType::ARRELEM:
+		case TACType::POINTER:
 			return false;
 		case TACType::EXPRESSION:
 			return false;
@@ -59,7 +59,7 @@ namespace fl
 		case TACType::JUMP:	// terminator
 			return true;
 		case TACType::LABEL: // terminator
-			return true;
+			return true; 
 		default:
 			panic("internal compiler error: unknown TACType in block terminator mapper");
 			return false; // for g++ to shut up

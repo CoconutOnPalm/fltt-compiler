@@ -1,0 +1,7 @@
+PROGRAM IS
+    a, b
+IN
+    a := 99;
+    b := a + 1;
+    WRITE b;
+END

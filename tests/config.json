@@ -1,6 +1,19 @@
 {
     "compiler-exe": "kompilator",
     "vm-exe": "mw2025-p/maszyna-wirtualna-cln",
-    "tests-dir": "tests/programs",
+    "tests": [
+        {
+            "dict-dir": "tests/test-set-1.json",
+            "tests-dir": "tests/test-set-1"
+        },
+        {
+            "dict-dir": "tests/test-set-2.json",
+            "tests-dir": "tests/test-set-2"
+        },
+        {
+            "dict-dir": "tests/gijoop-tests.json",
+            "tests-dir": "tests/gijoop-tests"
+        }
+    ],
     "compiled-dir": "tests/.compiled"
 }

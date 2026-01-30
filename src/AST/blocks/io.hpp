@@ -13,11 +13,11 @@ namespace fl::ast
 	{
 	private:
 
-		std::shared_ptr<ASTNode> identifier;
+		std::shared_ptr<Identifier> identifier;
 
 	public:
 
-		Read(ASTNode* id)
+		Read(Identifier* id)
 			: identifier(id)
 		{}
 
@@ -30,8 +30,8 @@ namespace fl::ast
 
 		size_t generateTAC(TACTable& tac_table) const override
 		{
-			size_t var = identifier->generateTAC(tac_table);
-			size_t read = tac_table.add<tac::Read>(var, p_owner);
+			size_t lval = identifier->generateTAC(tac_table);
+			size_t read = tac_table.add<tac::Read>(lval, p_owner);
 			return read;
 		}
 

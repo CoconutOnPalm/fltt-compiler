@@ -1,0 +1,15 @@
+PROCEDURE calculate(dummy) IS
+    a, b, c
+IN
+    a := 10;
+    b := 5;
+    c := a + b;
+    WRITE c;
+END
+
+PROGRAM IS
+    x
+IN
+    x := 0;
+    calculate(x);
+END

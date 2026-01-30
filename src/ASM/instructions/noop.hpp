@@ -23,7 +23,7 @@ namespace fl::ins
 
 		std::string generate() const
 		{
-			return std::string{};
+			return {};
 		}
 
 	};

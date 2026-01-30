@@ -1,0 +1,8 @@
+PROGRAM IS
+    a, b, c
+IN
+    a := 42;
+    b := 42;
+    c := a / b;
+    WRITE c;
+END

@@ -9,7 +9,6 @@ from typing import List, Tuple, Optional, Any
 
 # Constants
 CONFIG_FILE = Path("tests/config.json")
-TESTS_FILE = Path("tests/tests.json")
 OUTPUT_PREFIX = "> "
 INPUT_PREFIX = "? "
 REMOVE_ANSI = re.compile(r"\x1b[^m]*m")
@@ -120,9 +119,9 @@ def run_vm(vm_path: str, program_path: Path, input_data: List[int]) -> Tuple[boo
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            text=True,
+            text=True
         )
-        stdout, stderr = process.communicate(input=input_str, timeout=10)
+        stdout, stderr = process.communicate(input=input_str)
         
         if process.returncode != 0:
             return False, [], stderr, "", ""
@@ -162,12 +161,11 @@ def parse_vm_output(lines: List[str]) -> List[int]:
     return result
 
 def main():
-    if not CONFIG_FILE.exists() or not TESTS_FILE.exists():
-        print(f"Configuration files not found. Ensure {CONFIG_FILE} and {TESTS_FILE} exist.")
+    if not CONFIG_FILE.exists():
+        print(f"Configuration file not found: {CONFIG_FILE}")
         sys.exit(1)
 
     config = load_json(CONFIG_FILE)
-    tests = load_json(TESTS_FILE)
 
     # Resolve paths relative to CWD
     compiler_cfg = config.get("compiler-exe", "kompilator")
@@ -189,80 +187,108 @@ def main():
     else:
          vm_executable = str(vm_path)
 
-    tests_dir = Path(config.get("tests-dir", "tests/programs"))
     compiled_dir = Path(config.get("compiled-dir", "tests/.compiled"))
 
     if not Path(compiler_executable).exists() and not compiler_path.exists():
          # Check both with and without ./ just in case logic is fuzzy
         print(f"Compiler not found at: {compiler_path}")
     
-    failed_tests = []
-    total_tests = len(tests)
-    passed_count = 0
+    # Load all test sets from config
+    test_sets = config.get("tests", [])
+    if not test_sets:
+        print("No test sets defined in config.json")
+        sys.exit(1)
     
-    # Calculate max filename length for alignment (+ ansi code length)
-    max_filename_len = max(len(tc["file"]) for tc in tests) if tests else 20
+    total_failed_tests = []
+    total_passed_count = 0
+    total_test_count = 0
 
-    # Result column width (visible chars); ANSI codes add extra hidden chars
-    result_width = 7  # "SUCCESS" or "FAILED "
-    result_col = result_width + Colors.STATUS_ANSI_LEN
-
-    print("Running tests...\n")
-    print(f"{'File':<{max_filename_len}}  {'Result':<{result_width}}  {'Cost':>13}  {'I/O':>8}")
-    print("-" * (max_filename_len + 2 + result_width + 2 + 12 + 2 + 8))
-
-    max_filename_len += Colors.FILENAME_ANSI_LEN
-
-    for test_case in tests:
-        filename = test_case["file"]
-        expected_in = test_case.get("in", [])
-        expected_out = test_case.get("out", [])
+    # Process each test set
+    for test_set in test_sets:
+        dict_path = Path(test_set.get("dict-dir", "tests.json"))
+        tests_dir = Path(test_set.get("tests-dir", "tests/programs"))
         
-        source_file = resolve_source_file(tests_dir, filename)
-        
-        # Determine output file path. Use original filename structure for consistency
-        # e.g., output will be named 'test-assign' or 'test-array.imp' in the compiled dir
-        compiled_file = compiled_dir / filename
-        
-        # 1. Compile
-        success, err = compile_program(compiler_executable, source_file, compiled_file)
-        if not success:
-            print(f"{filename:<{max_filename_len}}  {Colors.failure('FAILED'):<{result_col}}  {'N/A':>13}  {'N/A':>8}  (Compilation Error)")
-            print(f"Error output:\n{err}")
-            failed_tests.append(filename)
+        if not dict_path.exists():
+            print(f"Test dictionary not found: {dict_path}, skipping...")
             continue
-            
-        # 2. Run VM
-        success, output_lines, err, cost, io_cost = run_vm(vm_executable, compiled_file, expected_in)
-        if not success:
-            print(f"{filename:<{max_filename_len}}  {Colors.failure('FAILED'):<{result_col}}  {'N/A':>13}  {'N/A':>8}  (Runtime/VM Error)")
-            print(f"Error output:\n{err}")
-            failed_tests.append(filename)
+        
+        tests = load_json(dict_path)
+        if not tests:
             continue
-            
-        # 3. Validate
-        parsed_out = parse_vm_output(output_lines)
         
-        cost_str = cost if cost else "N/A"
-        io_str = io_cost if io_cost else "N/A"
+        total_test_count += len(tests)
+        failed_tests = []
+        passed_count = 0
         
-        if parsed_out == expected_out:
-            print(f"{Colors.filename(filename):<{max_filename_len}}  {Colors.success('SUCCESS'):<{result_col}}  {Colors.cost(cost_str):>{12 + Colors.COST_ANSI_LEN}}  {Colors.io_cost(io_str):>{8 + Colors.IO_COST_ANSI_LEN}}")
-            passed_count += 1
-        else:
-            print(f"{Colors.filename(filename):<{max_filename_len}}  {Colors.failure('FAILED'):<{result_col}}  {Colors.cost(cost_str):>{12 + Colors.COST_ANSI_LEN}}  {Colors.io_cost(io_str):>{8 + Colors.IO_COST_ANSI_LEN}}")
-            print(f"{Colors.faint('Input:')}    {expected_in}")
-            print(f"{Colors.faint('Expected:')} {expected_out}")
-            print(f"{Colors.faint('Got:')}      {parsed_out}")
-            failed_tests.append(filename)
+        # Calculate max filename length for alignment (+ ansi code length)
+        max_filename_len = max(len(tc["file"]) for tc in tests) if tests else 20
+
+        # Result column width (visible chars); ANSI codes add extra hidden chars
+        result_width = 7  # "SUCCESS" or "FAILED "
+        result_col = result_width + Colors.STATUS_ANSI_LEN
+
+        print(f"{Colors.bold('Test Set:')} {dict_path} ({len(tests)} tests)")
+        print(f"{'File':<{max_filename_len}}  {'Result':<{result_width}}  {'Cost':>13}  {'I/O':>8}")
+        print("-" * (max_filename_len + 2 + result_width + 2 + 12 + 2 + 8 + 1))
+
+        max_filename_len += Colors.FILENAME_ANSI_LEN
+
+        for test_case in tests:
+            filename = test_case["file"]
+            expected_in = test_case.get("in", [])
+            expected_out = test_case.get("out", [])
             
-    print("\nSUMMARY:")
-    if passed_count == total_tests:
-        print(f"{Colors.success('ALL TESTS PASSED')} ({Colors.GREEN}{passed_count}{Colors.RESET}{Colors.FAINT}/{Colors.GREEN}{total_tests}{Colors.RESET})")
+            source_file = resolve_source_file(tests_dir, filename)
+            
+            # Determine output file path. Use original filename structure for consistency
+            # e.g., output will be named 'test-assign' or 'test-array.imp' in the compiled dir
+            compiled_file = compiled_dir / filename
+            
+            # 1. Compile
+            success, err = compile_program(compiler_executable, source_file, compiled_file)
+            if not success:
+                print(f"{filename:<{max_filename_len}}  {Colors.failure('FAILED'):<{result_col}}  {'N/A':>13}  {'N/A':>8}  (Compilation Error)")
+                print(f"Error output:\n{err}")
+                failed_tests.append(filename)
+                continue
+                
+            # 2. Run VM
+            success, output_lines, err, cost, io_cost = run_vm(vm_executable, compiled_file, expected_in)
+            if not success:
+                print(f"{filename:<{max_filename_len}}  {Colors.failure('FAILED'):<{result_col}}  {'N/A':>13}  {'N/A':>8}  (Runtime/VM Error)")
+                print(f"Error output:\n{err}")
+                failed_tests.append(filename)
+                continue
+                
+            # 3. Validate
+            parsed_out = parse_vm_output(output_lines)
+            
+            cost_str = cost if cost else "N/A"
+            io_str = io_cost if io_cost else "N/A"
+            
+            if parsed_out == expected_out:
+                print(f"{Colors.filename(filename):<{max_filename_len}}  {Colors.success('SUCCESS'):<{result_col}}  {Colors.cost(cost_str):>{12 + Colors.COST_ANSI_LEN}}  {Colors.io_cost(io_str):>{8 + Colors.IO_COST_ANSI_LEN}}")
+                passed_count += 1
+            else:
+                print(f"{Colors.filename(filename):<{max_filename_len}}  {Colors.failure('FAILED'):<{result_col}}  {Colors.cost(cost_str):>{12 + Colors.COST_ANSI_LEN}}  {Colors.io_cost(io_str):>{8 + Colors.IO_COST_ANSI_LEN}}")
+                print(f"{Colors.faint('Input:')}    {expected_in}")
+                print(f"{Colors.faint('Expected:')} {expected_out}")
+                print(f"{Colors.faint('Got:')}      {parsed_out}")
+                failed_tests.append(filename)
+        
+        # Accumulate results for this test set
+        total_passed_count += passed_count
+        total_failed_tests.extend(failed_tests)
+        print()  # Blank line between test sets
+            
+    print("=" * 60)
+    print("OVERALL SUMMARY:")
+    if total_passed_count == total_test_count:
+        print(f"{Colors.success('ALL TESTS PASSED')} ({Colors.GREEN}{total_passed_count}{Colors.RESET}{Colors.FAINT}/{Colors.GREEN}{total_test_count}{Colors.RESET})")
     else:
-        print(f"Passed: {Colors.RED}{passed_count}{Colors.FAINT}/{Colors.RED}{total_tests}{Colors.RESET}")
+        print(f"Passed: {Colors.RED}{total_passed_count}{Colors.FAINT}/{Colors.RED}{total_test_count}{Colors.RESET}")
         print("Failed tests:")
-        for t in failed_tests:
+        for t in total_failed_tests:
             print(f" - {t}")
         sys.exit(1)
 

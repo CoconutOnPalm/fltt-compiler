@@ -1,0 +1,21 @@
+# Count Even Numbers
+# Counts how many even numbers are in an array
+
+PROGRAM IS
+  n, arr[0:100], i, count, half, doubled, size
+IN
+  READ n;
+  size := n - 1;
+  FOR i FROM 0 TO size DO
+    READ arr[i];
+  ENDFOR
+  count:=0;
+  FOR i FROM 0 TO size DO
+    half:=arr[i]/2;
+    doubled:=half*2;
+    IF arr[i]=doubled THEN
+      count:=count+1;
+    ENDIF
+  ENDFOR
+  WRITE count;
+END

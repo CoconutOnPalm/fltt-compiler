@@ -1,0 +1,12 @@
+PROGRAM IS
+    a, b, result
+IN
+    a := 5;
+    b := 1;
+    result := 1;
+    WHILE b <= a DO
+        result := result * 2;
+        b := b + 1;
+    ENDWHILE
+    WRITE result;
+END

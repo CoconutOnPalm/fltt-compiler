@@ -1,0 +1,24 @@
+# Perfect Number Checker
+# A perfect number equals the sum of its proper divisors
+# Example: 6 = 1 + 2 + 3
+# Outputs 1 if perfect, 0 otherwise
+
+PROGRAM IS
+  n, sum, i, tmp
+IN
+  READ n;
+  sum:=0;
+  i:=1;
+  WHILE i<n DO
+    tmp := n % i;
+    IF tmp=0 THEN
+      sum:=sum+i;
+    ENDIF
+    i:=i+1;
+  ENDWHILE
+  IF sum=n THEN
+    WRITE 1;
+  ELSE
+    WRITE 0;
+  ENDIF
+END

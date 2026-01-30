@@ -1,0 +1,10 @@
+PROGRAM IS
+    a, b, c, d
+IN
+    a := 5;
+    b := 15;
+    c := 25;
+    d := a + b;
+    d := d + c;
+    WRITE d;
+END

@@ -1,0 +1,6 @@
+PROGRAM IS
+IN
+    WRITE 7;
+    WRITE 15;
+    WRITE 23;
+END

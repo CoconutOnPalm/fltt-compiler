@@ -1,0 +1,13 @@
+PROGRAM IS
+    arr[0:5], i
+IN
+    arr[0] := 100;
+    arr[1] := 200;
+    arr[2] := 300;
+    i := 0;
+    WRITE arr[i];
+    i := 1;
+    WRITE arr[i];
+    i := 2;
+    WRITE arr[i];
+END

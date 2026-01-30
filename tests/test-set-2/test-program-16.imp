@@ -1,0 +1,22 @@
+# Check if Sorted
+# Checks if array is sorted in ascending order
+# Returns 1 if sorted, 0 otherwise
+
+PROGRAM IS
+  n, arr[0:100], i, sorted, next
+IN
+  READ n;
+  FOR i FROM 0 TO n DO
+    READ arr[i];
+  ENDFOR
+  sorted:=1;
+  FOR i FROM 0 TO n DO
+    next:=i+1;
+    IF next<=n THEN
+      IF arr[i]>arr[next] THEN
+        sorted:=0;
+      ENDIF
+    ENDIF
+  ENDFOR
+  WRITE sorted;
+END

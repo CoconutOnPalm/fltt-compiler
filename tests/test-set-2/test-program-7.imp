@@ -1,0 +1,22 @@
+# Collatz Conjecture (3n+1 Problem)
+# Generates Collatz sequence for a given number
+# Sequence: if n is even, n/2; if n is odd, 3n+1
+# Continues until reaching 1
+
+PROGRAM IS
+  n, temp
+IN
+  READ n;
+  WHILE n>1 DO
+    WRITE n;
+    temp:=n/2;
+    temp:=temp*2;
+    IF n=temp THEN
+      n:=n/2;
+    ELSE
+      n:=n*3;
+      n:=n+1;
+    ENDIF
+  ENDWHILE
+  WRITE n;
+END

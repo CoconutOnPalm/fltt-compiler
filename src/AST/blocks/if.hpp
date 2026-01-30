@@ -10,7 +10,6 @@
 #include "identifier.hpp"
 #include "../../TAC/codes/other/label.hpp"
 
-
 namespace fl::ast
 {
 

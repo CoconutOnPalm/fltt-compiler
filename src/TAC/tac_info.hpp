@@ -11,7 +11,7 @@ namespace fl
 	{
 		VARIABLE,
 		CONSTANT,
-		ARRELEM,
+		POINTER,
 		EXPRESSION,
 		CONDITION,
 		JUMP,
@@ -29,7 +29,7 @@ namespace fl
 		const uint64_t const_value {};
 		
 		const std::string owning_proc {};
-		const TACType code_type;
+		TACType code_type;
 		const bool block_terminator;
 
 	private:

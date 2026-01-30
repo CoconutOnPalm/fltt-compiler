@@ -37,7 +37,7 @@ namespace fl::tac
 			info_table[condition_index].useIn(p_index);
 		}
 
-		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, const std::vector<TACInfo>& info_table) const override
+		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, std::vector<TACInfo>& info_table) const override
 		{
 			REG cond_reg = regalloc.get(condition_index);
 			cond_reg = regalloc.swap(cond_reg);	// cond_reg should be RA, but swap jic

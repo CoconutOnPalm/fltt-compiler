@@ -1,0 +1,9 @@
+PROGRAM IS
+    sum
+IN
+    sum := 0;
+    FOR i FROM 1 TO 5 DO
+        sum := sum + i;
+    ENDFOR
+    WRITE sum;
+END

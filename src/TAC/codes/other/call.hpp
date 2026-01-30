@@ -34,7 +34,7 @@ namespace fl::tac
 			return TACInfo(TACType::JUMP, p_owning_procedure);
 		}
 		
-		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, const std::vector<TACInfo>& info_table) const override 
+		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, std::vector<TACInfo>& info_table) const override 
 		{
 			asm_table.add<ins::CALL>(symbol_tables[callee]->UUID());
 		}

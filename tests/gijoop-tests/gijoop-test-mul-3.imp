@@ -1,0 +1,10 @@
+PROGRAM IS
+    a, b, c, d
+IN
+    a := 2;
+    b := 3;
+    c := 7;
+    d := a * b;
+    d := d * c;
+    WRITE d;
+END

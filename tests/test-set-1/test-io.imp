@@ -1,0 +1,25 @@
+PROCEDURE foo(T arr, O n) IS
+IN
+    READ n;
+    READ arr[1];
+    READ arr[2];
+    READ arr[3];
+    WRITE n;
+    WRITE arr[1];
+    WRITE arr[2];
+    WRITE arr[3];
+END
+
+PROGRAM IS
+    n, arr[1:3]
+IN
+    READ n;
+    READ arr[1];
+    READ arr[2];
+    READ arr[3];
+    WRITE n;
+    WRITE arr[1];
+    WRITE arr[2];
+    WRITE arr[3];
+    foo(arr, n);
+END

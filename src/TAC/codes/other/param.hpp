@@ -63,7 +63,7 @@ namespace fl::tac
 		}
 
 
-		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, const std::vector<TACInfo>& info_table) const override
+		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, std::vector<TACInfo>& info_table) const override
 		{
 			std::shared_ptr<SymbolTable> callee = symbol_tables[dest];
 			std::string arg_identifier = callee->argAt(index);
@@ -72,15 +72,17 @@ namespace fl::tac
 
 			if (param_obj.testFlag(SymbolType::ARGUMENT))
 			{
-				const REG reg = regalloc.loadVariable(p_index, param_obj.address());
-				regalloc.storeVariable(reg, passed_address);
+				REG reg = regalloc.loadVariable(p_index, param_obj.address());
+				reg = regalloc.storeVariable(reg, passed_address, RegAlloc::empty_tac);
+				regalloc.resetRegister(reg);
 			}
 			else
 			{
 				size_t address = param_obj.address();
 
-				const REG reg = regalloc.loadImmediate(p_index, address);
-				regalloc.storeVariable(reg, passed_address);
+				REG reg = regalloc.loadImmediate(p_index, address);
+				reg = regalloc.storeVariable(reg, passed_address, RegAlloc::empty_tac);
+				regalloc.resetRegister(reg);
 			}
 		}
 

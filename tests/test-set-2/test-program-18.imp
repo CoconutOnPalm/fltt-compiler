@@ -1,0 +1,17 @@
+# Copy Array
+# Copies elements from one array to another
+
+PROGRAM IS
+  n, arr_a[0:100], arr_b[0:100], i
+IN
+  READ n;
+  FOR i FROM 0 TO n DO
+    READ arr_a[i];
+  ENDFOR
+  FOR i FROM 0 TO n DO
+    arr_b[i]:=arr_a[i];
+  ENDFOR
+  FOR i FROM 0 TO n DO
+    WRITE arr_b[i];
+  ENDFOR
+END

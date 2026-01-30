@@ -1,0 +1,16 @@
+# Array Sum
+# Calculates the sum of all elements in an array
+
+PROGRAM IS
+  n, arr[0:100], i, sum
+IN
+  READ n;
+  FOR i FROM 0 TO n DO
+    READ arr[i];
+  ENDFOR
+  sum:=0;
+  FOR i FROM 0 TO n DO
+    sum:=sum+arr[i];
+  ENDFOR
+  WRITE sum;
+END

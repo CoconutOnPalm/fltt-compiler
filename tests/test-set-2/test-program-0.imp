@@ -1,0 +1,15 @@
+# Factorial Calculator
+# Calculates n! for a given number n
+
+PROGRAM IS
+  n, result, i
+IN
+  READ n;
+  result:=1;
+  i:=1;
+  WHILE i<=n DO
+    result:=result*i;
+    i:=i+1;
+  ENDWHILE
+  WRITE result;
+END

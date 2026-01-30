@@ -1,0 +1,22 @@
+# Palindrome Number Checker
+# Checks if a number reads the same forwards and backwards
+# Outputs 1 if palindrome, 0 otherwise
+
+PROGRAM IS
+  n, original, reversed, digit
+IN
+  READ n;
+  original:=n;
+  reversed:=0;
+  WHILE n>0 DO
+    digit:=n%10;
+    reversed:=reversed*10;
+    reversed:=reversed+digit;
+    n:=n/10;
+  ENDWHILE
+  IF original=reversed THEN
+    WRITE 1;
+  ELSE
+    WRITE 0;
+  ENDIF
+END

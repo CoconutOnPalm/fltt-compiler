@@ -1,0 +1,37 @@
+# Bubble Sort Algorithm
+# Sorts an array of n numbers in ascending order
+
+PROCEDURE bubble_sort(T arr, I n) IS
+	i, j, swapped, temp, next, n_minus_one
+IN
+	REPEAT
+		swapped:=0;
+		FOR i FROM 0 TO n DO
+			j:=i+1;
+			IF j<=n THEN
+				IF arr[i]>arr[j] THEN
+					temp:=arr[i];
+					arr[i]:=arr[j];
+					arr[j]:=temp;
+					swapped:=1;
+				ENDIF
+			ENDIF
+		ENDFOR
+	UNTIL swapped=0;
+END
+
+PROGRAM IS
+	n, arr[0:100], i
+IN
+	READ n;
+	IF n != 0 THEN
+		n := n - 1;
+		FOR i FROM 0 TO n DO
+			READ arr[i];
+		ENDFOR
+		bubble_sort(arr, n);
+		FOR i FROM 0 TO n DO
+			WRITE arr[i];
+		ENDFOR
+	ENDIF
+END

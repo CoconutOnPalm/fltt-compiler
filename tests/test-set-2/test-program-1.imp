@@ -1,0 +1,18 @@
+# Fibonacci Sequence Generator
+# Generates first n Fibonacci numbers
+
+PROGRAM IS
+  n, a, b, temp, count
+IN
+  READ n;
+  a:=0;
+  b:=1;
+  count:=0;
+  WHILE count<n DO
+    WRITE a;
+    temp:=a+b;
+    a:=b;
+    b:=temp;
+    count:=count+1;
+  ENDWHILE
+END

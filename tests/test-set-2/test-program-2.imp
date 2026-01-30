@@ -1,0 +1,22 @@
+# Power Calculator
+# Calculates x raised to the power of y (x^y)
+
+PROCEDURE power(I base, I exp, O result) IS
+  i
+IN
+  result:=1;
+  i:=0;
+  WHILE i<exp DO
+    result:=result*base;
+    i:=i+1;
+  ENDWHILE
+END
+
+PROGRAM IS
+  x, y, result
+IN
+  READ x;
+  READ y;
+  power(x, y, result);
+  WRITE result;
+END

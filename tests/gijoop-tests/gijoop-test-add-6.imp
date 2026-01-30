@@ -1,0 +1,12 @@
+PROGRAM IS
+    a, b, sum
+IN
+    a := 0;
+    b := 5;
+    sum := 0;
+    WHILE a < b DO
+        sum := sum + a;
+        a := a + 1;
+    ENDWHILE
+    WRITE sum;
+END

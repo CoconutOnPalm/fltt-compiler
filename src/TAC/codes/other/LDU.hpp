@@ -29,7 +29,7 @@ namespace fl::tac
 			return TACInfo(TACType::VARIABLE, p_owning_procedure, identifier);
 		}
 		
-		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, const std::vector<TACInfo>& info_table) const override
+		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, std::vector<TACInfo>& info_table) const override
 		{
 			const Symbol& symbol = symbol_tables[p_owning_procedure]->get(identifier);
 			
@@ -39,6 +39,9 @@ namespace fl::tac
 				// leave pointer mechanic as it was
 				const REG address = regalloc.loadImmediate(p_index, symbol.address());
 				regalloc.loadPointer(p_index, address);
+
+				// correct info table
+				info_table[p_index].code_type = TACType::POINTER;
 			}
 			else // variables
 			{

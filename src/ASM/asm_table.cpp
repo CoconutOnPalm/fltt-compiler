@@ -2,6 +2,7 @@
 
 #include <print>
 #include <ranges>
+#include <regex>
 
 #include "instructions/noop.hpp"
 
@@ -94,6 +95,40 @@ namespace fl
 				i++;
 			}
 		}
+
+		// this breaks when there is a JUMP instruction pointing at the 'LOAD x'
+		// remove double STORE/LOAD
+		// for (size_t i = 0; i < m_instructions.size() - 1; i++)
+		// {
+		// 	const std::string first = m_instructions[i]->generate();
+
+		// 	std::string follow; size_t j = i + 1;
+		// 	for (; j < m_instructions.size(); j++)
+		// 	{
+		// 		follow = m_instructions[j]->generate();
+		// 		if (!follow.empty())
+		// 			break;
+		// 	}
+
+		// 	std::println("[debug]: (i, j)=({}, {}), first={}, follow={}", i, j, first, follow);
+			
+		// 	if (first.starts_with("STORE") && follow.starts_with("LOAD"))
+		// 	{
+		// 		std::string left_token = std::regex_replace(first, std::regex(R"(STORE[\s\t]*)"), "");
+		// 		std::string right_token = std::regex_replace(follow, std::regex(R"(LOAD[\s\t]*)"), "");
+		// 		if (left_token != right_token)
+		// 			continue; // not redundant
+
+		// 		// double stack of 
+		// 		// STORE <addr>
+		// 		// LOAD  <addr>
+		// 		// where <addr> is the same in both cases
+		// 		// instructions - remove the load as it is redundant
+		// 		m_instructions[j] = std::make_unique<ins::NOOP>();
+		// 		std::println("[removed]: j={} left={}, right={}", j, first, follow);
+		// 		i = j;
+		// 	}
+		// }
     }
 	
 } // namespace fl

@@ -1,0 +1,10 @@
+PROGRAM IS
+    a, b
+IN
+    a := 10;
+    b := 10;
+    REPEAT
+        a := a + 1;
+    UNTIL a > b;
+    WRITE a;
+END

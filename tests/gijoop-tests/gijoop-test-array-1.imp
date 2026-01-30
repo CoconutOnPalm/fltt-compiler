@@ -1,0 +1,10 @@
+PROGRAM IS
+    arr[0:5]
+IN
+    arr[0] := 10;
+    arr[1] := 20;
+    arr[2] := 30;
+    WRITE arr[0];
+    WRITE arr[1];
+    WRITE arr[2];
+END

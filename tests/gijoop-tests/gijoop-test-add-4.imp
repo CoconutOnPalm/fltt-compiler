@@ -1,0 +1,8 @@
+PROGRAM IS
+    a, b, c
+IN
+    a := 123456;
+    b := 654321;
+    c := a + b;
+    WRITE c;
+END

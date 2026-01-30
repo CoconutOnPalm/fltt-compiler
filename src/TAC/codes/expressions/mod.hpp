@@ -35,7 +35,7 @@ namespace fl::tac
 			info_table[right_index].useIn(p_index);
 		}
 		
-		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, const std::vector<TACInfo>& info_table) const override
+		virtual void generateASM(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, std::vector<TACInfo>& info_table) const override
 		{
 			//  auto label_align = std::make_shared<Asm::Label>("DIV_ALIGN");
 			// auto label_calc  = std::make_shared<Asm::Label>("DIV_CALC");
