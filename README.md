@@ -13,7 +13,7 @@ Compiler project for the Formal Languages and Translation Techniques course in t
 
 required:
  - `c++23` or higher
- - `cmake ≥ 3.31`
+ - `cmake version ≥ 3.31`
 
 required libraries must be installed: 
  - [Bison parser](https://www.gnu.org/software/bison/)
@@ -29,7 +29,7 @@ sudo apt-get install libcln-dev
 
 dependencies:
  - p-ranav's [argparse](https://github.com/p-ranav/argparse) (downloaded with FetchContent)
- - fltt-compiler-tools
+ - fltt-compiler-tools (submodule)
 
 ```sh
 git clone https://github.com/CoconutOnPalm/fltt-compiler.git
