@@ -34,7 +34,6 @@ namespace fl
 		for (size_t i = 0; const auto& asm_ptr : m_instructions)
 		{
 			std::string generated = asm_ptr->generate();
-			std::println("  {:2}| {}", i++, generated);
 
 			if (!generated.empty())
 				std::println(ofstr, "{}", generated);

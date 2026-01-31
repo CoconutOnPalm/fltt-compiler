@@ -226,19 +226,7 @@ namespace fl
 		warning("register not found - searching the stack");
 		panic("register lost for TAC ({})", tac);
 
-		// search the stack
-		for (size_t i = 0; i < m_stack.size(); i++)
-		{
-			if (m_stack[i].tac == tac)
-			{
-				REG empty_reg = getEmptyRegister(tac);
-				swap(empty_reg);
-				m_asm_table->add<ins::LOAD>(m_stack_ptr + i);
-			}
-		}
-
-		__debug_print();
-		return REG::RA;
+		return REG::RA; // suppress
 	}
 
 	REG RegAlloc::getValue(const size_t tac)
@@ -258,8 +246,6 @@ namespace fl
 		}
 
 		warning("register not found - searching the stack");
-		// stack search not implemented
-		__debug_print();
 		panic("register lost for TAC ({})", tac);
 		return REG::RA;
 	}
@@ -387,7 +373,6 @@ namespace fl
 			// if (m_registers[i].address > 0)
 			// 	continue;
 
-			// std::println("[debug]: reg_tac={}", reg_tac);
 			if (!m_tac_info->at(reg_tac).hasNextUse(tac))
 			{
 				this->resetRegister(static_cast<REG>(i));

@@ -41,8 +41,6 @@ namespace fl
 		generateTAC();
 		
 		m_tac_table.updateNextUse();
-		
-		m_tac_table.__debug_print();
 		m_tac_table.typeCheck(m_symbol_tables);
 
 		m_tac_table.generateASM(m_asm_table, stack_ptr, m_symbol_tables);
@@ -109,12 +107,6 @@ namespace fl
 			next_free_address += proc.assignMemoryBlock(next_free_address);
 		}
 
-		// debug print
-		for (auto& [name, proc] : m_procedure_map)
-		{
-			proc.__debug_print();
-		}
-
 		return next_free_address;
     }
 
@@ -156,7 +148,6 @@ namespace fl
 		else if (reads == 0)
 		{
 			// simulate the program, as the output is consteval
-			std::println("no READ instructions - consteval output");
 			std::vector<std::string> instructions;
 			m_asm_table->generate(instructions);
 			std::vector<cln::cl_I> vm_output = vm::runVM(instructions);
@@ -172,7 +163,6 @@ namespace fl
 		}
 		else 
 		{
-			std::println("ASM: ");
 			m_asm_table->generate(outfstream);
 		}
 			

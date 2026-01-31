@@ -49,7 +49,6 @@ namespace fl::ast
 			return 					tac_table.add<tac::Label>("endwhile", endwhile_id, p_owner);
 			
 			condition->generateTAC(tac_table);
-			std::println("while (not {}) JMP <endwhile>", condition->__debug_string());
 			block->generateTAC(tac_table);
 			return 0;
 		}

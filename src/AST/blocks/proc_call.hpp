@@ -22,7 +22,7 @@ namespace fl::ast
 		Params() = default;
 		~Params() = default;
 
-		void setCallee(const std::string_view identifier) { callee = identifier; std::println("callee set"); }
+		void setCallee(const std::string_view identifier) { callee = identifier; }
 		void add(const std::string& identifier) { param_ids.push_back(identifier); }
 
 		size_t size() const { return param_ids.size(); }

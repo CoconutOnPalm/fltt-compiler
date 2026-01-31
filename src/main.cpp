@@ -15,7 +15,6 @@ int main(const int argc, const char* const* argv)
 	fl::ProgramArgs args = fl::parse_args(argc, argv);
 	fl::FileHandler file_handler(args.language_path);
 
-	std::println("compiling {}", args.language_path.string());
 	run_parser(compiler, file_handler.handler);
 
 	compiler.compile(args.machine_code_path);
