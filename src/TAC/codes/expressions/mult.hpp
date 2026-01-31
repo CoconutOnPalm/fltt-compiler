@@ -281,11 +281,23 @@ namespace fl::tac
 			asm_table.add<ins::LABEL>(loop_end);
 			asm_table.add<ins::SWP>(REG::RC); // RA = total, RC = right
 
-			regalloc.overrideRA(RegAlloc::Register{
+			// move result to RC (so it doesn't clog RA)
+			asm_table.add<ins::SWP>(REG::RC);
+			regalloc.overrideRegister(REG::RC, RegAlloc::Register{
 				.tac = p_index,
 				.data_type = RegAlloc::DataType::TEMPORARY,
 				.address = 0,
 			});
+
+			// RA = null
+			// RB = left
+			// RC = result
+			
+			// regalloc.overrideRA(RegAlloc::Register{
+			// 	.tac = p_index,
+			// 	.data_type = RegAlloc::DataType::TEMPORARY,
+			// 	.address = 0,
+			// });
 		}
 		
 		void multLVRI(ASMTable& asm_table, RegAlloc& regalloc, std::map<std::string, std::shared_ptr<SymbolTable>>& symbol_tables, std::vector<TACInfo>& info_table) const

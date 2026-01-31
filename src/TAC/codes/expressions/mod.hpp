@@ -146,7 +146,15 @@ namespace fl::tac
 			regalloc.resetRegister(REG::RD);
 			regalloc.resetRegister(REG::RE);
 
-			regalloc.overrideRA(p_index);
+			// move result to RB (so it doesn't clog RA)
+			asm_table.add<ins::SWP>(REG::RB);
+			regalloc.overrideRegister(REG::RB, RegAlloc::Register{
+				.tac = p_index,
+				.data_type = RegAlloc::DataType::TEMPORARY,
+				.address = 0,
+			});
+
+			// regalloc.overrideRA(p_index);
 		}
 
 		virtual std::string __debug_string() const override
