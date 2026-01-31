@@ -4,8 +4,8 @@ Compiler project for the Formal Languages and Translation Techniques course in t
 
 # Project structure
 `src/` - compiler source code  
-`mw2025/` - virutal machine (old) by [prof Maciej Gębala](https://cs.pwr.edu.pl/gebala/)  
-`mw2025/` - virutal machine by [prof Maciej Gębala](https://cs.pwr.edu.pl/gebala/)  
+`mw2025/` - virtual machine (old) by [prof Maciej Gębala](https://cs.pwr.edu.pl/gebala/)  
+`mw2025-p/` - virtual machine by [prof Maciej Gębala](https://cs.pwr.edu.pl/gebala/)  
 `tests/` - test sets: see [testing](#testing)  
 
 
@@ -23,7 +23,7 @@ sudo apt-get install libcln-dev
 ```
 
 dependencies:
- - p-ranav's [argparse](https://github.com/p-ranav/argparse) (dowloaded with FetchContent)
+ - p-ranav's [argparse](https://github.com/p-ranav/argparse) (downloaded with FetchContent)
  - fltt-compiler-tools
 
 ```sh
@@ -53,6 +53,8 @@ requirements: Python 3
 ```sh
 python tests/run-tests.py
 ```
+
+> test set inside `tests/gijoop-tests/` was kindly provided by [gijoop](https://github.com/gijoop/jftt-compiler)
 
 # Usage
 
@@ -230,7 +232,7 @@ example:
 2 % 0 = 0
 ```
 
-## 2. `arr[a:b]` declares an array of indicies $[a, a+1, ..., b]$ (inclusive)
+## 2. `arr[a:b]` declares an array of indices $[a, a+1, ..., b]$ (inclusive)
 ```
 example: 
 arr[3, 7] = array of size 5, ind: [3, 4, 5, 6, 7]
@@ -241,7 +243,7 @@ arr[3, 7] = array of size 5, ind: [3, 4, 5, 6, 7]
 ## 4. Declarations
 All variables must be declared inside a function, or be passed as `IN/OUT` ref arguments
  - **`I`** (IN) param marks an argument as `readonly const`
- - **`O`** (OUT) param marks an argumenta as an 'OUT' argument - cannot be read before assignment, cannot be passed as `I`
+ - **`O`** (OUT) param marks an argument as an 'OUT' argument - cannot be read before assignment, cannot be passed as `I`
  - **`T`** marks an argument as an array
 
 ## 5. for loops
@@ -273,8 +275,8 @@ let `MEM[i]` be the memory cell at address *`i`*
 
 |instruction|arg|action|PC|cost|description|
 |:---|:---:|---|---|---:|---|
-| READ   |   | `[RA] = READ()`         | PC++          | 100 ![RED](https://placehold.co/15x15/red/red.png) | reads input from the user |
-| WRITE  |   | `print([RA])`           | PC++          | 100 ![RED](https://placehold.co/15x15/red/red.png) | prints output to the descriptor |
+| READ   |   | `[RA] = READ()`         | PC++          | 100 ![RED](https://placehold.co/15x15/red/red.png) | reads input from stdin |
+| WRITE  |   | `print([RA])`           | PC++          | 100 ![RED](https://placehold.co/15x15/red/red.png) | prints output stdout |
 | LOAD   | i | `[RA] = MEM[i]`         | PC++          |  50 ![ORANGE](https://placehold.co/15x15/orange/orange.png) |  |
 | STORE  | i | `MEM[i] = [RA]`         | PC++          |  50 ![ORANGE](https://placehold.co/15x15/orange/orange.png) |  |
 | RLOAD  | x | `[RA] = MEM[RX]`        | PC++          |  50 ![ORANGE](https://placehold.co/15x15/orange/orange.png) |  |
@@ -294,4 +296,6 @@ let `MEM[i]` be the memory cell at address *`i`*
 | RTRN   |   | `PC = [RA]`             | **PC = [RA]** |   1 ![GREEN](https://placehold.co/15x15/green/green.png) |  |
 | HALT   |   | `exit`                  | *stop*        |   0 ![CYAN](https://placehold.co/15x15/cyan/cyan.png) | stops the program |
 
-\* *where* `[RA]`, `[RB]`, `...`, `[RH]` hold unsigned int (of any size)
+\* *where* `[RA]`, `[RB]`, `...`, `[RH]` hold unsigned integers (of any size)
+
+*the compiler itself does not contain any AI-generated code*
