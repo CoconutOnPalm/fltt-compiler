@@ -241,8 +241,9 @@ def main():
             source_file = resolve_source_file(tests_dir, filename)
             
             # Determine output file path. Use original filename structure for consistency
-            # e.g., output will be named 'test-assign' or 'test-array.imp' in the compiled dir
-            compiled_file = compiled_dir / filename
+            # rename to .mr
+            compiled_file = compiled_dir / tests_dir / filename
+            compiled_file = compiled_file.with_suffix('.mr')
             
             # 1. Compile
             success, err = compile_program(compiler_executable, source_file, compiled_file)
