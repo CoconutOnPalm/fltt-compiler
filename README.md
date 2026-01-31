@@ -4,12 +4,142 @@ Compiler project for the Formal Languages and Translation Techniques course in t
 
 # Project structure
 `src/` - compiler source code  
+`mw2025/` - virutal machine (old) by [prof Maciej Gębala](https://cs.pwr.edu.pl/gebala/)  
 `mw2025/` - virutal machine by [prof Maciej Gębala](https://cs.pwr.edu.pl/gebala/)  
+`tests/` - test sets: see [testing](#testing)  
 
+
+# Building
+required libraries must be installed: 
+ - [Bison parser](https://www.gnu.org/software/bison/)
+ - [Flex lexer](https://github.com/westes/flex)
+ - [CLN](https://www.ginac.de/CLN/)
+
+```sh
+sudo apt-get update
+sudo apt-get install flex
+sudo apt-get install bison
+sudo apt-get install libcln-dev
+```
+
+dependencies:
+ - p-ranav's [argparse](https://github.com/p-ranav/argparse) (dowloaded with FetchContent)
+ - fltt-compiler-tools
+
+```sh
+git clone https://github.com/CoconutOnPalm/fltt-compiler.git
+cd fltt-compiler
+
+cmake -S ./ -B ./build/
+cmake --build ./build/ --parallel
+
+# compile virtual machine
+make -C ./mw2025-p/
+```
+
+```sh
+# optional: init fltt-compiler-tools
+git submodule init
+git submodule update
+cmake -S ./fltt-compiler-tools/ -B ./fltt-compiler-tools/build/
+cmake --build ./fltt-compiler-tools/build/ --parallel
+```
+see the [fltt-compiler-tools](https://github.com/CoconutOnPalm/fltt-compiler-tools) repository for more info
+
+# Testing
+
+requirements: Python 3
+
+```sh
+python tests/run-tests.py
+```
+
+# Usage
+
+```sh
+./kompilator src-file.imp asm-file.mr
+```
+run with
+```sh
+./mw2025-p/maszyna-wirtualna-cln asm-file.mr
+```
 
 # Language Structure
 
 The structure is described by the fltt-compiler's language, some parameters are encapsulated in the `< >` brackets
+
+**grammar:**
+```
+program_all  -> procedures main
+
+procedures   -> procedures PROCEDURE proc_head IS declarations IN commands END
+             | procedures PROCEDURE proc_head IS IN commands END
+             | 
+
+main         -> PROGRAM IS declarations IN commands END
+             | PROGRAM IS IN commands END
+
+commands     -> commands command
+             | command
+
+command      -> identifier := expression;
+             | IF condition THEN commands ELSE commands ENDIF
+             | IF condition THEN commands ENDIF
+             | WHILE condition DO commands ENDWHILE
+             | REPEAT commands UNTIL condition;
+             | FOR pidentifier FROM value TO value DO commands ENDFOR
+             | FOR pidentifier FROM value DOWNTO value DO commands ENDFOR
+             | proc_call;
+             | READ identifier;
+             | WRITE value;
+
+proc_head    -> pidentifier ( args_decl )
+
+proc_call    -> pidentifier ( args )
+
+declarations -> declarations, pidentifier
+             | declarations, pidentifier[num:num]
+             | pidentifier
+             | pidentifier[num:num]
+
+args_decl    -> args_decl, type pidentifier
+             | type pidentifier
+             
+type         -> T | I | O | ε
+
+args         -> args, pidentifier
+             | pidentifier
+
+expression   -> value
+             | value + value
+             | value - value
+             | value * value
+             | value / value
+             | value % value
+
+condition    -> value = value
+             | value != value
+             | value > value
+             | value < value
+             | value >= value
+             | value <= value
+
+value        -> num
+             | identifier
+
+identifier   -> pidentifier
+             | pidentifier[pidentifier]
+             | pidentifier[num]
+```
+
+```
+where:
+    pidentifier:    [a-z_]+
+    num:            64-bit unsigned integer
+```
+
+
+# Examples
 
 ## main()
 ```c++
@@ -164,4 +294,4 @@ let `MEM[i]` be the memory cell at address *`i`*
 | RTRN   |   | `PC = [RA]`             | **PC = [RA]** |   1 ![GREEN](https://placehold.co/15x15/green/green.png) |  |
 | HALT   |   | `exit`                  | *stop*        |   0 ![CYAN](https://placehold.co/15x15/cyan/cyan.png) | stops the program |
 
-\* *where* `[RA]`, `[RB]`, `...`, `[RH]` $\in \N$
+\* *where* `[RA]`, `[RB]`, `...`, `[RH]` hold unsigned int (of any size)
