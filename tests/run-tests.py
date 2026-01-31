@@ -26,7 +26,7 @@ class Colors:
     FAINT = '\033[2m'
     RESET = '\033[0m'
     
-    # ANSI escape sequences add hidden chars; these constants help with alignment
+    # used for alignment 
     STATUS_ANSI_LEN = len(GREEN) + len(BOLD) + len(RESET)
     FILENAME_ANSI_LEN = len(CYAN) + len(RESET)
     COST_ANSI_LEN = len(BLUE) + len(RESET)
