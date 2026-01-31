@@ -5,6 +5,7 @@ project(compiler)
 find_package(BISON REQUIRED)
 find_package(FLEX REQUIRED)
 find_package(PkgConfig REQUIRED)
+pkg_check_modules(CLN REQUIRED cln)
 
 SET(CMAKE_CXX_STANDARD 23)
 SET(FLAGS -ggdb3)
