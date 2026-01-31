@@ -25,4 +25,4 @@ namespace fl::ins
 		}
 	};
 	
-} // namespace fl::asm
+} // namespace fl::ins

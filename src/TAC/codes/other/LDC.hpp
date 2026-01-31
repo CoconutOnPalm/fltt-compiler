@@ -9,7 +9,9 @@
 
 namespace fl::tac
 {
-	
+	/**
+	 * @brief Load a const variable (used in for-loop's iterator)
+	 */
 	class LDC : public TAC
 	{
 

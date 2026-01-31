@@ -54,24 +54,6 @@ namespace fl::ast
 	
 	private:
 
-		// size_t mapOperatorsToTAC(const size_t l, const size_t r, TACTable& tac_table) const
-		// {
-		// 	switch (op)
-		// 	{
-		// 	// ASSIGN too complicated to change with this grammar
-		// 	// case Operator::ASSIGN:
-		// 	// 	return tac_table.add<tac::Assign>(l, r, p_owner);
-		// 	case Operator::INDEX:
-		// 		return tac_table.add<tac::Index>(l, r, p_owner, left->identifier);
-		// 	default:
-		// 		panic("internal compier error: no available mapping from operator '{}' to TAC table", op);
-		// 		return 0;
-		// 	}
-
-		// 	// unreachable, just for g++ to shut up
-		// 	return 0;
-		// }
-
 	};
 
 } // namespace fl

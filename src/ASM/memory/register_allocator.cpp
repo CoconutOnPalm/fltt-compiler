@@ -19,73 +19,8 @@ namespace fl
 {
 	RegAlloc::RegAlloc(std::shared_ptr<std::vector<TACInfo>> tac_info, std::shared_ptr<ASMTable> asm_table, const size_t stack_ptr)
 		: m_tac_info(tac_info), m_asm_table(asm_table), m_stack_ptr(stack_ptr)
-	{
-	}
+	{}
 
-	// void RegAlloc::allocate(const size_t tac, const std::string_view variable_name)
-	// {
-	// 	// search for this tac 
-	// 	for (size_t i = 0; i < m_registers.size(); i++)
-	// 	{
-	// 		if (m_registers[i].tac.contains(tac) && m_registers[i].assoc_variable == variable_name)
-	// 		{
-	// 			return;
-	// 			// return static_cast<REG>(i);
-	// 		}
-	// 	}
-
-	// 	// search for the first empty register
-	// 	for (size_t i = 0; i < m_registers.size(); i++)
-	// 	{
-	// 		Register& reg = m_registers[i];
-	// 		if (reg.tac.empty() && reg.assoc_variable.empty())
-	// 		{
-	// 			reg.tac.emplace(tac);
-	// 			reg.assoc_variable = variable_name;
-	// 			return;
-	// 			// return static_cast<REG>(i);
-	// 		}
-	// 	}
-
-
-	// 	std::vector<TACInfo>& tac_info = *m_tac_info; // alias
-
-	// 	// search for the first dead tac
-	// 	for (size_t i = 0; i < m_registers.size(); i++)
-	// 	{
-	// 		Register& reg = m_registers[i];
-	// 		// if (reg.tac_index >= tac_info.size())
-	// 		// 	panic("internal compier error: requested a register for TAC beyond scope");
-
-	// 		bool all_free = reg.assoc_variable.empty();
-	// 		for (size_t code : reg.tac)
-	// 		{
-	// 			if (tac_info[code].hasNextUse(tac))
-	// 			{
-	// 				all_free = false;
-	// 				break;
-	// 			}
-	// 		}
-
-	// 		if (all_free)
-	// 		{
-	// 			reg.tac.clear();
-	// 			reg.assoc_variable.clear(); // redundant
-	// 			reg.tac.emplace(tac);
-	// 			return;
-	// 		}
-	// 	}
-
-	// 	panic("out of registers");
-	// }
-
-	// void RegAlloc::assign(const REG reg, const size_t tac)
-	// {
-	// 	auto& rvalue = m_registers[static_cast<size_t>(get(tac))];
-	// 	rvalue.assoc_variable.clear();
-	// 	rvalue.tac.erase(tac);
-	// 	m_registers[static_cast<size_t>(reg)].tac.emplace(tac);
-	// }
 
 	void RegAlloc::overrideRA(const Register& regdata)
 	{
@@ -277,35 +212,6 @@ namespace fl
 		return imm_reg;
 	}
 
-	// REG RegAlloc::load(const size_t tac, const size_t addr)
-	// {
-	// 	if (addr == 0)
-	// 		panic("null ptr assignment");
-
-	// 	REG reg = this->getEmptyRegister(tac, addr);
-	// 	this->swap(reg);
-
-	// 	m_asm_table->add<ins::LOAD>(addr);
-
-	// 	m_registers[0].data_type = DataType::VARIABLE;
-	// 	m_registers[0].tac = tac;
-	// 	m_registers[0].address = addr;
-	// 	return reg;
-	// }
-
-	// REG RegAlloc::rload(const size_t tac, const REG reg)
-	// {
-	// 	REG elem_reg = this->getEmptyRegister(tac, 0);
-	// 	this->swap(elem_reg);
-
-	// 	m_asm_table->add<ins::RLOAD>(reg);
-
-	// 	m_registers[0].data_type = DataType::POINTER;
-	// 	m_registers[0].tac = tac;
-	// 	m_registers[0].address = 0;
-	// 	return reg;
-	// }
-
 	REG RegAlloc::get(const size_t tac)
 	{
 		// search registers
@@ -391,13 +297,9 @@ namespace fl
 		else if (ldt == DataType::VARIABLE)
 		{
 			const uint64_t address = m_registers[static_cast<size_t>(lval_reg)].address;
-			// lval_reg = this->swap(lval_reg);
-			// rval_reg = this->getValue(rval_tac);
-			// m_asm_table->add<ins::MOVE>(rval_reg);
 			rval_reg = this->swap(rval_reg);
 			lval_reg = this->get(lval_tac);
 			m_asm_table->add<ins::STORE>(address);
-			// lval_reg = this->swap(lval_reg);
 
 			this->overrideRA(Register{
 				.tac = lval_tac,
@@ -415,53 +317,9 @@ namespace fl
 		else if (ldt == DataType::TEMPORARY)
 		{
 			lval_reg = this->swap(lval_reg);
-			// rval_reg = this->get(rval_tac);
 			m_asm_table->add<ins::MOVE>(rval_reg);
-			// m_registers[0].address = m_registers[static_cast<size_t>(lval_reg)].address;
-			// m_registers[0].data_type = DataType::VARIABLE;
 			m_registers[0].tac = tac_index;
-			// panic("illegal operation - rvalue assignment; value-type={}", static_cast<size_t>(ldt));
 		}
-
-		// this->swap(rval_reg);
-		// rval_reg = REG::RA;
-		// lval_reg = get(lval_tac);
-		// if (ldt == DataType::POINTER)
-		// 	m_asm_table->add<ins::RSTORE>(lval_reg);
-		// else
-		// 	m_asm_table->add<ins::STORE>(m_registers[static_cast<size_t>(lval_reg)].address);
-
-		// this->swap(lval_reg);
-		// lval_reg = REG::RA;
-		// rval_reg = get(rval_tac);
-		// if (m_registers[static_cast<size_t>(lval_reg)].data_type == DataType::POINTER)
-		// { /* do nothing */
-		// }
-		// else
-		// 	m_asm_table->add<ins::LOAD>(m_registers[static_cast<size_t>(lval_reg)].address);
-
-		// if (m_tac_info->at(rval_tac).hasNextUse(tac_index))
-		// {
-		// 	// LD/ST of shame
-		// 	this->swap(rval_reg);
-		// 	m_asm_table->add<ins::STORE>(m_registers[static_cast<size_t>(lval)].address);
-		// 	this->swap(lval);
-		// 	m_asm_table->add<ins::LOAD>(m_registers[static_cast<size_t>(lval)].address);
-		// }
-		// else
-		// {
-		// 	this->swap(lval);
-
-		// 	// no next use --> swap the registers (internally)
-
-		// 	// reset lval register (will become an empty rval_reg)
-		// 	m_registers[static_cast<size_t>(rval_reg)].tac = empty_tac;
-		// 	m_registers[static_cast<size_t>(rval_reg)].address = 0;
-		// 	m_registers[static_cast<size_t>(rval_reg)].data_type = DataType::NONE;
-
-		// 	// std::swap(m_registers[static_cast<size_t>(lval)], m_registers[static_cast<size_t>(rval_reg)]);
-		// 	m_asm_table->add<ins::SWP>(rval_reg);
-		// }
 	}
 
 	void RegAlloc::flushTemporaryTAC()
@@ -504,36 +362,6 @@ namespace fl
 			tac = max_tac;
 		}
 
-		// if (tac >= m_tac_info->size())
-		// {
-		// 	// delete register with the least tac (NOT TESTED IF THIS WROKS)
-		// 	size_t min_tac = -1;
-		// 	REG min_reg = REG::RH;
-		// 	for (size_t i = 0; i < m_registers.size(); i++)
-		// 	{
-		// 		if (m_registers[i].tac < min_tac)
-		// 		{
-		// 			min_tac = m_registers[i].tac;
-		// 			min_reg = static_cast<REG>(i);
-		// 		}
-		// 	}
-
-		// 	this->resetRegister(min_reg);
-		// 	return min_reg;
-		// }
-
-		// if (addr > 0) // not null
-		// {
-		// 	// search for a register containing this address
-		// 	for (size_t i = 0; i < m_registers.size(); i++)
-		// 	{
-		// 		if (m_registers[i].address == addr)
-		// 		{
-		// 			return static_cast<REG>(i);
-		// 		}
-		// 	}
-		// }
-
 
 		// search for empty registers
 		for (size_t i = 0; i < m_registers.size(); i++)
@@ -571,6 +399,7 @@ namespace fl
 		static std::mt19937_64 gen(0); // seed = 0
 		static std::uniform_int_distribution<size_t> dist(0, m_registers.size() - 1);
 		
+		// does not work for some reason
 		// (2) all registers are variables - choose one randomly
 		// max 50 attempts
 		// for (size_t _ = 0; _ < 50; _++)
@@ -605,23 +434,8 @@ namespace fl
 		// 	}
 		// }
 
-		warning("no empty register found - putting on stack");
-
-		// WARNING: stuff below not tested properly
-
-		// generate store call on a random [RB,RH] register
-		// std::mt19937_64 gen(0);
-		// std::uniform_int_distribution<size_t> dist(1, m_registers.size());
-		// const size_t reg = dist(gen);
-
-		// this->swap(static_cast<REG>(reg));
-		// size_t next_stack_addr = m_stack_ptr + m_stack.size();
-		// m_asm_table->add<ins::STORE>(next_stack_addr);
-		// m_stack.push_back(m_registers[0]); // we swapped this reg to RA
-		// this->swap(static_cast<REG>(reg)); // swap back RA
-
+		warning("no empty register found - returning RA");
 		return REG::RA;
-
 	}
 
 	bool RegAlloc::isTemporary(const size_t tac) const

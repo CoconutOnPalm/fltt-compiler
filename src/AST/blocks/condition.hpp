@@ -101,19 +101,10 @@ namespace fl::ast
 			{
 			case CondOp::EQ:
 				return tac_table.add<tac::Equal>(l, r, p_owner);
-				// size_t a = tac_table.add<tac::Sub>(l, r);
-				// size_t b = tac_table.add<tac::Sub>(r, l);
-				// size_t cond = tac_table.add<tac::Add>(a, b);
-
 			case CondOp::NEQ:
 				return tac_table.add<tac::NotEqual>(l, r, p_owner);
-				// size_t a = tac_table.add<tac::Sub>(l, r);
-				// size_t b = tac_table.add<tac::Sub>(r, l);
-				// size_t cond = tac_table.add<tac::Add>(a, b);
 			case CondOp::GT:
 				return tac_table.add<tac::GreaterThan>(l, r, p_owner);
-				// size_t cond = tac_table.add<tac::Sub>(r, l);
-				// return tac_table.add<tac::JZ>(cond);
 			case CondOp::LT:
 				return tac_table.add<tac::LessThan>(l, r, p_owner);
 			case CondOp::GEQ:

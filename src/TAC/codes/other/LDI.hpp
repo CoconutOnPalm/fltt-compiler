@@ -16,7 +16,9 @@
 
 namespace fl::tac
 {
-	
+	/**
+	 * Load Immediate (64-bit unsigned)
+	 */
 	class LDI : public TAC
 	{
 

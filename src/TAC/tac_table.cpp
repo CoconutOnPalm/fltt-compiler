@@ -77,9 +77,6 @@ namespace fl
 			auto usages = tac_info.usages();
 			for (size_t usage : usages)
 				std::print("{}, ", usage);
-			// for (size_t j = 0; j < m_tac_info.size(); j++)
-			// 	if (tac_info.hasNextUse(j))
-			// 		std::print("{}, ", tac_info.nextUsage(j));
 			std::println();
 		}
     }

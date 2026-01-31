@@ -131,7 +131,7 @@
 program_all 
     : procedures main
     {
-        std::println("parsing complete");
+        
     }
 ;
 
@@ -144,6 +144,8 @@ procedures
         
         compiler.defineProcedure(head->name(), head, symbol_table, block);
 
+        // now owned by std::shared_ptr 
+        // this is generally a bad practise but bison doesn't allow smart pointers in unions, so we have to stick with this
         // delete head;
         // delete symbol_table;
         // delete block;
@@ -156,8 +158,9 @@ procedures
 
         compiler.defineProcedure(head->name(), head, symbol_table, block);
 
+        // now owned by std::shared_ptr 
         // delete head;
-        // // delete symbol_table; <-- nullptr
+        // delete symbol_table; <-- nullptr
         // delete block;
     }
     | %empty
@@ -171,6 +174,7 @@ main
         
         compiler.defineMain(symbol_table, block);
 
+        // now owned by std::shared_ptr 
         // delete symbol_table;
         // delete block;
     }
@@ -181,6 +185,7 @@ main
 
         compiler.defineMain(symbol_table, block);
 
+        // now owned by std::shared_ptr 
         // // delete symbol_table; <-- nullptr
         // delete block;
     }
@@ -218,6 +223,7 @@ statement
         {
             fl::ast::LvalIdentifier* lvalue = new fl::ast::LvalIdentifier(original->identifier); 
             $<ast>$ = new fl::ast::Assign(lvalue, rvalue);
+            delete original;
         }
     }
     | IF condition THEN block[I] ELSE block[E] ENDIF
@@ -260,6 +266,7 @@ statement
         {
             fl::ast::LvalIdentifier* lvalue = new fl::ast::LvalIdentifier(original->identifier); 
             $<ast>$ = new fl::ast::Read(lvalue);
+            delete original;
         }
     }
     | WRITE value ';'
@@ -277,7 +284,7 @@ procedure_head
         $<procdecl>$ = procedure;
 
         delete args;
-        // free($<id>1);
+        free($<id>1);
     }
 ;
 
@@ -286,10 +293,12 @@ procedure_call
     {
         fl::ast::Params* params = $<param>3;
         fl::ASTNode* proc_call = new fl::ast::ProcCall($<id>1, std::move(*params));
-        // free(params);
-        // free($<id>1);
+        free($<id>1);
 
         $<ast>$ = proc_call;
+
+        // now owned by std::shared_ptr 
+        // delete params;
     }
 ;
 
@@ -299,28 +308,28 @@ declarations
         fl::SymbolTable* symbol_table = $<st>1;
         symbol_table->add<fl::Variable>($<id>3);
         $<st>$ = symbol_table;
-        // free($<id>3);
+        free($<id>3);
     }
     | declarations ',' pidentifier '[' num ':' num ']'
     {
         fl::SymbolTable* symbol_table = $<st>1;
         symbol_table->add<fl::Array>($<id>3, $<num>5, $<num>7);
         $<st>$ = symbol_table;
-        // free($<id>3);
+        free($<id>3);
     }
     | pidentifier
     {
         fl::SymbolTable* symbol_table = new fl::SymbolTable;
         symbol_table->add<fl::Variable>($<id>1);
         $<st>$ = symbol_table;
-        // free($<id>1);
+        free($<id>1);
     }
     | pidentifier '[' num ':' num ']'
     {
         fl::SymbolTable* symbol_table = new fl::SymbolTable;
         symbol_table->add<fl::Array>($<id>1, $<num>3, $<num>5);
         $<st>$ = symbol_table;
-        // free($<id>1);
+        free($<id>1);
     }
 ;
 
@@ -351,14 +360,14 @@ args
     {
         fl::ast::Params* params = $<param>1;
         params->add($<id>3);
-        // free($<id>3);
+        free($<id>3);
         $<param>$ = params;
     }
     | pidentifier
     {
         fl::ast::Params* params = new fl::ast::Params;
         params->add($<id>1);
-        // free($<id>1);
+        free($<id>1);
         $<param>$ = params;
     }
 ;
@@ -434,7 +443,7 @@ identifier
     : pidentifier
     {
         $<ident>$ = new fl::ast::Identifier($<id>1);
-        // free($<id>1);
+        free($<id>1);
     }
     | pidentifier '[' pidentifier ']'
     {
@@ -443,8 +452,8 @@ identifier
 
         $<ident>$ = node;
 
-        // free($<id>1);
-        // free($<id>3);
+        free($<id>1);
+        free($<id>3);
     }
     | pidentifier '[' num ']'
     {
@@ -453,7 +462,7 @@ identifier
 
         $<ident>$ = node;
 
-        // free($<id>1);
+        free($<id>1);
     }
 ;
 

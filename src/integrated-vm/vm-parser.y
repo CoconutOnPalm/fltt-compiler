@@ -73,18 +73,13 @@ void vm_yyerror(std::vector<std::pair<int,long long>>& program, char const *s)
 
 void vm_run_parser(std::vector<std::pair<int,long long>>& program, const std::vector<std::string>& instructions) 
 {
-    // Convert vector to single string
+    // Convert vector to a single string
     std::string input;
     for (const auto& line : instructions) {
         input += line + '\n';
     }
-    
-    // Create buffer from string using yy_scan_string
+
     YY_BUFFER_STATE buffer = vm_yy_scan_string(input.c_str());
-    
-    // Parse
     vm_yyparse(program);
-    
-    // Clean up buffer
     vm_yy_delete_buffer(buffer);
 }

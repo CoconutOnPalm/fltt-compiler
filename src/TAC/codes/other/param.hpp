@@ -57,8 +57,6 @@ namespace fl::tac
 					panic("internal compiler error: no owning procedure assigned");
 				if (this_param.testFlag(SymbolType::OUT))
 					panic("cannot pass an OUT variable ({}) to an IN param ({})", param, arg.name);
-				// if (symbol_tables[p_owning_procedure]->get(this_param.associated_variable).testFlag(SymbolType::ARGUMENT) && this_param.code_type != TACType::CONSTANT)
-				// 	panic("param '{}' is not an IN argument", this_param.associated_variable);
 			}
 		}
 

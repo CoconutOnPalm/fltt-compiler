@@ -10,6 +10,9 @@
 namespace fl::tac
 {
 	
+	/**
+	 * @brief Load variable
+	 */
 	class LD : public TAC
 	{
 

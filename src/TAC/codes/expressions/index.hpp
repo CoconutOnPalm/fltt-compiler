@@ -56,10 +56,6 @@ namespace fl::tac
 				REG shift_reg = regalloc.loadPointer(shift_tac, ptr_reg);
 				ptr_reg = regalloc.loadVariable(ptr_tac, symbol_tables[p_owning_procedure]->get(identifier).address());
 
-				// // load ptr_reg again and set it to the first elem
-				// REG ptr_reg = regalloc.loadVariable(RegAlloc::temp_tac[0], symbol_tables[p_owning_procedure]->get(identifier).address());
-				// asm_table.add<ins::INC>(ptr_reg); // set to the first elem
-
 				// convert index register to the 'normal' 0..n array indexing
 				REG index_reg = regalloc.getValue(index);
 				index_reg = regalloc.swap(index_reg); // RA = index
@@ -102,7 +98,6 @@ namespace fl::tac
 			// forget index register and make it act as temporary
 			size_t shift = symbol->begin; // we know the shift and compile time so we omit it
 			REG temp = regalloc.allocTemporary(RegAlloc::temp_tac[0]);
-			// std::println("[debug]: {}[({})] shift = {} + {} = {}", identifier, index, symbol->begin, symbol->header_size, shift);
 			if (shift > symbol->address())
 			{
 				setupImmediate(shift - symbol->address() - symbol->header_size, temp, asm_table);

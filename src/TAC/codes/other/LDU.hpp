@@ -9,7 +9,9 @@
 
 namespace fl::tac
 {
-	// load without assigning (don't call LOAD) - use as lvalue
+	/**
+	 * Load to register without loading from memory (load as lvalue)
+	 */
 	class LDU : public TAC
 	{
 

@@ -53,10 +53,8 @@ namespace fl::ast
 			std::shared_ptr<uint64_t> exit_for = std::make_shared<uint64_t>(0);
 
 			// for header
-			// size_t it =  iterator->generateTAC(tac_table);
-			size_t it = tac_table.add<tac::LDC>(iterator->identifier, p_owner);
+			size_t it = tac_table.add<tac::LDU>(iterator->identifier, p_owner);
 			size_t beg = from->generateTAC(tac_table);
-			// size_t end = to->generateTAC(tac_table);
 			tac_table.add<tac::ForceAssign>(it, beg, p_owner);
 
 			if (step == Step::DOWNTO)

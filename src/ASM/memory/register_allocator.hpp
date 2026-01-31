@@ -7,7 +7,6 @@
 #include <set>
 
 #include "../../TAC/tac_info.hpp"
-#include "address_descriptor.hpp"
 #include "../asm_table.hpp"
 #include "../../symbol/symbol_table.hpp"
 
@@ -64,11 +63,6 @@ namespace fl
 
 		RegAlloc(std::shared_ptr<std::vector<TACInfo>> tac_info, std::shared_ptr<ASMTable> asm_table, const size_t stack_ptr);
 		~RegAlloc() = default;
-
-		// void allocate(const size_t tac);
-		// void allocate(const size_t tac, const std::string_view variable_name);
-
-		// void assign(const REG reg, const size_t tac);
 
 		void overrideRA(const Register& regdata);
 		void overrideRA(const size_t tac);
