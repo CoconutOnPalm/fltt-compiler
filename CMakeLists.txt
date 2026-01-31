@@ -4,6 +4,7 @@ project(compiler)
 
 find_package(BISON REQUIRED)
 find_package(FLEX REQUIRED)
+find_package(PkgConfig REQUIRED)
 
 SET(CMAKE_CXX_STANDARD 23)
 SET(FLAGS -ggdb3)
@@ -16,10 +17,6 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(argparse)
-
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(CLN REQUIRED cln)
-
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 
