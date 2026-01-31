@@ -46,6 +46,20 @@ cmake --build ./fltt-compiler-tools/build/ --parallel
 ```
 see the [fltt-compiler-tools](https://github.com/CoconutOnPalm/fltt-compiler-tools) repository for more info
 
+> [!IMPORTANT]
+> to make the benchmarking tool work, you must modify the `fltt-compiler-tools/benchmarker/config.json` to match to current directory
+>
+
+```json
+// fltt-compiler-tools/benchmarker/config.json:
+{
+    "benchmarks-dir": "fltt-compiler-tools/benchmarker/programs",
+    "benchmark-table": "fltt-compiler-tools/benchmarker/benchmark-table.json",
+    "compiler-exe": "kompilator",
+    "compiled-dir": "fltt-compiler-tools/benchmarker/.compiled"
+}
+```
+
 # Testing
 
 requirements: Python 3
