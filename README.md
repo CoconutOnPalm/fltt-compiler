@@ -10,6 +10,11 @@ Compiler project for the Formal Languages and Translation Techniques course in t
 
 
 # Building
+
+required:
+ - `c++23` or higher
+ - `cmake ≥ 3.31`
+
 required libraries must be installed: 
  - [Bison parser](https://www.gnu.org/software/bison/)
  - [Flex lexer](https://github.com/westes/flex)
